@@ -6,10 +6,11 @@ using Taska.Identity.Domain.Entities;
 
 namespace Taska.Identity.Application.Commands;
 
-public class LoginCommandHandler(UserManager<User> userManager, IJwtService jwtService) : IRequestHandler<LoginCommand, LoginResult>
+public class LoginCommandHandler(UserManager<User> userManager, IJwtService jwtService, IRefreshTokenRepository refreshTokenRepository) : IRequestHandler<LoginCommand, LoginResult>
 {
     private readonly UserManager<User> _userManager = userManager;
     private readonly IJwtService _jwtService = jwtService;
+    private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
 
     public async Task<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -23,6 +24,16 @@ public class LoginCommandHandler(UserManager<User> userManager, IJwtService jwtS
 
         var accessToken = _jwtService.GenerateAccessToken(user);
         var refreshToken = _jwtService.GenerateRefreshToken();
+
+        await _refreshTokenRepository.AddAsync(new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            Token = refreshToken,
+            UserId = user.Id,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            IsRevoked = false
+        }, cancellationToken);
 
         return new LoginResult(
             accessToken,

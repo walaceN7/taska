@@ -14,11 +14,6 @@
     <ProjectReference Include="..\Taska.Identity.Application\Taska.Identity.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Persistence\Migrations\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

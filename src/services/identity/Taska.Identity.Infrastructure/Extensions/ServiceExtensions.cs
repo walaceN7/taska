@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
 using Taska.Identity.Infrastructure.Persistence;
+using Taska.Identity.Infrastructure.Repositories;
 using Taska.Identity.Infrastructure.Services;
 
 namespace Taska.Identity.Infrastructure.Extensions;
@@ -32,6 +33,7 @@ public static class ServiceExtensions
         .AddDefaultTokenProviders();
 
         services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         return services;
     }
