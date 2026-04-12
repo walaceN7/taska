@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Taska.Core.API/Taska.Core.API.csproj" />
+  <Project Path="Taska.Core.Application/Taska.Core.Application.csproj" />
+  <Project Path="Taska.Core.Domain/Taska.Core.Domain.csproj" />
+  <Project Path="Taska.Core.Infrastructure/Taska.Core.Infrastructure.csproj" />
+</Solution>
