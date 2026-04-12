@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
 using Taska.Identity.Infrastructure.Persistence;
+using Taska.Identity.Infrastructure.Services;
 
 namespace Taska.Identity.Infrastructure.Extensions;
 
@@ -28,6 +30,8 @@ public static class ServiceExtensions
         .AddRoles<IdentityRole<Guid>>()
         .AddEntityFrameworkStores<TaskaIdentityDbContext>()
         .AddDefaultTokenProviders();
+
+        services.AddScoped<IJwtService, JwtService>();
 
         return services;
     }
