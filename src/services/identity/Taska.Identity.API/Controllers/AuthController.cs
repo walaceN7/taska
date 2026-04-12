@@ -1,4 +1,5 @@
 ﻿using Mediator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Taska.Identity.Application.Commands;
 
@@ -36,5 +37,14 @@ public class AuthController(IMediator mediator) : ControllerBase
     {
         await _mediator.Send(command);
         return NoContent();
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    public IActionResult Me()
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+        return Ok(new { userId, email });
     }
 }
