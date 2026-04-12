@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Mediator;
 using Microsoft.AspNetCore.Identity;
 using Taska.Identity.Application.DTOs;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
+using Taska.Identity.Domain.Exceptions;
 
 namespace Taska.Identity.Application.Commands;
 
@@ -12,12 +13,12 @@ public class LoginCommandHandler(UserManager<User> userManager, IJwtService jwtS
     private readonly IJwtService _jwtService = jwtService;
     private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
 
-    public async Task<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async ValueTask<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
         if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
-            throw new Exception("Invalid credentials");
+            throw new UnauthorizedException("Invalid credentials");
 
         user.LastLoginAt = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);

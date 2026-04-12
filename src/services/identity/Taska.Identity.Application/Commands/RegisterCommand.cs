@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using Mediator;
 using Taska.Identity.Application.DTOs;
 
 namespace Taska.Identity.Application.Commands;

@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Mediator;
 using Microsoft.AspNetCore.Identity;
 using Taska.Identity.Application.DTOs;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
+using Taska.Identity.Domain.Exceptions;
 
 namespace Taska.Identity.Application.Commands;
 
@@ -12,12 +13,12 @@ public class RefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepo
     private readonly UserManager<User> _userManager = userManager;
     private readonly IJwtService _jwtService = jwtService;
 
-    public async Task<LoginResult> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async ValueTask<LoginResult> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         var refreshToken = await _refreshTokenRepository.GetByTokenAsync(request.RefreshToken, cancellationToken);
 
         if (refreshToken == null || refreshToken.IsRevoked || refreshToken.ExpiresAt < DateTime.UtcNow)
-            throw new Exception("Invalid or expired refresh token");
+            throw new UnauthorizedException("Invalid or expired refresh token");
 
         await _refreshTokenRepository.RevokeAsync(refreshToken, cancellationToken);
 

@@ -1,7 +1,8 @@
-﻿using MediatR;
+﻿using Mediator;
 using Microsoft.AspNetCore.Identity;
 using Taska.Identity.Application.DTOs;
 using Taska.Identity.Domain.Entities;
+using Taska.Identity.Domain.Exceptions;
 
 namespace Taska.Identity.Application.Commands;
 
@@ -9,7 +10,7 @@ public class RegisterCommandHandler(UserManager<User> userManager) : IRequestHan
 {
     private readonly UserManager<User> _userManager = userManager;
 
-    public async Task<RegisterResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async ValueTask<RegisterResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         var user = new User
         {
@@ -27,7 +28,7 @@ public class RegisterCommandHandler(UserManager<User> userManager) : IRequestHan
         if (!result.Succeeded)
         {
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            throw new Exception(errors);
+            throw new ValidationException(errors);
         }
 
         return new RegisterResult(user.Id, user.Email!, $"{user.FirstName} {user.LastName}");

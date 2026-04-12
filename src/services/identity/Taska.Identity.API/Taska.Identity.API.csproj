@@ -22,8 +22,4 @@
     <ProjectReference Include="..\Taska.Identity.Infrastructure\Taska.Identity.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Middlewares\" />
-  </ItemGroup>
-
 </Project>
