@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="Mapster" Version="10.0.7" />
+    <PackageReference Include="MediatR" Version="14.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Taska.Identity.Domain\Taska.Identity.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Mappings\" />
+    <Folder Include="Validators\" />
+    <Folder Include="Queries\" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Taska.Identity.API/Taska.Identity.API.csproj" />
+  <Project Path="Taska.Identity.Application/Taska.Identity.Application.csproj" />
+  <Project Path="Taska.Identity.Domain/Taska.Identity.Domain.csproj" />
+  <Project Path="Taska.Identity.Infrastructure/Taska.Identity.Infrastructure.csproj" />
+</Solution>
