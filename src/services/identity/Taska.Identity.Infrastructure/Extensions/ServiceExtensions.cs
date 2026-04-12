@@ -35,6 +35,10 @@ public static class ServiceExtensions
         .AddEntityFrameworkStores<TaskaIdentityDbContext>()
         .AddDefaultTokenProviders();
 
+        services.AddDbContext<TaskaIdentityDbContext>(options =>
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
+           .UseSnakeCaseNamingConvention());
+
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
