@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>f51b7db7-2ad5-4b83-a8e7-a39e8eddfb22</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,10 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Taska.Core.Application\Taska.Core.Application.csproj" />
     <ProjectReference Include="..\Taska.Core.Infrastructure\Taska.Core.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

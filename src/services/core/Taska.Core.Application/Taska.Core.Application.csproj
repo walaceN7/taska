@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="DTOs\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Extensions\" />
     <Folder Include="Validators\" />
     <Folder Include="Queries\" />
   </ItemGroup>
