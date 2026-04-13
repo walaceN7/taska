@@ -1,8 +1,8 @@
-﻿using Mediator;
+﻿using Mapster;
+using Mediator;
 using Taska.Core.Application.DTOs;
 using Taska.Core.Application.Interfaces;
 using Taska.Core.Domain.Entities;
-using Taska.Core.Domain.Enums;
 
 namespace Taska.Core.Application.Commands;
 
@@ -17,23 +17,11 @@ public class CreateCompanyCommandHandler(ICompanyRepository companyRepository, I
                 throw new Domain.Exceptions.ValidationException("A company with this domain already exists");
         }
 
-        var company = new Company
-        {
-            Name = request.Name,
-            LogoUrl = request.LogoUrl,
-            Domain = request.Domain,
-            Plan = CompanyPlan.Free,
-            CreatedBy = currentUser.UserId,
-        };
+        var company = request.Adapt<Company>();
+        company.CreatedBy = currentUser.UserId;
 
         var created = await companyRepository.AddAsync(company, cancellationToken);
 
-        return new CompanyResult(
-            created.Id,
-            created.Name,
-            created.LogoUrl,
-            created.Domain,
-            created.Plan.ToString()
-        );
+        return created.Adapt<CompanyResult>();
     }
 }

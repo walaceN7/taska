@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Mapster;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Taska.Core.Application.Behaviors;
@@ -12,6 +13,10 @@ public static class ServiceExtensions
         services.AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
         services.AddValidatorsFromAssembly(typeof(ServiceExtensions).Assembly);
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(typeof(ServiceExtensions).Assembly);
+        services.AddSingleton(config);
 
         return services;
     }
