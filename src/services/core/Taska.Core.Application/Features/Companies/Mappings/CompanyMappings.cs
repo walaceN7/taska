@@ -1,10 +1,10 @@
 ﻿using Mapster;
-using Taska.Core.Application.Commands;
-using Taska.Core.Application.DTOs;
+using Taska.Core.Application.Features.Companies.Commands;
+using Taska.Core.Application.Features.Companies.DTOs;
 using Taska.Core.Domain.Entities;
 using Taska.Core.Domain.Enums;
 
-namespace Taska.Core.Application.Mappings;
+namespace Taska.Core.Application.Features.Companies.Mappings;
 
 public class CompanyMappings : IRegister
 {

@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Validators\" />
-    <Folder Include="Queries\" />
+    <Folder Include="Features\Companies\Validators\" />
+    <Folder Include="Features\Projects\Validators\" />
   </ItemGroup>
 
   <PropertyGroup>

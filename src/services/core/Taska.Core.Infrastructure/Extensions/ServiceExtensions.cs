@@ -23,6 +23,7 @@ public static class ServiceExtensions
         services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<IProjectRepository, ProjectRepository>();
 
         services.AddAuthentication(options =>
         {

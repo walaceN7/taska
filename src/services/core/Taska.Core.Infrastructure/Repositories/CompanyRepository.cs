@@ -22,6 +22,13 @@ public class CompanyRepository(TaskaCoreDbContext context) : ICompanyRepository
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 
+    public async Task<Company> UpdateAsync(Company company, CancellationToken cancellationToken)
+    {
+        _context.Companies.Update(company);
+        await _context.SaveChangesAsync(cancellationToken);
+        return company;
+    }
+
     public async Task<bool> ExistsByDomainAsync(string domain, CancellationToken cancellationToken)
     {
         return await _context.Companies
