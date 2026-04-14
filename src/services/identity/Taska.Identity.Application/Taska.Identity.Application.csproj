@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Invitations\" />
     <Folder Include="Mappings\" />
     <Folder Include="Queries\" />
   </ItemGroup>

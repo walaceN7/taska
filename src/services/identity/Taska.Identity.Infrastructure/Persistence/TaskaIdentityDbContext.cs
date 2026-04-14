@@ -8,6 +8,7 @@ namespace Taska.Identity.Infrastructure.Persistence;
 public class TaskaIdentityDbContext(DbContextOptions<TaskaIdentityDbContext> options) : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<Invitation> Invitations { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

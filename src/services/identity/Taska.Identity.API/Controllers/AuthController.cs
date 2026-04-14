@@ -1,7 +1,8 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Taska.Identity.Application.Commands;
+using Taska.Identity.Application.Features.RefreshTokens.Commands;
+using Taska.Identity.Application.Features.Users.Commands;
 
 namespace Taska.Identity.API.Controllers;
 

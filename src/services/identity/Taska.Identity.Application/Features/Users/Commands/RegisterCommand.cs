@@ -1,6 +1,6 @@
 ﻿using Mediator;
-using Taska.Identity.Application.DTOs;
+using Taska.Identity.Application.Features.Users.DTOs;
 
-namespace Taska.Identity.Application.Commands;
+namespace Taska.Identity.Application.Features.Users.Commands;
 
 public record RegisterCommand(string FirstName, string LastName, string Email, string Password, Guid CompanyId) : IRequest<RegisterResult>;

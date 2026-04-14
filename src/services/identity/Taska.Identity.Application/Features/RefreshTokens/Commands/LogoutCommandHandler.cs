@@ -1,7 +1,7 @@
 ﻿using Mediator;
 using Taska.Identity.Application.Interfaces;
 
-namespace Taska.Identity.Application.Commands;
+namespace Taska.Identity.Application.Features.RefreshTokens.Commands;
 
 public class LogoutCommandHandler(IRefreshTokenRepository refreshTokenRepository) : IRequestHandler<LogoutCommand>
 {

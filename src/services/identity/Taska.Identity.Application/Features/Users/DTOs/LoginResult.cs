@@ -1,4 +1,4 @@
-﻿namespace Taska.Identity.Application.DTOs;
+﻿namespace Taska.Identity.Application.Features.Users.DTOs;
 
 public record LoginResult(string AccessToken, string RefreshToken, DateTime ExpiresAt, UserDto User);
 

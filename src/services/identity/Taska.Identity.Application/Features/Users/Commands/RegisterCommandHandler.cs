@@ -1,10 +1,10 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Identity;
-using Taska.Identity.Application.DTOs;
+using Taska.Identity.Application.Features.Users.DTOs;
 using Taska.Identity.Domain.Entities;
 using Taska.Identity.Domain.Exceptions;
 
-namespace Taska.Identity.Application.Commands;
+namespace Taska.Identity.Application.Features.Users.Commands;
 
 public class RegisterCommandHandler(UserManager<User> userManager) : IRequestHandler<RegisterCommand, RegisterResult>
 {

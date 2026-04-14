@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Taska.Identity.Application.Commands;
+using Taska.Identity.Application.Features.Users.Commands;
 
 namespace Taska.Identity.Application.Validators;
 
