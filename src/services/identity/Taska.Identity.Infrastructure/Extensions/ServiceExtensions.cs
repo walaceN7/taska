@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
+using Taska.Identity.Infrastructure.Configurations;
 using Taska.Identity.Infrastructure.Persistence;
 using Taska.Identity.Infrastructure.Repositories;
 using Taska.Identity.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Taska.Identity.Infrastructure.Extensions;
 
@@ -41,6 +42,10 @@ public static class ServiceExtensions
 
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+        services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
+
+        services.AddTransient<IEmailService, SmtpEmailService>();
 
         services.AddAuthentication(options =>
         {
