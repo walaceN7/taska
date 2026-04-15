@@ -16,7 +16,7 @@ public class SmtpEmailService(IOptions<SmtpSettings> smtpSettings) : IEmailServi
         var email = new MimeMessage();
         email.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
         email.To.Add(new MailboxAddress(toEmail, toEmail));
-        email.Subject = "Você foi convidado para o TaskFlow!";
+        email.Subject = "You have been invited to join a workspace on Taska";
 
         var registerUrl = $"http://localhost:3000/register/invite?token={token}";
 

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Taska.Identity.Application.Features.Users.Commands;
 
-namespace Taska.Identity.Application.Validators;
+namespace Taska.Identity.Application.Features.Users.Validators;
 
 public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {

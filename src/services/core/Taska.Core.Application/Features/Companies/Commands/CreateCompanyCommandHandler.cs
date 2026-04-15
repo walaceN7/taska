@@ -1,14 +1,16 @@
 ﻿using Mapster;
+using MassTransit;
 using Mediator;
 using Taska.Core.Application.Features.Companies.DTOs;
 using Taska.Core.Application.Interfaces;
 using Taska.Core.Domain.Constants;
 using Taska.Core.Domain.Entities;
 using Taska.Core.Domain.Exceptions;
+using Taska.Shared.Events;
 
 namespace Taska.Core.Application.Features.Companies.Commands;
 
-public class CreateCompanyCommandHandler(ICompanyRepository companyRepository, ICurrentUser currentUser) : IRequestHandler<CreateCompanyCommand, CompanyResult>
+public class CreateCompanyCommandHandler(ICompanyRepository companyRepository, ICurrentUser currentUser, IPublishEndpoint publishEndpoint) : IRequestHandler<CreateCompanyCommand, CompanyResult>
 {
     public async ValueTask<CompanyResult> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
     {
@@ -29,6 +31,8 @@ public class CreateCompanyCommandHandler(ICompanyRepository companyRepository, I
         company.CreatedBy = currentUser.UserId;
 
         var created = await companyRepository.AddAsync(company, cancellationToken);
+
+        await publishEndpoint.Publish(new CompanyCreatedEvent(currentUser.UserId, company.Id), cancellationToken);
 
         return created.Adapt<CompanyResult>();
     }

@@ -8,8 +8,6 @@ namespace Taska.Identity.Application.Features.Users.Commands;
 
 public class RegisterCommandHandler(UserManager<User> userManager) : IRequestHandler<RegisterCommand, RegisterResult>
 {
-    private readonly UserManager<User> _userManager = userManager;
-
     public async ValueTask<RegisterResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         var user = new User
@@ -20,10 +18,10 @@ public class RegisterCommandHandler(UserManager<User> userManager) : IRequestHan
             UserName = request.Email,
             CompanyId = request.CompanyId,
             CreatedAt = DateTime.UtcNow,
-            SystemRole = Domain.Enums.SystemRole.Member
+            SystemRole = Domain.Enums.SystemRole.CompanyAdmin
         };
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        var result = await userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
         {

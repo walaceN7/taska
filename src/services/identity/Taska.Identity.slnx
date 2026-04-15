@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../../shared/Taska.Shared/Taska.Shared/Taska.Shared.csproj" />
   <Project Path="Taska.Identity.API/Taska.Identity.API.csproj" />
   <Project Path="Taska.Identity.Application/Taska.Identity.Application.csproj" />
   <Project Path="Taska.Identity.Domain/Taska.Identity.Domain.csproj" />

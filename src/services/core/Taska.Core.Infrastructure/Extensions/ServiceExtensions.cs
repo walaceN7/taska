@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +45,23 @@ public static class ServiceExtensions
                     Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)),
                 ClockSkew = TimeSpan.Zero
             };
+        });
+
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                var host = configuration["RabbitMQ:Host"] ?? "localhost";
+                var port = configuration.GetValue<ushort>("RabbitMQ:Port", 5672);
+
+                cfg.Host(host, port, "/", h =>
+                {
+                    h.Username(configuration["RabbitMQ:Username"] ?? "taska");
+                    h.Password(configuration["RabbitMQ:Password"]!);
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
         });
 
         services.AddAuthorization();

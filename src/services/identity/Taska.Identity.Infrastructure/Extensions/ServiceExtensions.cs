@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Taska.Identity.Application.Features.Users.Events;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
 using Taska.Identity.Infrastructure.Configurations;
@@ -40,8 +42,12 @@ public static class ServiceExtensions
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
            .UseSnakeCaseNamingConvention());
 
+        services.AddHttpContextAccessor();
+
+        services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IInvitationRepository, InvitationRepository>();
 
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
 
@@ -65,6 +71,28 @@ public static class ServiceExtensions
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)),
                 ClockSkew = TimeSpan.Zero
             };
+        });
+
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumer<CompanyCreatedEventConsumer>();
+
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                var host = configuration["RabbitMQ:Host"] ?? "localhost";
+                var port = configuration.GetValue<ushort>("RabbitMQ:Port", 5672);
+
+                cfg.Host(host, port, "/", h =>
+                {
+                    h.Username(configuration["RabbitMQ:Username"] ?? "taska");
+                    h.Password(configuration["RabbitMQ:Password"]!);
+                });
+
+                cfg.ReceiveEndpoint("identity-company-created", e =>
+                {
+                    e.ConfigureConsumer<CompanyCreatedEventConsumer>(context);
+                });
+            });
         });
 
         services.AddAuthorization();

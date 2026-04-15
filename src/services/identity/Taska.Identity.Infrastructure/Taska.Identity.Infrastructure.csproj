@@ -2,6 +2,9 @@
 
   <ItemGroup>
     <PackageReference Include="EFCore.NamingConventions" Version="10.0.1" />
+    <PackageReference Include="MailKit" Version="4.15.1" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="9.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.5" />
@@ -15,6 +18,16 @@
   <ItemGroup>
     <ProjectReference Include="..\Taska.Identity.Domain\Taska.Identity.Domain.csproj" />
     <ProjectReference Include="..\Taska.Identity.Application\Taska.Identity.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Templates\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\InvitationEmail.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <PropertyGroup>

@@ -4,6 +4,7 @@
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Mapster" Version="10.0.7" />
+    <PackageReference Include="MassTransit.Abstractions" Version="9.1.0" />
     <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
     <PackageReference Include="Mediator.SourceGenerator" Version="3.0.2">
       <PrivateAssets>all</PrivateAssets>
@@ -12,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\shared\Taska.Shared\Taska.Shared\Taska.Shared.csproj" />
     <ProjectReference Include="..\Taska.Identity.Domain\Taska.Identity.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Invitations\" />
     <Folder Include="Mappings\" />
     <Folder Include="Queries\" />
   </ItemGroup>

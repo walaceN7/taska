@@ -1,0 +1,32 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Taska.Identity.Application.Interfaces;
+using Taska.Identity.Domain.Entities;
+using Taska.Identity.Infrastructure.Persistence;
+
+namespace Taska.Identity.Infrastructure.Repositories;
+
+public class InvitationRepository(TaskaIdentityDbContext context) : IInvitationRepository
+{
+    public async ValueTask<Invitation> AddAsync(Invitation invitation, CancellationToken cancellationToken = default)
+    {
+        await context.Invitations.AddAsync(invitation, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+        return invitation;
+    }    
+
+    public async ValueTask<bool> HasPendingInvitationAsync(string email, Guid companyId, CancellationToken cancellationToken = default)
+    {
+        return await context.Invitations.AnyAsync(i => i.Email == email && i.CompanyId == companyId && i.AcceptedAt == null, cancellationToken);
+    }
+
+    public async ValueTask<Invitation?> GetByTokenAsync(string token, CancellationToken cancellationToken = default)
+    {
+        return await context.Invitations.FirstOrDefaultAsync(i => i.Token == token, cancellationToken);
+    }
+
+    public async ValueTask<Invitation> UpdateAsync(Invitation invitation, CancellationToken cancellationToken = default)
+    {
+        await context.SaveChangesAsync(cancellationToken);
+        return invitation;
+    }
+}

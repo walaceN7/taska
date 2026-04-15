@@ -2,7 +2,7 @@
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Taska.Identity.Application.Behaviors;
-using Taska.Identity.Application.Validators;
+using Taska.Identity.Application.Features.Users.Validators;
 
 namespace Taska.Identity.Application.Extensions;
 
