@@ -1,6 +1,7 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Taska.Core.Application.Features.Boards.Queries;
 using Taska.Core.Application.Features.Projects.Commands;
 using Taska.Core.Application.Features.Projects.Queries;
 
@@ -45,6 +46,13 @@ public class ProjectController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> AddMember(Guid id, [FromBody] AddProjectMemberCommand command)
     {
         var result = await _mediator.Send(command with { ProjectId = id });
+        return Ok(result);
+    }
+
+    [HttpGet("{projectId}/boards")]
+    public async Task<IActionResult> GetBoards(Guid projectId)
+    {
+        var result = await _mediator.Send(new GetBoardsByProjectQuery(projectId));
         return Ok(result);
     }
 }

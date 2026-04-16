@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Taska.Core.Application.Interfaces;
 using Taska.Core.Domain.Entities;
 
 namespace Taska.Core.Infrastructure.Persistence;
 
-public class TaskaCoreDbContext(DbContextOptions<TaskaCoreDbContext> options) : DbContext(options)
+public class TaskaCoreDbContext(DbContextOptions<TaskaCoreDbContext> options, ICurrentUser currentUser) : DbContext(options)
 {
     public DbSet<Company> Companies { get; set; }
     public DbSet<Team> Teams { get; set; }
@@ -23,5 +24,25 @@ public class TaskaCoreDbContext(DbContextOptions<TaskaCoreDbContext> options) : 
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(typeof(TaskaCoreDbContext).Assembly);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker.Entries<BaseEntity>();
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedBy = currentUser.UserId;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+                entry.Entity.UpdatedBy = currentUser.UserId;
+            }
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
     }
 }

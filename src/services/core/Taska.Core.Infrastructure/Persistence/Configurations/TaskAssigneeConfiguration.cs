@@ -12,6 +12,7 @@ public class TaskAssigneeConfiguration : IEntityTypeConfiguration<TaskAssignee>
 
         builder.HasOne(ta => ta.Task)
             .WithMany(t => t.TaskAssignees)
-            .HasForeignKey(ta => ta.TaskId);
+            .HasForeignKey(ta => ta.TaskId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -21,10 +21,12 @@ public static class ServiceExtensions
                    .UseSnakeCaseNamingConvention());
 
         services.AddHttpContextAccessor();
-        services.AddScoped<ICurrentUser, CurrentUser>();
 
+        services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<IBoardRepository, BoardRepository>();
+        services.AddScoped<IColumnRepository, ColumnRepository>();
 
         services.AddAuthentication(options =>
         {

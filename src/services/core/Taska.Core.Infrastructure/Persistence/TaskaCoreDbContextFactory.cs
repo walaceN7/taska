@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Taska.Core.Application.Interfaces;
 
 namespace Taska.Core.Infrastructure.Persistence;
 
@@ -20,6 +21,19 @@ public class TaskaCoreDbContextFactory : IDesignTimeDbContextFactory<TaskaCoreDb
             .UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
             .UseSnakeCaseNamingConvention();
 
-        return new TaskaCoreDbContext(optionsBuilder.Options);
+        var dummyUser = new DesignTimeCurrentUser();
+
+        return new TaskaCoreDbContext(optionsBuilder.Options, dummyUser);
+    }
+
+    private class DesignTimeCurrentUser : ICurrentUser
+    {
+        public Guid UserId => Guid.Empty;
+
+        public Guid? CompanyId => Guid.Empty;
+
+        public string Email => string.Empty;
+
+        public string SystemRole => string.Empty;
     }
 }

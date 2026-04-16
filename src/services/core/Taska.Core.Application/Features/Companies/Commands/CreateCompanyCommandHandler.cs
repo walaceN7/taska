@@ -28,7 +28,6 @@ public class CreateCompanyCommandHandler(ICompanyRepository companyRepository, I
         }
 
         var company = request.Adapt<Company>();
-        company.CreatedBy = currentUser.UserId;
 
         var created = await companyRepository.AddAsync(company, cancellationToken);
 

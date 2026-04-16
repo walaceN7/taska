@@ -7,7 +7,7 @@ using Taska.Core.Domain.Exceptions;
 
 namespace Taska.Core.Application.Features.Projects.Commands;
 
-public class AddProjectMemberCommandHandler(IProjectRepository projectRepository, ICurrentUser currentUser) : IRequestHandler<AddProjectMemberCommand, ProjectResult>
+public class AddProjectMemberCommandHandler(IProjectRepository projectRepository) : IRequestHandler<AddProjectMemberCommand, ProjectResult>
 {  
     public async ValueTask<ProjectResult> Handle(AddProjectMemberCommand request, CancellationToken cancellationToken)
     {

@@ -12,6 +12,7 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
 
         builder.HasOne(tm => tm.Team)
             .WithMany(t => t.TeamMembers)
-            .HasForeignKey(tm => tm.TeamId);
+            .HasForeignKey(tm => tm.TeamId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

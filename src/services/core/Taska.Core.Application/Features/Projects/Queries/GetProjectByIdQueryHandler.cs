@@ -6,7 +6,7 @@ using Taska.Core.Domain.Exceptions;
 
 namespace Taska.Core.Application.Features.Projects.Queries;
 
-public class GetProjectByIdQueryHandler(IProjectRepository projectRepository, ICurrentUser currentUser) : IRequestHandler<GetProjectByIdQuery, ProjectResult>
+public class GetProjectByIdQueryHandler(IProjectRepository projectRepository) : IRequestHandler<GetProjectByIdQuery, ProjectResult>
 {
     public async ValueTask<ProjectResult> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
     {

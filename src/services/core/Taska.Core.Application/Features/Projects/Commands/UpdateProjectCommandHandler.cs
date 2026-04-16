@@ -6,7 +6,7 @@ using Taska.Core.Domain.Exceptions;
 
 namespace Taska.Core.Application.Features.Projects.Commands;
 
-public class UpdateProjectCommandHandler(IProjectRepository projectRepository, ICurrentUser currentUser) : IRequestHandler<UpdateProjectCommand, ProjectResult>
+public class UpdateProjectCommandHandler(IProjectRepository projectRepository) : IRequestHandler<UpdateProjectCommand, ProjectResult>
 {
     public async ValueTask<ProjectResult> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
     {
@@ -26,9 +26,6 @@ public class UpdateProjectCommandHandler(IProjectRepository projectRepository, I
 
         if (request.Status is not null) 
             result.Status = request.Status.Value;
-
-        result.UpdatedBy = currentUser.UserId;
-        result.UpdatedAt = DateTime.UtcNow;
 
         await projectRepository.UpdateAsync(result, cancellationToken);
 

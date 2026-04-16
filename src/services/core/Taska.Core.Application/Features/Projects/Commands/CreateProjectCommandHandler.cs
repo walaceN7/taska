@@ -12,7 +12,6 @@ public class CreateProjectCommandHandler(IProjectRepository projectRepository, I
     public async ValueTask<ProjectResult> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
     {
         var project = request.Adapt<Project>();
-        project.CreatedBy = currentUser.UserId;
         project.CompanyId = currentUser.CompanyId 
             ?? throw new UnauthorizedException("User does not belong to a company");
 

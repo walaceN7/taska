@@ -6,7 +6,7 @@ using Taska.Core.Domain.Exceptions;
 
 namespace Taska.Core.Application.Features.Companies.Commands;
 
-public class UpdateCompanyCommandHandler(ICompanyRepository companyRepository, ICurrentUser currentUser) : IRequestHandler<UpdateCompanyCommand, CompanyResult>
+public class UpdateCompanyCommandHandler(ICompanyRepository companyRepository) : IRequestHandler<UpdateCompanyCommand, CompanyResult>
 {
     public async ValueTask<CompanyResult> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
     {
@@ -16,9 +16,6 @@ public class UpdateCompanyCommandHandler(ICompanyRepository companyRepository, I
 
         if (request.LogoUrl is not null) 
             result.LogoUrl = request.LogoUrl;
-
-        result.UpdatedBy = currentUser.UserId;
-        result.UpdatedAt = DateTime.UtcNow;
 
         await companyRepository.UpdateAsync(result, cancellationToken);
 
