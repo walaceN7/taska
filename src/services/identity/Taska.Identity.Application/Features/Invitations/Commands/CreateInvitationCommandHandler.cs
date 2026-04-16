@@ -3,8 +3,8 @@ using Mediator;
 using Taska.Identity.Application.Features.Invitations.DTOs;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
-using Taska.Identity.Domain.Enums;
 using Taska.Identity.Domain.Exceptions;
+using Taska.Shared.Enums;
 
 namespace Taska.Identity.Application.Features.Invitations.Commands;
 

@@ -1,4 +1,4 @@
-﻿namespace Taska.Core.Domain.Exceptions;
+﻿namespace Taska.Shared.Exceptions;
 
 public class UnauthorizedException(string message) : Exception(message)
 {

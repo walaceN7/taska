@@ -3,10 +3,10 @@ using MassTransit;
 using Mediator;
 using Taska.Core.Application.Features.Companies.DTOs;
 using Taska.Core.Application.Interfaces;
-using Taska.Core.Domain.Constants;
 using Taska.Core.Domain.Entities;
-using Taska.Core.Domain.Exceptions;
+using Taska.Shared.Enums;
 using Taska.Shared.Events;
+using Taska.Shared.Exceptions;
 
 namespace Taska.Core.Application.Features.Companies.Commands;
 
@@ -14,7 +14,7 @@ public class CreateCompanyCommandHandler(ICompanyRepository companyRepository, I
 {
     public async ValueTask<CompanyResult> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
     {
-        if (currentUser.SystemRole != SystemRoles.SaasAdmin && currentUser.SystemRole != SystemRoles.CompanyAdmin)
+        if (currentUser.SystemRole != SystemRole.SaasAdmin.ToString() && currentUser.SystemRole != SystemRole.CompanyAdmin.ToString())
             throw new UnauthorizedException("Only admins can create a company");
 
         if (currentUser.CompanyId.HasValue)

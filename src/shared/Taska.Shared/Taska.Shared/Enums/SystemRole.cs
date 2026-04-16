@@ -1,4 +1,4 @@
-﻿namespace Taska.Identity.Domain.Enums;
+﻿namespace Taska.Shared.Enums;
 
 public enum SystemRole
 {

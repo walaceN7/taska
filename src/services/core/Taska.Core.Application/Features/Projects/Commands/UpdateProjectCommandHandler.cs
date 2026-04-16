@@ -2,7 +2,7 @@
 using Mediator;
 using Taska.Core.Application.Features.Projects.DTOs;
 using Taska.Core.Application.Interfaces;
-using Taska.Core.Domain.Exceptions;
+using Taska.Shared.Exceptions;
 
 namespace Taska.Core.Application.Features.Projects.Commands;
 

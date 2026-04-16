@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
-using Taska.Core.Domain.Exceptions;
+using Taska.Shared.Exceptions;
 
 namespace Taska.Core.API.Middlewares;
 

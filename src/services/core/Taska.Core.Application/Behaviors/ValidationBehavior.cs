@@ -22,7 +22,7 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
         if (errors.Any())
         {
             var errorMessages = string.Join(", ", errors.Select(e => e.ErrorMessage));
-            throw new Domain.Exceptions.ValidationException(errorMessages);
+            throw new Shared.Exceptions.ValidationException(errorMessages);
         }
 
         return await next(message, cancellationToken);
