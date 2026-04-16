@@ -1,6 +1,8 @@
-﻿namespace Taska.Core.Domain.Entities;
+﻿using Taska.Core.Domain.Interfaces;
 
-public class Team : BaseEntity
+namespace Taska.Core.Domain.Entities;
+
+public class Team : BaseEntity, IMustHaveCompany
 {
     public required string Name { get; set; }
     public string? Description { get; set; }

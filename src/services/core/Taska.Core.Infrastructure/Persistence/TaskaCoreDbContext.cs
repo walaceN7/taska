@@ -24,6 +24,12 @@ public class TaskaCoreDbContext(DbContextOptions<TaskaCoreDbContext> options, IC
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(typeof(TaskaCoreDbContext).Assembly);
+
+        builder.Entity<Project>().HasQueryFilter(p =>
+            p.CompanyId == currentUser.CompanyId && p.IsActive);
+
+        builder.Entity<Team>().HasQueryFilter(t =>
+            t.CompanyId == currentUser.CompanyId && t.IsActive);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

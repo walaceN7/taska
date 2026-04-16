@@ -1,8 +1,9 @@
 ﻿using Taska.Core.Domain.Enums;
+using Taska.Core.Domain.Interfaces;
 
 namespace Taska.Core.Domain.Entities;
 
-public class Project : BaseEntity
+public class Project : BaseEntity, IMustHaveCompany
 {
     public required string Name { get; set; }
     public string? Description { get; set; }
