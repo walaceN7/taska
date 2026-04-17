@@ -21,10 +21,6 @@ public class ColumnRepository(TaskaCoreDbContext context) : IColumnRepository
 
     public async Task<int> GetNextOrderAsync(Guid boardId, CancellationToken cancellationToken = default)
     {
-        var maxOrder = await context.Columns
-            .Where(c => c.BoardId == boardId)
-            .MaxAsync(c => (int?)c.Order, cancellationToken);
-
-        return (maxOrder ?? -1) + 1;
+        return await context.Columns.Where(c => c.BoardId == boardId).MaxAsync(c => (int?)c.Order, cancellationToken) + 1 ?? 0;
     }
 }
