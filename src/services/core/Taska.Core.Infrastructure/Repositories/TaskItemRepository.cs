@@ -34,5 +34,17 @@ public class TaskItemRepository(TaskaCoreDbContext context) : ITaskItemRepositor
     public async Task<int> GetNextOrderAsync(Guid columnId, CancellationToken cancellationToken = default)
     {
         return await context.Tasks.Where(t => t.ColumnId == columnId).MaxAsync(t => (int?)t.Order, cancellationToken) + 1 ?? 0;
-    }    
+    }
+
+    public async Task ShiftOrdersAsync(Guid columnId, int startOrder, int? endOrder, int shiftAmount, CancellationToken cancellationToken = default)
+    {
+        var query = context.Tasks.Where(t => t.ColumnId == columnId && t.Order >= startOrder);
+
+        if (endOrder.HasValue)
+        {
+            query = query.Where(t => t.Order <= endOrder.Value);
+        }
+
+        await query.ExecuteUpdateAsync(s => s.SetProperty(t => t.Order, t => t.Order + shiftAmount), cancellationToken);
+    }
 }
