@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Amazon.S3;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +33,25 @@ public static class ServiceExtensions
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IAttachmentRepository, AttachmentRepository>();
         services.AddScoped<ITaskAssigneeRepository, TaskAssigneeRepository>();
+
+        var s3Config = new AmazonS3Config
+        {
+            ServiceURL = configuration["Storage:ServiceURL"],
+            ForcePathStyle = true
+        };
+                
+        services.AddSingleton<IAmazonS3>(sp =>
+            new AmazonS3Client(
+                configuration["Storage:AccessKey"],
+                configuration["Storage:SecretKey"],
+                s3Config));
+
+        services.AddScoped<IFileStorageService>(sp =>
+        {
+            var s3Client = sp.GetRequiredService<IAmazonS3>();
+            var bucketName = configuration["Storage:BucketName"] ?? "taska-attachments";
+            return new MinioStorageService(s3Client, bucketName);
+        });
 
         services.AddAuthentication(options =>
         {
