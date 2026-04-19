@@ -15,7 +15,7 @@ public class GetAttachmentsByTaskQueryHandler(IAttachmentRepository repository, 
         foreach (var attachment in attachments)
         {
             var result = attachment.Adapt<AttachmentResult>();
-            result.FileUrl = await storageService.GetPresignedUrlAsync(attachment.FileUrl, cancellationToken);
+            result.FileUrl = await storageService.GetPresignedUrlAsync(attachment.StorageKey, cancellationToken);
             results.Add(result);
         }
 

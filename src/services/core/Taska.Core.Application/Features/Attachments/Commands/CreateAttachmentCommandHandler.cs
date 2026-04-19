@@ -14,14 +14,14 @@ public class CreateAttachmentCommandHandler(IAttachmentRepository repository, IF
         var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
 
         using var stream = request.File.OpenReadStream();
-        var fileUrl = await storageService.UploadAsync(stream, uniqueFileName, request.File.ContentType, cancellationToken);
+        var fileKey = await storageService.UploadAsync(stream, uniqueFileName, request.File.ContentType, cancellationToken);
 
         var attachment = new Attachment
         {
             TaskId = request.TaskId,
             UserId = currentUser.UserId,
             FileName = request.File.FileName,
-            FileUrl = fileUrl,
+            StorageKey = fileKey,
             ContentType = request.File.ContentType,
             FileSize = request.File.Length
         };

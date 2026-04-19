@@ -11,7 +11,7 @@ public class AttachmentConfiguration : BaseEntityConfiguration<Attachment>
         base.Configure(builder);
 
         builder.Property(a => a.FileName).IsRequired().HasMaxLength(255);
-        builder.Property(a => a.FileUrl).IsRequired().HasMaxLength(1000);
+        builder.Property(a => a.StorageKey).IsRequired().HasMaxLength(1000);
         builder.Property(a => a.ContentType).IsRequired().HasMaxLength(100);
 
         builder.HasOne(a => a.Task)

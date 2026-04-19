@@ -5,7 +5,7 @@ namespace Taska.Core.Domain.Entities;
 public class Attachment : BaseEntity
 {
     public required string FileName { get; set; }
-    public required string FileUrl { get; set; }
+    public required string StorageKey { get; set; }
     public long FileSize { get; set; }
     public required string ContentType { get; set; }
     public Guid TaskId { get; set; }

@@ -11,7 +11,7 @@ public class DeleteAttachmentCommandHandler(IAttachmentRepository repository, IF
         var attachment = await repository.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new NotFoundException("Attachment not found.");
                 
-        await storageService.DeleteAsync(attachment.FileUrl, cancellationToken);
+        await storageService.DeleteAsync(attachment.StorageKey, cancellationToken);
                 
         await repository.DeleteAsync(attachment, cancellationToken);
 
