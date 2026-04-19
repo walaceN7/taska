@@ -9,5 +9,6 @@ public interface IProjectRepository
     Task<ICollection<Project>> GetByCompanyAsync(Guid companyId, CancellationToken cancellationToken);
     Task<Project> UpdateAsync(Project project, CancellationToken cancellationToken);
     Task AddMemberAsync(ProjectMember member, CancellationToken cancellationToken);
+    Task RemoveMemberAsync(Project project, Guid userId, CancellationToken cancellationToken);
     Task<bool> IsMemberAsync(Guid projectId, Guid userId, CancellationToken cancellationToken);
 }

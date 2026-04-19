@@ -14,13 +14,35 @@ public class ColumnRepository(TaskaCoreDbContext context) : IColumnRepository
         return column;
     }
 
+    public async Task<bool> DeleteAsync(Column column, CancellationToken cancellationToken = default)
+    {
+        column.IsActive = !column.IsActive;
+        context.Update(column);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
+
     public async Task<List<Column>> GetByBoardIdAsync(Guid boardId, CancellationToken cancellationToken = default)
     {
         return await context.Columns.Where(c => c.BoardId == boardId).OrderBy(c => c.Order).AsNoTracking().ToListAsync(cancellationToken);
     }
 
+    public async Task<Column?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.Columns.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+    }
+
     public async Task<int> GetNextOrderAsync(Guid boardId, CancellationToken cancellationToken = default)
     {
         return await context.Columns.Where(c => c.BoardId == boardId).MaxAsync(c => (int?)c.Order, cancellationToken) + 1 ?? 0;
+    }
+
+    public async Task<Column> UpdateAsync(Column column, CancellationToken cancellationToken = default)
+    {
+        context.Update(column);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return column;
     }
 }

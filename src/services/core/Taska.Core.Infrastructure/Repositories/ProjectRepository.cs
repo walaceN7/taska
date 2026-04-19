@@ -47,6 +47,15 @@ public class ProjectRepository(TaskaCoreDbContext context) : IProjectRepository
         await context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task RemoveMemberAsync(Project project, Guid userId, CancellationToken cancellationToken)
+    {
+        var member = project.ProjectMembers.FirstOrDefault(m => m.UserId == userId);
+        if (member != null)
+        {
+            context.ProjectMembers.Remove(member);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+    }
     public async Task<bool> IsMemberAsync(Guid projectId, Guid userId, CancellationToken cancellationToken)
     {
         return await context.ProjectMembers.AnyAsync(pm => pm.ProjectId == projectId && pm.UserId == userId, cancellationToken);

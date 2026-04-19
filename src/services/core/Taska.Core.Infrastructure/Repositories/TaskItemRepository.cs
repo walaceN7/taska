@@ -47,4 +47,18 @@ public class TaskItemRepository(TaskaCoreDbContext context) : ITaskItemRepositor
 
         await query.ExecuteUpdateAsync(s => s.SetProperty(t => t.Order, t => t.Order + shiftAmount), cancellationToken);
     }
+
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var taskItem = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
+        if (taskItem == null)
+        {
+            return false;
+        }
+
+        taskItem.IsActive = !taskItem.IsActive;
+        context.Update(taskItem);
+        await context.SaveChangesAsync(cancellationToken);
+        return true;
+    }
 }

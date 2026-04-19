@@ -10,6 +10,7 @@ using Taska.Core.Application.Features.Checklists.Queries;
 using Taska.Core.Application.Features.Comments.Commands;
 using Taska.Core.Application.Features.Comments.Queries;
 using Taska.Core.Application.Features.TaskItems.Commands;
+using Taska.Core.Application.Features.TaskItems.Queries;
 
 namespace Taska.Core.API.Controllers;
 
@@ -27,6 +28,27 @@ public class TaskItemController(IMediator mediator) : ControllerBase
     {
         var result = await mediator.Send(command with { TaskId = taskId });
         return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTaskById(Guid id)
+    {
+        var result = await mediator.Send(new GetTaskItemByIdQuery(id));
+        return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateTask(Guid id, [FromBody] UpdateTaskItemCommand command)
+    {
+        var result = await mediator.Send(command with { Id = id });
+        return Ok(result);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTask(Guid id)
+    {
+        await mediator.Send(new DeleteTaskItemCommand(id));
+        return NoContent();
     }
 
     // ==========================================

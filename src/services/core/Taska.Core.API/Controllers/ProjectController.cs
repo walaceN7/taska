@@ -55,4 +55,11 @@ public class ProjectController(IMediator mediator) : ControllerBase
         var result = await _mediator.Send(new GetBoardsByProjectQuery(projectId));
         return Ok(result);
     }
+
+    [HttpDelete("{projectId}/members/{userId}")]
+    public async Task<IActionResult> RemoveMember(Guid projectId, Guid userId)
+    {
+        await _mediator.Send(new RemoveProjectMemberCommand(projectId, userId));
+        return NoContent();
+    }
 }

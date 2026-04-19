@@ -10,4 +10,5 @@ public interface ITaskItemRepository
     Task<List<TaskItem>> GetByColumnIdAsync(Guid columnId, CancellationToken cancellationToken = default);
     Task<int> GetNextOrderAsync(Guid columnId, CancellationToken cancellationToken = default);
     Task ShiftOrdersAsync(Guid columnId, int startOrder, int? endOrder, int shiftAmount, CancellationToken cancellationToken = default);
+    Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

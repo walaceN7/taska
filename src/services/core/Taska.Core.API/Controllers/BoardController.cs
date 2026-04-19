@@ -24,4 +24,18 @@ public class BoardController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(command with { BoardId = boardId });
         return Ok(result);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateBoard(Guid id, [FromBody] UpdateBoardCommand command)
+    {
+        var result = await mediator.Send(command with { Id = id });
+        return Ok(result);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBoard(Guid id)
+    {
+        await mediator.Send(new DeleteBoardCommand(id));
+        return NoContent();
+    }
 }

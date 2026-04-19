@@ -29,4 +29,13 @@ public class BoardRepository(TaskaCoreDbContext context) : IBoardRepository
         context.Boards.Update(board);
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<bool> DeleteAsync(Board board, CancellationToken cancellationToken = default)
+    {
+        board.IsActive = !board.IsActive;
+
+        context.Update(board);
+        await context.SaveChangesAsync(cancellationToken);
+        return true;
+    }
 }
