@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 using Taska.Identity.API.Middlewares;
 using Taska.Identity.Application.Extensions;
+using Taska.Identity.Infrastructure.Data;
 using Taska.Identity.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,5 +45,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
+
+await IdentityDataSeeder.SeedSaasAdminAsync(app.Services, app.Configuration);
 
 app.Run();
