@@ -16,7 +16,7 @@ public class ColumnController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> CreateTask(Guid columnId, [FromBody] CreateTaskItemCommand command)
     {
         var result = await mediator.Send(command with { ColumnId = columnId });
-        return Ok(result);
+        return CreatedAtAction(nameof(CreateTask), result);
     }
 
     [HttpGet("{columnId}/tasks")]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Taska.Identity.Application.Features.Users.DTOs;
 using Taska.Identity.Domain.Entities;
 using Taska.Identity.Domain.Exceptions;
+using Taska.Shared.Enums;
 
 namespace Taska.Identity.Application.Features.Users.Commands;
 
@@ -16,9 +17,9 @@ public class RegisterCommandHandler(UserManager<User> userManager) : IRequestHan
             LastName = request.LastName,
             Email = request.Email,
             UserName = request.Email,
-            CompanyId = request.CompanyId,
+            CompanyId = null,
             CreatedAt = DateTime.UtcNow,
-            SystemRole = Domain.Enums.SystemRole.CompanyAdmin
+            SystemRole = SystemRole.CompanyAdmin
         };
 
         var result = await userManager.CreateAsync(user, request.Password);

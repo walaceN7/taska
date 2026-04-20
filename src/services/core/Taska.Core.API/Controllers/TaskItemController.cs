@@ -1,5 +1,6 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Taska.Core.Application.Features.Assignees.Commands;
 using Taska.Core.Application.Features.Assignees.Queries;
@@ -59,7 +60,7 @@ public class TaskItemController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> CreateChecklistItem(Guid taskId, [FromBody] CreateChecklistItemCommand command)
     {
         var result = await mediator.Send(command with { TaskId = taskId });
-        return Ok(result);
+        return CreatedAtAction(nameof(CreateChecklistItem), result);
     }
 
     [HttpGet("{taskId}/checklists")]
@@ -91,7 +92,7 @@ public class TaskItemController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> CreateComment(Guid taskId, [FromBody] CreateCommentCommand command)
     {
         var result = await mediator.Send(command with { TaskId = taskId });
-        return Ok(result);
+        return CreatedAtAction(nameof(CreateComment), result);
     }
 
     [HttpGet("{taskId}/comments")]
@@ -128,7 +129,7 @@ public class TaskItemController(IMediator mediator) : ControllerBase
         var command = new CreateAttachmentCommand(taskId, file);
         var result = await mediator.Send(command);
 
-        return Ok(result);
+        return CreatedAtAction(nameof(CreateAttachment), result);
     }
 
     [HttpGet("{taskId}/attachments")]

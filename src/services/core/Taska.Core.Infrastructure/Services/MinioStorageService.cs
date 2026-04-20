@@ -26,7 +26,7 @@ public class MinioStorageService(IAmazonS3 s3Client, string bucketName) : IFileS
             Key = fileName,
             InputStream = fileStream,
             ContentType = contentType,            
-            DisablePayloadSigning = true
+            //DisablePayloadSigning = true
         };
 
         await s3Client.PutObjectAsync(request, cancellationToken);
@@ -51,7 +51,8 @@ public class MinioStorageService(IAmazonS3 s3Client, string bucketName) : IFileS
         {
             BucketName = bucketName,
             Key = fileName,
-            Expires = DateTime.UtcNow.AddMinutes(15)
+            Expires = DateTime.UtcNow.AddMinutes(15),
+            Protocol = Protocol.HTTP
         };
 
         var url = s3Client.GetPreSignedURL(request);

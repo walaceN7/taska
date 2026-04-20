@@ -4,6 +4,7 @@ using Taska.Identity.Application.Features.Users.DTOs;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
 using Taska.Identity.Domain.Exceptions;
+using Taska.Shared.Enums;
 
 namespace Taska.Identity.Application.Features.Users.Commands;
 
@@ -27,7 +28,7 @@ public class RegisterWithInvitationCommandHandler(IInvitationRepository invitati
             UserName = invitation.Email,
             CompanyId = invitation.CompanyId,
             CreatedAt = DateTime.UtcNow,
-            SystemRole = Domain.Enums.SystemRole.Member
+            SystemRole = SystemRole.Member
         };
 
         var result = await userManager.CreateAsync(user, request.Password);

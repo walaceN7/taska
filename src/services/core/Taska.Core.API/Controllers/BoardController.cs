@@ -15,7 +15,7 @@ public class BoardController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateBoardCommand command)
     {
         var result = await mediator.Send(command);
-        return CreatedAtAction("", result);
+        return CreatedAtAction(nameof(Create), result);
     }
 
     [HttpPost("{boardId}/columns")]

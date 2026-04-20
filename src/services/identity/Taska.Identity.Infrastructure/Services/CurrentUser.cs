@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Taska.Identity.Application.Interfaces;
-using Taska.Identity.Domain.Enums;
+using Taska.Shared.Enums;
 
 namespace Taska.Identity.Infrastructure.Services;
 

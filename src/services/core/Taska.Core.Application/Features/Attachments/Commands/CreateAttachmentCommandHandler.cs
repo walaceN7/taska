@@ -27,6 +27,9 @@ public class CreateAttachmentCommandHandler(IAttachmentRepository repository, IF
         };
 
         var created = await repository.AddAsync(attachment, cancellationToken);
-        return created.Adapt<AttachmentResult>();
+        var result = created.Adapt<AttachmentResult>();        
+        result.FileUrl = await storageService.GetPresignedUrlAsync(created.StorageKey, cancellationToken);
+
+        return result;
     }
 }

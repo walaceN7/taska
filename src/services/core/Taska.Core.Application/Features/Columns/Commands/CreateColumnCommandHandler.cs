@@ -13,7 +13,7 @@ public class CreateColumnCommandHandler(IColumnRepository repository) : IRequest
         var nextOrder = await repository.GetNextOrderAsync(request.BoardId, cancellationToken);
 
         var column = request.Adapt<Column>();
-
+        column.BoardId = request.BoardId;
         column.Order = nextOrder;
 
         var created = await repository.AddAsync(column, cancellationToken);
