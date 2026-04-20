@@ -7,17 +7,15 @@ namespace Taska.Identity.Infrastructure.Repositories;
 
 public class RefreshTokenRepository(TaskaIdentityDbContext context) : IRefreshTokenRepository
 {
-    private readonly TaskaIdentityDbContext _context = context;
-
     public async Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
     {
-        await _context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken)
     {
-        return await _context.RefreshTokens
+        return await context.RefreshTokens
             .Include(r => r.User)
             .FirstOrDefaultAsync(r => r.Token == token, cancellationToken);
     }
@@ -25,6 +23,6 @@ public class RefreshTokenRepository(TaskaIdentityDbContext context) : IRefreshTo
     public async Task RevokeAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
     {
         refreshToken.IsRevoked = true;
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

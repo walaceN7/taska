@@ -1,17 +1,20 @@
 ﻿using Mapster;
+using MassTransit;
 using Mediator;
 using Taska.Core.Application.Features.TaskItems.DTOs;
 using Taska.Core.Application.Interfaces;
+using Taska.Shared.Events;
 using Taska.Shared.Exceptions;
 
 namespace Taska.Core.Application.Features.TaskItems.Commands;
 
-public class MoveTaskItemCommandHandler(ITaskItemRepository repository) : IRequestHandler<MoveTaskItemCommand, TaskItemResult>
+public class MoveTaskItemCommandHandler(ITaskItemRepository repository, ICurrentUser currentUser, IPublishEndpoint publishEndpoint) : IRequestHandler<MoveTaskItemCommand, TaskItemResult>
 {
     public async ValueTask<TaskItemResult> Handle(MoveTaskItemCommand request, CancellationToken cancellationToken)
     {
         var task = await repository.GetByIdAsync(request.TaskId, cancellationToken) ?? throw new NotFoundException("Task not found");
                 
+        var originalColumnId = task.ColumnId;
         if (task.ColumnId == request.NewColumnId)
         {
             if (task.Order == request.NewOrder)
@@ -37,6 +40,8 @@ public class MoveTaskItemCommandHandler(ITaskItemRepository repository) : IReque
                 
         task.Order = request.NewOrder;
         var updatedTask = await repository.UpdateAsync(task, cancellationToken);
+
+        await publishEndpoint.Publish(new TaskMovedEvent(task.Id, task.Column.BoardId, originalColumnId, request.NewColumnId, task.Order, currentUser.UserId, DateTime.UtcNow), cancellationToken);
 
         return updatedTask.Adapt<TaskItemResult>();
     }

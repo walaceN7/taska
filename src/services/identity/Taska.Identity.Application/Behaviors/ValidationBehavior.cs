@@ -5,15 +5,13 @@ namespace Taska.Identity.Application.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull, IMessage
 {
-    private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
-
     public async ValueTask<TResponse> Handle(TRequest message, MessageHandlerDelegate<TRequest, TResponse> next, CancellationToken cancellationToken)
     {
-        if (!_validators.Any())
+        if (!validators.Any())
             return await next(message, cancellationToken);
 
         var context = new ValidationContext<TRequest>(message);
-        var errors = _validators
+        var errors = validators
             .Select(v => v.Validate(context))
             .SelectMany(r => r.Errors)
             .Where(e => e != null)

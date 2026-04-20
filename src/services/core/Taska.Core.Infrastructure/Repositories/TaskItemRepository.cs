@@ -16,7 +16,7 @@ public class TaskItemRepository(TaskaCoreDbContext context) : ITaskItemRepositor
 
     public async Task<TaskItem?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Tasks.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
+        return await context.Tasks.Include(t => t.Column).FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
     public async Task<TaskItem> UpdateAsync(TaskItem taskItem, CancellationToken cancellationToken = default)

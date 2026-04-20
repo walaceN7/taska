@@ -11,11 +11,9 @@ namespace Taska.Identity.Infrastructure.Services;
 
 public class JwtService(IConfiguration configuration) : IJwtService
 {
-    private readonly IConfiguration _configuration = configuration;
-
     public string GenerateAccessToken(User user)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!));
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -31,11 +29,11 @@ public class JwtService(IConfiguration configuration) : IJwtService
         };
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
+            issuer: configuration["Jwt:Issuer"],
+            audience: configuration["Jwt:Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(
-                int.Parse(_configuration["Jwt:ExpiryMinutes"]!)),
+                int.Parse(configuration["Jwt:ExpiryMinutes"]!)),
             signingCredentials: credentials
         );
 
