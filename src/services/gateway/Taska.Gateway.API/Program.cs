@@ -29,6 +29,8 @@ builder.Services.AddHealthChecksUI(options =>
 {
     options.SetEvaluationTimeInSeconds(10);
     options.AddHealthCheckEndpoint("Identity API", "https://localhost:7096/health");
+    options.AddHealthCheckEndpoint("Core API", "https://localhost:7206/health");
+    options.AddHealthCheckEndpoint("Notify API", "https://localhost:7230/health");
     options.AddHealthCheckEndpoint("Gateway", "https://localhost:7122/health");
 })
 .AddInMemoryStorage();
