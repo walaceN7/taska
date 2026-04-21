@@ -1,0 +1,13 @@
+{
+    "common": {
+      "loading": "Carregando...",
+      "save": "Salvar",
+      "cancel": "Cancelar"
+    },
+    "auth": {
+      "loginTitle": "Bem-vindo de volta ao Taska",
+      "emailLabel": "Endereço de e-mail",
+      "passwordLabel": "Senha",
+      "loginButton": "Entrar"
+    }
+  }
