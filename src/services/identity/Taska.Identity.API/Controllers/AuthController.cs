@@ -22,7 +22,7 @@ public class AuthController(IMediator mediator) : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None,
             Expires = result.RefreshTokenExpiresAt
         };
         Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
@@ -43,7 +43,7 @@ public class AuthController(IMediator mediator) : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None,
             Expires = result.RefreshTokenExpiresAt
         };
 
@@ -71,7 +71,7 @@ public class AuthController(IMediator mediator) : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None,
             Expires = result.RefreshTokenExpiresAt
         };
                 
@@ -115,7 +115,7 @@ public class AuthController(IMediator mediator) : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None,
             Expires = result.RefreshTokenExpiresAt
         };
         Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
@@ -167,7 +167,7 @@ public class AuthController(IMediator mediator) : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None,
             Expires = result.RefreshTokenExpiresAt
         };
         Response.Cookies.Append("taska_refresh_token", result.RefreshToken, refreshCookieOptions);
@@ -178,7 +178,7 @@ public class AuthController(IMediator mediator) : ControllerBase
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(30)
             };
             Response.Cookies.Append("taska_device_token", result.DeviceToken, deviceCookieOptions);
@@ -201,10 +201,10 @@ public class AuthController(IMediator mediator) : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None,
             Expires = result.RefreshTokenExpiresAt
         };
-        Response.Cookies.Append("refreshToken", result.RefreshToken, cookieOptions);
+        Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
 
         var responseResult = result with { RefreshToken = string.Empty };
 
