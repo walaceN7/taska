@@ -44,6 +44,8 @@ public static class ServiceExtensions
 
         services.AddHttpContextAccessor();
 
+        services.AddHttpClient<ITurnstileService, TurnstileService>();
+
         services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
@@ -88,12 +90,11 @@ public static class ServiceExtensions
                     h.Password(configuration["RabbitMQ:Password"]!);
                 });
 
-                cfg.ReceiveEndpoint("identity-company-created", e =>
-                {
-                    e.ConfigureConsumer<CompanyCreatedEventConsumer>(context);
-                });
+                cfg.ConfigureEndpoints(context);
             });
         });
+
+
 
         services.AddAuthorization();
 

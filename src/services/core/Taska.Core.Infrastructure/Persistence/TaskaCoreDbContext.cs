@@ -39,13 +39,20 @@ public class TaskaCoreDbContext(DbContextOptions<TaskaCoreDbContext> options, IC
         foreach (var entry in entries)
         {
             if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreatedBy = currentUser.UserId;
+            {                
+                if (entry.Entity.CreatedBy == Guid.Empty && currentUser.UserId != Guid.Empty)
+                {
+                    entry.Entity.CreatedBy = currentUser.UserId;
+                }
             }
             else if (entry.State == EntityState.Modified)
             {
                 entry.Entity.UpdatedAt = DateTime.UtcNow;
-                entry.Entity.UpdatedBy = currentUser.UserId;
+                             
+                if (currentUser.UserId != Guid.Empty)
+                {
+                    entry.Entity.UpdatedBy = currentUser.UserId;
+                }
             }
         }
 

@@ -46,4 +46,32 @@ public class SmtpEmailService(IOptions<SmtpSettings> smtpSettings) : IEmailServi
             await smtp.DisconnectAsync(true, cancellationToken);
         }
     }
+
+    public async Task SendPasswordResetEmailAsync(string toEmail, string resetUrl, CancellationToken cancellationToken = default)
+    {
+        var email = new MimeMessage();
+        email.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
+        email.To.Add(new MailboxAddress(toEmail, toEmail));
+        email.Subject = "Reset your Taska password";
+
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "ResetPasswordEmail.html");
+
+        var htmlTemplate = await File.ReadAllTextAsync(templatePath, cancellationToken);
+        var htmlBody = htmlTemplate.Replace("{{ResetUrl}}", resetUrl);
+
+        var builder = new BodyBuilder { HtmlBody = htmlBody };
+        email.Body = builder.ToMessageBody();
+
+        using var smtp = new SmtpClient();
+        try
+        {
+            await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls, cancellationToken);
+            await smtp.AuthenticateAsync(_settings.Username, _settings.Password, cancellationToken);
+            await smtp.SendAsync(email, cancellationToken);
+        }
+        finally
+        {
+            await smtp.DisconnectAsync(true, cancellationToken);
+        }
+    }
 }

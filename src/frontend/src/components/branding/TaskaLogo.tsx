@@ -37,7 +37,7 @@ export function TaskaLogo({ className, iconOnly = false }: TaskaLogoProps) {
       </svg>
 
       {!iconOnly && (
-        <span className="text-3xl font-extrabold tracking-tighter text-foreground">
+        <span className="text-3xl font-extrabold tracking-tighter">
           Task<span className="text-primary">a</span>
         </span>
       )}

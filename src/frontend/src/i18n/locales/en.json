@@ -1,13 +1,58 @@
 {
-    "common": {
-      "loading": "Loading...",
-      "save": "Save",
-      "cancel": "Cancel"
-    },
-    "auth": {
-      "loginTitle": "Welcome back to Taska",
-      "emailLabel": "Email address",
-      "passwordLabel": "Password",
-      "loginButton": "Sign in"
-    }
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "acceptAll": "Accept All",
+    "orContinueWith": "Or continue with",
+    "copyright": "© 2026 Taska Software Inc. All rights reserved."
+  },
+  "auth": {
+    "loginTitle": "Log in to your account",
+    "loginSubtitle": "Enter your details below to access the platform.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "name@company.com",
+    "invalidEmail": "Please enter a valid email address.",
+    "passwordLabel": "Password",
+    "passwordMinLength": "Password must be at least 6 characters.",
+    "forgotPassword": "Forgot your password?",
+    "loginButton": "Sign in",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create a free account",
+    "registerTitle": "Create your workspace",
+    "registerSubtitle": "Start managing projects like a pro.",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "companyNameLabel": "Company / Workspace Name",
+    "companyPlaceholder": "Acme Corp",
+    "planLabel": "Select your plan",
+    "planFreeTitle": "Starter (Free)",
+    "planFreeDesc": "Up to 10 users. Basic features.",
+    "planProTitle": "Pro ($12/user)",
+    "planProDesc": "Unlimited users. Advanced security.",
+    "planEnterpriseTitle": "Enterprise",
+    "planEnterpriseDesc": "Custom solutions and dedicated support.",
+    "registerButton": "Create account",
+    "hasAccount": "Already have an account?",
+    "forgotPasswordTitle": "Forgot your password?",
+    "forgotPasswordSubtitle": "Enter your email and we'll send you a link to reset your password.",
+    "sendLinkButton": "Send reset link",
+    "backToLogin": "Back to login",
+    "resetPasswordTitle": "Reset your password",
+    "resetPasswordSubtitle": "Enter your new password below.",
+    "newPasswordLabel": "New Password",
+    "confirmPasswordLabel": "Confirm New Password",
+    "passwordMismatch": "Passwords do not match.",
+    "resetButton": "Reset password",
+    "planRequired": "Please select a plan.",
+    "rememberMe": "Remember me",
+    "verifySecurity": "Verifying security of the browser..."
+  },
+  "marketing": {
+    "heroTitle": "Manage projects with the fluidity your team deserves.",
+    "heroSubtitle": "Join thousands of companies using Taska to scale their development."
+  },
+  "cookieBanner": {
+    "message": "We use cookies to improve your experience, manage your session, and analyze Taska's traffic. By continuing, you agree to our privacy policy."
   }
+}

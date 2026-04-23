@@ -20,13 +20,15 @@ public class RefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepo
         var newAccessToken = jwtService.GenerateAccessToken(refreshToken.User);
         var newRefreshToken = jwtService.GenerateRefreshToken();
 
+        var newRefreshTokenExpiry = DateTime.UtcNow.Add(refreshToken.ExpiresAt - refreshToken.CreatedAt);
+
         await refreshTokenRepository.AddAsync(new RefreshToken
         {
             Id = Guid.NewGuid(),
             Token = newRefreshToken,
             UserId = refreshToken.UserId,
             CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            ExpiresAt = newRefreshTokenExpiry,
             IsRevoked = false
         }, cancellationToken);
 
@@ -34,6 +36,7 @@ public class RefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepo
             newAccessToken,
             newRefreshToken,
             DateTime.UtcNow.AddMinutes(15),
+            newRefreshTokenExpiry,
             new UserDto(
                 refreshToken.User.Id,
                 $"{refreshToken.User.FirstName} {refreshToken.User.LastName}",

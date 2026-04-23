@@ -1,4 +1,7 @@
+import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { Login } from "@/pages/auth/Login";
+import { Register } from "@/pages/auth/Register";
+import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { Dashboard } from "@/pages/dashboard/Dashboard";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
@@ -12,7 +15,12 @@ export const router = createBrowserRouter([
 
   {
     element: <PublicRoute />,
-    children: [{ path: "/login", element: <Login /> }],
+    children: [
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      { path: "/reset-password", element: <ResetPassword /> },
+    ],
   },
 
   {

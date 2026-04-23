@@ -3,6 +3,7 @@ using Taska.Core.Application.Features.Companies.Commands;
 using Taska.Core.Application.Features.Companies.DTOs;
 using Taska.Core.Domain.Entities;
 using Taska.Core.Domain.Enums;
+using Taska.Shared.Enums;
 
 namespace Taska.Core.Application.Features.Companies.Mappings;
 

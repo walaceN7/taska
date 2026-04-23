@@ -7,32 +7,34 @@ using Taska.Identity.Domain.Exceptions;
 
 namespace Taska.Identity.Application.Features.Users.Commands;
 
-public class LoginCommandHandler(UserManager<User> userManager, IJwtService jwtService, IRefreshTokenRepository refreshTokenRepository) : IRequestHandler<LoginCommand, LoginResult>
+public class LoginCommandHandler(UserManager<User> userManager, IJwtService jwtService, IRefreshTokenRepository refreshTokenRepository, ITurnstileService turnstileService) : IRequestHandler<LoginCommand, LoginResult>
 {
-    private readonly UserManager<User> _userManager = userManager;
-    private readonly IJwtService _jwtService = jwtService;
-    private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
-
     public async ValueTask<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var isHuman = await turnstileService.VerifyTokenAsync(request.TurnstileToken, cancellationToken);
+        if (!isHuman)
+            throw new UnauthorizedException("Falha na verificação de segurança (Bot detectado).");
 
-        if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
+        var user = await userManager.FindByEmailAsync(request.Email);
+        if (user == null || !await userManager.CheckPasswordAsync(user, request.Password))
             throw new UnauthorizedException("Invalid credentials");
 
         user.LastLoginAt = DateTime.UtcNow;
-        await _userManager.UpdateAsync(user);
+        await userManager.UpdateAsync(user);
 
-        var accessToken = _jwtService.GenerateAccessToken(user);
-        var refreshToken = _jwtService.GenerateRefreshToken();
+        var accessToken = jwtService.GenerateAccessToken(user);
+        var refreshToken = jwtService.GenerateRefreshToken();
 
-        await _refreshTokenRepository.AddAsync(new RefreshToken
+        var refreshTokenExpiryDays = request.RememberMe ? 30 : 1;
+        var refreshTokenExpiryDate = DateTime.UtcNow.AddDays(refreshTokenExpiryDays);
+
+        await refreshTokenRepository.AddAsync(new RefreshToken
         {
             Id = Guid.NewGuid(),
             Token = refreshToken,
             UserId = user.Id,
             CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            ExpiresAt = refreshTokenExpiryDate,
             IsRevoked = false
         }, cancellationToken);
 
@@ -40,6 +42,7 @@ public class LoginCommandHandler(UserManager<User> userManager, IJwtService jwtS
             accessToken,
             refreshToken,
             DateTime.UtcNow.AddMinutes(15),
+            refreshTokenExpiryDate,
             new UserDto(
                 user.Id,
                 $"{user.FirstName} {user.LastName}",

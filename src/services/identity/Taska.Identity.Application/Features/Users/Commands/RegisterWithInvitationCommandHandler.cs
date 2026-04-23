@@ -8,7 +8,7 @@ using Taska.Shared.Enums;
 
 namespace Taska.Identity.Application.Features.Users.Commands;
 
-public class RegisterWithInvitationCommandHandler(IInvitationRepository invitationRepository, UserManager<User> userManager) : IRequestHandler<RegisterWithInvitationCommand, RegisterResult>
+public class RegisterWithInvitationCommandHandler(IInvitationRepository invitationRepository, UserManager<User> userManager, IJwtService jwtService, IRefreshTokenRepository refreshTokenRepository) : IRequestHandler<RegisterWithInvitationCommand, RegisterResult>
 {
     public async ValueTask<RegisterResult> Handle(RegisterWithInvitationCommand request, CancellationToken cancellationToken)
     {
@@ -42,6 +42,32 @@ public class RegisterWithInvitationCommandHandler(IInvitationRepository invitati
         invitation.AcceptedAt = DateTime.UtcNow;
         await invitationRepository.UpdateAsync(invitation, cancellationToken);
 
-        return new RegisterResult(user.Id, user.Email!, $"{user.FirstName} {user.LastName}");
+        var accessToken = jwtService.GenerateAccessToken(user);
+        var refreshToken = jwtService.GenerateRefreshToken();
+        var refreshTokenExpiryDate = DateTime.UtcNow.AddDays(7);
+
+        await refreshTokenRepository.AddAsync(new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            Token = refreshToken,
+            UserId = user.Id,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = refreshTokenExpiryDate,
+            IsRevoked = false
+        }, cancellationToken);
+
+        return new RegisterResult(
+            accessToken,
+            refreshToken,
+            refreshTokenExpiryDate,
+            new UserDto(
+                user.Id,
+                $"{user.FirstName} {user.LastName}",
+                user.Email!,
+                user.AvatarUrl,
+                user.SystemRole.ToString(),
+                user.CompanyId
+            )
+        );
     }
 }

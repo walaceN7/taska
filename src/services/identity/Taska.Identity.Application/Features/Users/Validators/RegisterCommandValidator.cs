@@ -25,5 +25,8 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter")
             .Matches("[0-9]").WithMessage("Password must contain at least one number")
             .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character");
+
+        RuleFor(x => x.TurnstileToken)
+            .NotEmpty().WithMessage("Awaiting security verification...");
     }
 }

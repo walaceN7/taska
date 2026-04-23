@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\shared\Taska.Shared\Taska.Shared\Taska.Shared.csproj" />
     <ProjectReference Include="..\Taska.Core.Application\Taska.Core.Application.csproj" />
     <ProjectReference Include="..\Taska.Core.Infrastructure\Taska.Core.Infrastructure.csproj" />
   </ItemGroup>

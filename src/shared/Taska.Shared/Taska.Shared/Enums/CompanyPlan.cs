@@ -1,4 +1,4 @@
-﻿namespace Taska.Core.Domain.Enums;
+﻿namespace Taska.Shared.Enums;
 
 public enum CompanyPlan
 {

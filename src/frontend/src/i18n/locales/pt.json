@@ -1,13 +1,62 @@
 {
-    "common": {
-      "loading": "Carregando...",
-      "save": "Salvar",
-      "cancel": "Cancelar"
-    },
-    "auth": {
-      "loginTitle": "Bem-vindo de volta ao Taska",
-      "emailLabel": "Endereço de e-mail",
-      "passwordLabel": "Senha",
-      "loginButton": "Entrar"
-    }
+  "common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "acceptAll": "Aceitar Todos",
+    "orContinueWith": "Ou continue com",
+    "copyright": "© 2026 Taska Software Inc. Todos os direitos reservados.",
+    "everythingYouNeed": "Tudo o que você precisa para gerenciar seus projetos.",
+    "manageProjects": "Gerencie projetos com a fluidez que sua equipe merece.",
+    "joinThousandsOfCompanies": "Junte-se a milhares de empresas que usam o Taska para escalar seu desenvolvimento.",
+    "tryForFreeOrBoostYourTeam": "Experimente gratuitamente ou impulsione a sua equipa com recursos avançados."
+  },
+  "auth": {
+    "loginTitle": "Acesse a sua conta",
+    "loginSubtitle": "Insira seus dados abaixo para acessar a plataforma.",
+    "emailLabel": "Endereço de e-mail",
+    "emailPlaceholder": "nome@empresa.com",
+    "invalidEmail": "Por favor, insira um e-mail válido.",
+    "passwordLabel": "Senha",
+    "passwordMinLength": "A senha deve ter pelo menos 6 caracteres.",
+    "forgotPassword": "Esqueceu a senha?",
+    "loginButton": "Entrar",
+    "noAccount": "Não tem uma conta?",
+    "createAccount": "Criar conta gratuita",
+    "registerTitle": "Crie o seu workspace",
+    "registerSubtitle": "Comece a gerenciar projetos como um profissional.",
+    "firstNameLabel": "Nome",
+    "lastNameLabel": "Sobrenome",
+    "companyNameLabel": "Nome da Empresa / Workspace",
+    "companyPlaceholder": "Acme Corp",
+    "planLabel": "Escolha o seu plano",
+    "planFreeTitle": "Starter (Grátis)",
+    "planFreeDesc": "Até 10 usuários. Recursos básicos.",
+    "planProTitle": "Pro ($12/usuário)",
+    "planProDesc": "Usuários ilimitados. Segurança avançada.",
+    "planEnterpriseTitle": "Enterprise",
+    "planEnterpriseDesc": "Soluções customizadas e suporte dedicado.",
+    "registerButton": "Criar conta",
+    "hasAccount": "Já tem uma conta?",
+    "forgotPasswordTitle": "Esqueceu a senha?",
+    "forgotPasswordSubtitle": "Insira seu e-mail e enviaremos um link para redefinir sua senha.",
+    "sendLinkButton": "Enviar link de recuperação",
+    "backToLogin": "Voltar para o login",
+    "resetPasswordTitle": "Redefinir sua senha",
+    "resetPasswordSubtitle": "Insira sua nova senha abaixo.",
+    "newPasswordLabel": "Nova Senha",
+    "confirmPasswordLabel": "Confirmar Nova Senha",
+    "passwordMismatch": "As senhas não coincidem.",
+    "resetButton": "Redefinir senha",
+    "planRequired": "Por favor, selecione um plano.",
+    "rememberMe": "Lembre-me",
+    "verifySecurity": "Verificando segurança do navegador..."
+  },
+  "marketing": {
+    "heroTitle": "Gerencie projetos com a fluidez que sua equipe merece.",
+    "heroSubtitle": "Junte-se a milhares de empresas que usam o Taska para escalar seu desenvolvimento."
+  },
+  "cookieBanner": {
+    "message": "Usamos cookies para melhorar sua experiência, gerenciar sua sessão e analisar o tráfego do Taska. Ao continuar, você concorda com nossa política de privacidade."
   }
+}

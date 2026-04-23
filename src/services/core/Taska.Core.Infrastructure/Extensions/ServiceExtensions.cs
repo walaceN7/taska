@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Taska.Core.Application.Events;
 using Taska.Core.Application.Interfaces;
 using Taska.Core.Infrastructure.Persistence;
 using Taska.Core.Infrastructure.Repositories;
@@ -76,6 +77,8 @@ public static class ServiceExtensions
 
         services.AddMassTransit(x =>
         {
+            x.AddConsumer<UserRegisteredEventConsumer>();
+
             x.UsingRabbitMq((context, cfg) =>
             {
                 var host = configuration["RabbitMQ:Host"] ?? "localhost";

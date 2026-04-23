@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Taska.Identity.Application.Features.RefreshTokens.Commands;
 using Taska.Identity.Application.Features.Users.Commands;
+using Taska.Identity.Domain.Exceptions;
 
 namespace Taska.Identity.API.Controllers;
 
@@ -16,27 +17,84 @@ public class AuthController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterCommand command)
     {
         var result = await mediator.Send(command);
-        return CreatedAtAction(nameof(Register), result);
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = result.RefreshTokenExpiresAt
+        };
+        Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
+
+        return Ok(new
+        {
+            message = "Usuário registrado com sucesso. Criando workspace...",
+            user = result.User,
+            accessToken = result.AccessToken
+        });
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginCommand command)
     {
         var result = await mediator.Send(command);
-        return Ok(result);
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = result.RefreshTokenExpiresAt
+        };
+
+        Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
+
+        return Ok(new
+        {
+            message = "Login realizado com sucesso",
+            user = result.User,
+            accessToken = result.AccessToken
+        });
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand command)
-    {
-        var result = await mediator.Send(command);
-        return Ok(result);
+    public async Task<IActionResult> Refresh()
+    {        
+        var refreshToken = Request.Cookies["taska_refresh_token"];
+
+        if (string.IsNullOrEmpty(refreshToken))
+            throw new UnauthorizedException("Refresh token not found.");
+             
+        var result = await mediator.Send(new RefreshTokenCommand(refreshToken));
+                
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = result.RefreshTokenExpiresAt
+        };
+                
+        Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
+                
+        return Ok(new
+        {
+            accessToken = result.AccessToken
+        });
     }
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout([FromBody] LogoutCommand command)
+    public async Task<IActionResult> Logout()
     {
-        await mediator.Send(command);
+        var refreshToken = Request.Cookies["taska_refresh_token"];
+
+        if (!string.IsNullOrEmpty(refreshToken))
+        {            
+            await mediator.Send(new LogoutCommand(refreshToken));
+        }
+        
+        Response.Cookies.Delete("taska_refresh_token");
+
         return NoContent();
     }
 
@@ -53,6 +111,35 @@ public class AuthController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> RegisterWithInvitation([FromBody] RegisterWithInvitationCommand command)
     {
         var result = await mediator.Send(command);
-        return CreatedAtAction("", result);
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = result.RefreshTokenExpiresAt
+        };
+        Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
+
+        return Ok(new
+        {
+            message = "Conta criada e convite aceito com sucesso.",
+            user = result.User,
+            accessToken = result.AccessToken
+        });
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
+    {
+        await mediator.Send(command);
+        return Ok(new { message = "If the email is registered, a reset link has been sent." });
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+    {
+        await mediator.Send(command);
+        return Ok(new { message = "Password has been reset successfully." });
     }
 }

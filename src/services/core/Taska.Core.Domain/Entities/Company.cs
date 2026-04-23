@@ -1,4 +1,4 @@
-﻿using Taska.Core.Domain.Enums;
+﻿using Taska.Shared.Enums;
 
 namespace Taska.Core.Domain.Entities;
 
