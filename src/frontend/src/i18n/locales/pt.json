@@ -50,7 +50,13 @@
     "resetButton": "Redefinir senha",
     "planRequired": "Por favor, selecione um plano.",
     "rememberMe": "Lembre-me",
-    "verifySecurity": "Verificando segurança do navegador..."
+    "verifySecurity": "Verificando segurança do navegador...",
+    "verify2FAPageTitle": "Verificação em Duas Etapas",
+    "verify2FAPageSubtitle": "Digite o código de 6 dígitos gerado pelo seu aplicativo autenticador.",
+    "verify2FACodeLabel": "Código de Autenticação",
+    "verify2FAButton": "Verificar e Entrar",
+    "codeLengthError": "O código deve ter exatamente 6 dígitos",
+    "codeNumericError": "Apenas números são permitidos"    
   },
   "marketing": {
     "heroTitle": "Gerencie projetos com a fluidez que sua equipe merece.",

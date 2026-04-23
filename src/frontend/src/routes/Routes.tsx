@@ -6,6 +6,7 @@ import { Dashboard } from "@/pages/dashboard/Dashboard";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import { Verify2FA } from "@/pages/auth/Verify2FA";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: "/register", element: <Register /> },
       { path: "/forgot-password", element: <ForgotPassword /> },
       { path: "/reset-password", element: <ResetPassword /> },
+      { path: "/verify-2fa", element: <Verify2FA /> },
     ],
   },
 
