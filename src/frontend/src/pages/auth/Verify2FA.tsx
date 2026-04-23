@@ -3,21 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuthStore } from "@/stores/authStore";
+import { useVerify2FAMutation } from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { z } from "zod";
 
 export function Verify2FA() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const location = useLocation();
-  const login = useAuthStore((state) => state.login);
 
   const email = location.state?.email as string | undefined;
+  const twoFactorToken = location.state?.twoFactorToken as string | undefined;
 
   const schema = z.object({
     code: z
@@ -48,12 +47,25 @@ export function Verify2FA() {
     name: "rememberDevice",
   });
 
-  function onSubmit(values: Verify2FAValues) {
-    console.log(`Validating code ${values.code} for ${email}`);
-    console.log(`Remember this device? ${values.rememberDevice}`);
+  const verifyMutation = useVerify2FAMutation();
 
-    login();
-    navigate("/dashboard");
+  function onSubmit(values: Verify2FAValues) {
+    if (!email || !twoFactorToken) return;
+
+    verifyMutation.mutate(
+      {
+        email,
+        code: values.code,
+        twoFactorToken,
+        rememberDevice: values.rememberDevice,
+      },
+      {
+        onError: (error) => {
+          console.error("2FA verification failed:", error);
+          setValue("code", "");
+        },
+      },
+    );
   }
 
   if (!email) {
@@ -118,8 +130,17 @@ export function Verify2FA() {
             </Label>
           </div>
 
-          <Button type="submit" className="w-full" size="lg">
-            {t("auth.verify2FAButton", "Verify & Sign In")}
+          <Button
+            type="submit"
+            className="w-full"
+            size="lg"
+            disabled={verifyMutation.isPending}
+          >
+            {verifyMutation.isPending ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              t("auth.verify2FAButton", "Verify & Sign In")
+            )}
           </Button>
         </form>
 

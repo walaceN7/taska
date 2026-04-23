@@ -53,7 +53,13 @@
     "verify2FAButton": "Verify and Sign In",
     "codeLengthError": "The code must be exactly 6 digits",
     "codeNumericError": "Only numbers are allowed",
-    "verify2FARememberDevice": "Don't ask again on this browser"
+    "verify2FARememberDevice": "Don't ask again on this browser",
+    "invalidCredentials": "Invalid credentials or server error.",
+    "loginSuccess": "Login successful! Welcome back.",
+    "registerSuccess": "Account created successfully!",
+    "registerError": "Failed to register account.",
+    "verify2FAError": "Invalid authentication code.",
+    "twoFactorRequired": "Two-factor authentication required."
   },
   "marketing": {
     "heroTitle": "Manage projects with the fluidity your team deserves.",

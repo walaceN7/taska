@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useAuthStore } from "@/stores/authStore";
+import { useRegisterMutation } from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { Loader2 } from "lucide-react";
@@ -15,7 +15,6 @@ import { z } from "zod";
 
 export function Register() {
   const { t } = useTranslation();
-  const login = useAuthStore((state) => state.login);
   const [turnstileKey, setTurnstileKey] = useState(0);
 
   const registerSchema = z.object({
@@ -59,27 +58,27 @@ export function Register() {
   const hasToken = turnstileToken && turnstileToken.length > 10;
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || "";
 
+  const registerMutation = useRegisterMutation();
+
   function onSubmit(values: RegisterFormValues) {
-    try {
-      console.log("Valores do Novo Registo:", values);
-
-      // O payload que vai pro C# será:
-      // {
-      //   firstName: values.firstName,
-      //   lastName: values.lastName,
-      //   companyName: values.companyName,
-      //   email: values.email,
-      //   password: values.password,
-      //   planId: values.plan,
-      //   turnstileToken: values.turnstileToken
-      // }
-
-      login();
-    } catch (error) {
-      setTurnstileKey((prev) => prev + 1);
-      setValue("turnstileToken", "");
-      console.error("Erro ao registrar:", error);
-    }
+    registerMutation.mutate(
+      {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        companyName: values.companyName,
+        email: values.email,
+        password: values.password,
+        planId: values.plan,
+        turnstileToken: values.turnstileToken,
+      },
+      {
+        onError: (error) => {
+          console.error("Registration failed:", error);
+          setTurnstileKey((prev) => prev + 1);
+          setValue("turnstileToken", "", { shouldValidate: true });
+        },
+      },
+    );
   }
 
   return (
@@ -273,9 +272,15 @@ export function Register() {
                 type="submit"
                 className="w-full"
                 size="lg"
-                disabled={!hasToken && !!siteKey}
+                disabled={
+                  (!hasToken && !!siteKey) || registerMutation.isPending
+                }
               >
-                {t("auth.registerButton")}
+                {registerMutation.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  t("auth.registerButton")
+                )}
               </Button>
             </div>
           </form>

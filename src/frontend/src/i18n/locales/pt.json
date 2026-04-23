@@ -57,7 +57,13 @@
     "verify2FAButton": "Verificar e Entrar",
     "codeLengthError": "O código deve ter exatamente 6 dígitos",
     "codeNumericError": "Apenas números são permitidos",
-    "verify2FARememberDevice": "Não pergunte novamente neste navegador"
+    "verify2FARememberDevice": "Não pergunte novamente neste navegador",
+    "invalidCredentials": "Credenciais inválidas ou erro no servidor.",
+    "loginSuccess": "Login realizado com sucesso! Bem-vindo de volta.",
+    "registerSuccess": "Conta criada com sucesso!",
+    "registerError": "Falha ao criar conta.",
+    "verify2FAError": "Código de autenticação inválido.",
+    "twoFactorRequired": "Autenticação de dois fatores necessária."
   },
   "marketing": {
     "heroTitle": "Gerencie projetos com a fluidez que sua equipe merece.",
