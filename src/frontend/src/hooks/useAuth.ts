@@ -79,3 +79,22 @@ export function useVerify2FAMutation() {
     },
   });
 }
+
+export function useGoogleLoginMutation() {
+  const navigate = useNavigate();
+  const login = useAuthStore((state) => state.login);
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: authService.googleLogin,
+    onSuccess: () => {
+      toast.success(t("auth.googleLoginSuccess"));
+      login();
+      navigate("/dashboard");
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const message = error.response?.data?.error || t("auth.googleLoginError");
+      toast.error(message);
+    },
+  });
+}

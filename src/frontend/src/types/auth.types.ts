@@ -39,3 +39,7 @@ export interface RegisterRequest {
   planId: number;
   turnstileToken: string;
 }
+
+export interface SsoLoginRequest {
+  accessToken: string;
+}

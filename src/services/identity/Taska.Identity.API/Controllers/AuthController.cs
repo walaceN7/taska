@@ -192,4 +192,23 @@ public class AuthController(IMediator mediator) : ControllerBase
             accessToken = result.AccessToken
         });
     }
+
+    [HttpPost("google-login")]
+    public async ValueTask<IActionResult> GoogleLogin([FromBody] GoogleLoginCommand command)
+    {
+        var result = await mediator.Send(command);
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = result.RefreshTokenExpiresAt
+        };
+        Response.Cookies.Append("refreshToken", result.RefreshToken, cookieOptions);
+
+        var responseResult = result with { RefreshToken = string.Empty };
+
+        return Ok(responseResult);
+    }
 }

@@ -1,5 +1,6 @@
 import { api } from "@/lib/api";
 import type {
+  SsoLoginRequest,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
@@ -27,6 +28,14 @@ export const authService = {
   ): Promise<LoginResponse> => {
     const response = await api.post<LoginResponse>(
       `${urlBase}/login/2fa`,
+      payload,
+    );
+    return response.data;
+  },
+
+  googleLogin: async (payload: SsoLoginRequest): Promise<LoginResponse> => {
+    const response = await api.post<LoginResponse>(
+      `${urlBase}/google-login`,
       payload,
     );
     return response.data;

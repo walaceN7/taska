@@ -59,7 +59,9 @@
     "registerSuccess": "Account created successfully!",
     "registerError": "Failed to register account.",
     "verify2FAError": "Invalid authentication code.",
-    "twoFactorRequired": "Two-factor authentication required."
+    "twoFactorRequired": "Two-factor authentication required.",
+    "googleLoginSuccess": "Google authentication successful!",
+    "googleLoginError": "Google authentication failed on our servers."
   },
   "marketing": {
     "heroTitle": "Manage projects with the fluidity your team deserves.",
