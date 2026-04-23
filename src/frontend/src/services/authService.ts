@@ -6,21 +6,29 @@ import type {
   Verify2FARequest,
 } from "@/types/auth.types";
 
+const urlBase = "identity/api/auth";
+
 export const authService = {
   login: async (payload: LoginRequest): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>("/auth/login", payload);
+    const response = await api.post<LoginResponse>(`${urlBase}/login`, payload);
     return response.data;
   },
 
   register: async (payload: RegisterRequest): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>("/auth/register", payload);
+    const response = await api.post<LoginResponse>(
+      `${urlBase}/register`,
+      payload,
+    );
     return response.data;
   },
 
   verifyTwoFactor: async (
     payload: Verify2FARequest,
   ): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>("/auth/login/2fa", payload);
+    const response = await api.post<LoginResponse>(
+      `${urlBase}/login/2fa`,
+      payload,
+    );
     return response.data;
   },
 };

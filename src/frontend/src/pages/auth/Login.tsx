@@ -38,11 +38,22 @@ export function Login() {
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+      turnstileToken: "",
+    },
   });
 
   const turnstileToken = useWatch({
     control,
     name: "turnstileToken",
+  });
+
+  const rememberMe = useWatch({
+    control,
+    name: "rememberMe",
   });
 
   const hasToken = turnstileToken && turnstileToken.length > 10;
@@ -150,7 +161,10 @@ export function Login() {
                 <Checkbox
                   id="rememberMe"
                   disabled={loginMutation.isPending}
-                  {...register("rememberMe")}
+                  checked={rememberMe ?? false}
+                  onCheckedChange={(checked) =>
+                    setValue("rememberMe", checked as boolean)
+                  }
                 />
                 <Label
                   htmlFor="rememberMe"
