@@ -76,11 +76,10 @@ public class AuthController(IMediator mediator) : ControllerBase
         };
                 
         Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
-                
-        return Ok(new
-        {
-            accessToken = result.AccessToken
-        });
+
+        var responseResult = result with { RefreshToken = string.Empty };
+
+        return Ok(responseResult);
     }
 
     [HttpPost("logout")]

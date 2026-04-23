@@ -1,12 +1,13 @@
 import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { Login } from "@/pages/auth/Login";
+import { Onboarding } from "@/pages/auth/Onboarding";
 import { Register } from "@/pages/auth/Register";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
+import { Verify2FA } from "@/pages/auth/Verify2FA";
 import { Dashboard } from "@/pages/dashboard/Dashboard";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
-import { Verify2FA } from "@/pages/auth/Verify2FA";
 
 export const router = createBrowserRouter([
   {
@@ -24,9 +25,11 @@ export const router = createBrowserRouter([
       { path: "/verify-2fa", element: <Verify2FA /> },
     ],
   },
-
   {
     element: <PrivateRoute />,
-    children: [{ path: "/dashboard", element: <Dashboard /> }],
+    children: [
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/onboarding", element: <Onboarding /> },
+    ],
   },
 ]);

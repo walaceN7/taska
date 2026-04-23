@@ -31,7 +31,7 @@ export function useLoginMutation() {
       }
 
       toast.success(t("auth.loginSuccess"));
-      login();
+      login(data.user!, data.accessToken!);
       navigate("/dashboard");
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -49,9 +49,9 @@ export function useRegisterMutation() {
 
   return useMutation({
     mutationFn: authService.register,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success(t("auth.registerSuccess"));
-      login();
+      login(data.user!, data.accessToken!);
       navigate("/dashboard");
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -68,9 +68,9 @@ export function useVerify2FAMutation() {
 
   return useMutation({
     mutationFn: authService.verifyTwoFactor,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success(t("auth.verify2FASuccess"));
-      login();
+      login(data.user!, data.twoFactorToken!);
       navigate("/dashboard");
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -87,9 +87,10 @@ export function useGoogleLoginMutation() {
 
   return useMutation({
     mutationFn: authService.googleLogin,
-    onSuccess: () => {
-      toast.success(t("auth.googleLoginSuccess"));
-      login();
+    onSuccess: (data) => {
+      login(data.user!, data.accessToken!);
+
+      toast.success(t("auth.loginSuccess"));
       navigate("/dashboard");
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {

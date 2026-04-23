@@ -65,7 +65,20 @@
     "verify2FAError": "Código de autenticação inválido.",
     "twoFactorRequired": "Autenticação de dois fatores necessária.",
     "googleLoginSuccess": "Login com Google realizado com sucesso!",
-    "googleLoginError": "Falha na autenticação com Google."
+    "googleLoginError": "Falha na autenticação com Google.",
+    "googleLogin": "Continue com o Google",
+    "almostThere": "Quase lá!",
+    "finishAndLogin": "Finalizar e Entrar",
+    "companyCreatedSuccess": "Empresa criada com sucesso!",
+    "companyCreatedErrorLoginAgain": "Empresa criada com sucesso, mas faça login novamente para acessar.",
+    "onboardingTitle": "Bem-vindo ao Taska!",
+    "onboardingSubtitle": "Dê um nome ao seu workspace.",
+    "onboardingButton": "Concluir e Entrar",
+    "companyNameMin": "O nome da empresa deve ter pelo menos 3 caracteres",
+    "companyCreateError": "Falha ao criar workspace. Por favor, tente novamente.",
+    "welcome": "Bem-vindo!",
+    "welcomeSubtitle": "Você está a apenas um passo de acessar o Taska.",
+    "welcomeButton": "Continuar"
   },
   "marketing": {
     "heroTitle": "Gerencie projetos com a fluidez que sua equipe merece.",

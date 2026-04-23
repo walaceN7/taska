@@ -61,7 +61,20 @@
     "verify2FAError": "Invalid authentication code.",
     "twoFactorRequired": "Two-factor authentication required.",
     "googleLoginSuccess": "Google authentication successful!",
-    "googleLoginError": "Google authentication failed on our servers."
+    "googleLoginError": "Google authentication failed on our servers.",
+    "googleLogin": "Continue with Google",
+    "almostThere": "Almost there!",
+    "finishAndLogin": "Finish and Log In",
+    "companyCreatedSuccess": "Company created successfully!",
+    "onboardingTitle": "Welcome to Taska!",
+    "onboardingSubtitle": "Give your workspace a name.",
+    "onboardingButton": "Complete and Enter",
+    "companyNameMin": "Company name must be at least 3 characters",
+    "companyCreateError": "Failed to create workspace. Please try again.",
+    "companyCreatedErrorLoginAgain": "Company created successfully, but please login again to access.",
+    "welcome": "Welcome!",
+    "welcomeSubtitle": "You are just one step away from accessing Taska.",
+    "welcomeButton": "Continue"
   },
   "marketing": {
     "heroTitle": "Manage projects with the fluidity your team deserves.",

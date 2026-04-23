@@ -40,4 +40,9 @@ export const authService = {
     );
     return response.data;
   },
+
+  refreshToken: async (): Promise<LoginResponse> => {
+    const response = await api.post<LoginResponse>(`${urlBase}/refresh`);
+    return response.data;
+  },
 };

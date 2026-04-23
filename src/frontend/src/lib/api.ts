@@ -6,7 +6,7 @@ interface CustomRequestConfig extends InternalAxiosRequestConfig {
 }
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "https://localhost:7122/api",
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -32,7 +32,7 @@ const processQueue = (
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("taska_access_token");
+    const token = useAuthStore.getState().accessToken;
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -65,15 +65,23 @@ api.interceptors.response.use(
 
       try {
         const { data } = await axios.post(
-          `${api.defaults.baseURL}/auth/refresh`,
+          `${import.meta.env.VITE_API_URL}/identity/api/auth/refresh`,
           {},
           {
             withCredentials: true,
           },
         );
 
-        const { accessToken } = data;
-        localStorage.setItem("taska_access_token", accessToken);
+        const { accessToken, user } = data;
+
+        if (user) {
+          useAuthStore.getState().login(user, accessToken);
+        } else {
+          const currentUser = useAuthStore.getState().user;
+          if (currentUser) {
+            useAuthStore.getState().login(currentUser, accessToken);
+          }
+        }
 
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         processQueue(null, accessToken);
@@ -81,8 +89,13 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         processQueue(err as AxiosError, null);
-        localStorage.removeItem("taska_access_token");
+
         useAuthStore.getState().logout();
+
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
