@@ -29,6 +29,12 @@ public class VerifyTwoFactorCommandHandler(UserManager<User> userManager, IJwtSe
         user.LastLoginAt = DateTime.UtcNow;
         await userManager.UpdateAsync(user);
 
+        string? deviceToken = null;
+        if (request.RememberDevice)
+        {            
+            deviceToken = await userManager.GenerateUserTokenAsync(user, "Default", "Remember-2FA");
+        }
+
         var accessToken = jwtService.GenerateAccessToken(user);
         var refreshToken = jwtService.GenerateRefreshToken();
         var refreshTokenExpiryDate = DateTime.UtcNow.AddDays(30);
@@ -48,7 +54,10 @@ public class VerifyTwoFactorCommandHandler(UserManager<User> userManager, IJwtSe
             refreshToken,
             DateTime.UtcNow.AddMinutes(15),
             refreshTokenExpiryDate,
-            new UserDto(user.Id, $"{user.FirstName} {user.LastName}", user.Email!, user.AvatarUrl, user.SystemRole.ToString(), user.CompanyId)
+            new UserDto(user.Id, $"{user.FirstName} {user.LastName}", user.Email!, user.AvatarUrl, user.SystemRole.ToString(), user.CompanyId),
+            RequiresTwoFactor: false,
+            TwoFactorToken: null,
+            DeviceToken: deviceToken
         );
     }
 }

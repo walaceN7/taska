@@ -164,15 +164,26 @@ public class AuthController(IMediator mediator) : ControllerBase
     {
         var result = await mediator.Send(command);
 
-        var cookieOptions = new CookieOptions
+        var refreshCookieOptions = new CookieOptions
         {
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.Strict,
             Expires = result.RefreshTokenExpiresAt
         };
+        Response.Cookies.Append("taska_refresh_token", result.RefreshToken, refreshCookieOptions);
 
-        Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
+        if (!string.IsNullOrEmpty(result.DeviceToken))
+        {
+            var deviceCookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(30)
+            };
+            Response.Cookies.Append("taska_device_token", result.DeviceToken, deviceCookieOptions);
+        }
 
         return Ok(new
         {

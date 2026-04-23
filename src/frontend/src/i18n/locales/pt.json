@@ -56,7 +56,8 @@
     "verify2FACodeLabel": "Código de Autenticação",
     "verify2FAButton": "Verificar e Entrar",
     "codeLengthError": "O código deve ter exatamente 6 dígitos",
-    "codeNumericError": "Apenas números são permitidos"    
+    "codeNumericError": "Apenas números são permitidos",
+    "verify2FARememberDevice": "Não pergunte novamente neste navegador"
   },
   "marketing": {
     "heroTitle": "Gerencie projetos com a fluidez que sua equipe merece.",
