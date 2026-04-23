@@ -142,4 +142,43 @@ public class AuthController(IMediator mediator) : ControllerBase
         await mediator.Send(command);
         return Ok(new { message = "Password has been reset successfully." });
     }
+
+    [HttpGet("2fa/setup")]
+    [Authorize]
+    public async Task<IActionResult> SetupTwoFactor()
+    {
+        var result = await mediator.Send(new SetupTwoFactorCommand());
+        return Ok(result);
+    }
+
+    [HttpPost("2fa/enable")]
+    [Authorize]
+    public async Task<IActionResult> EnableTwoFactor([FromBody] EnableTwoFactorCommand command)
+    {
+        await mediator.Send(command);
+        return Ok(new { message = "Two-factor authentication enabled successfully." });
+    }
+
+    [HttpPost("login/2fa")]
+    public async Task<IActionResult> VerifyTwoFactor([FromBody] VerifyTwoFactorCommand command)
+    {
+        var result = await mediator.Send(command);
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = result.RefreshTokenExpiresAt
+        };
+
+        Response.Cookies.Append("taska_refresh_token", result.RefreshToken, cookieOptions);
+
+        return Ok(new
+        {
+            message = "Login successful",
+            user = result.User,
+            accessToken = result.AccessToken
+        });
+    }
 }

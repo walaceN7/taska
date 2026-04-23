@@ -19,6 +19,21 @@ public class LoginCommandHandler(UserManager<User> userManager, IJwtService jwtS
         if (user == null || !await userManager.CheckPasswordAsync(user, request.Password))
             throw new UnauthorizedException("Invalid credentials");
 
+        if (await userManager.GetTwoFactorEnabledAsync(user))
+        {
+            var tempToken = await userManager.GenerateUserTokenAsync(user, "Default", "2FA-Auth");
+
+            return new LoginResult(
+                AccessToken: string.Empty,
+                RefreshToken: string.Empty,
+                AccessTokenExpiresAt: DateTime.MinValue,
+                RefreshTokenExpiresAt: DateTime.MinValue,
+                User: null,
+                RequiresTwoFactor: true,
+                TwoFactorToken: tempToken
+            );
+        }
+
         user.LastLoginAt = DateTime.UtcNow;
         await userManager.UpdateAsync(user);
 
