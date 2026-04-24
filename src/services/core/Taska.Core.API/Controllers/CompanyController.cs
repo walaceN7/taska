@@ -11,26 +11,25 @@ namespace Taska.Core.API.Controllers;
 [Authorize]
 public class CompanyController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator = mediator;
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCompanyCommand command)
     {
-        var result = await _mediator.Send(command);
+        var result = await mediator.Send(command);
         return CreatedAtAction(nameof(Create), result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var result = await _mediator.Send(new GetCompanyByIdQuery(id));
+        var result = await mediator.Send(new GetCompanyByIdQuery(id));
         return Ok(result);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCompanyCommand command)
     {
-        var result = await _mediator.Send(command with { Id = id });
+        var result = await mediator.Send(command with { Id = id });
         return Ok(result);
     }
 }
