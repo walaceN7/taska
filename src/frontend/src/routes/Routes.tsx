@@ -1,3 +1,4 @@
+import { MainLayout } from "@/components/layout/MainLayout";
 import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { Login } from "@/pages/auth/Login";
 import { Onboarding } from "@/pages/auth/Onboarding";
@@ -28,8 +29,11 @@ export const router = createBrowserRouter([
   {
     element: <PrivateRoute />,
     children: [
-      { path: "/dashboard", element: <Dashboard /> },
       { path: "/onboarding", element: <Onboarding /> },
+      {
+        element: <MainLayout />,
+        children: [{ path: "/dashboard", element: <Dashboard /> }],
+      },
     ],
   },
 ]);

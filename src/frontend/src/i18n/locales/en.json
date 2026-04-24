@@ -82,5 +82,18 @@
   },
   "cookieBanner": {
     "message": "We use cookies to improve your experience, manage your session, and analyze Taska's traffic. By continuing, you agree to our privacy policy."
+  },
+  "invitation": {
+    "sendSuccess": "Invitation sent successfully!",
+    "sendError": "Failed to send invitation."
+  },
+  "nav": {
+    "mainMenu": "Main Menu",
+    "dashboard": "Dashboard",
+    "projects": "Projects",
+    "myTasks": "My Tasks",
+    "administration": "Administration",
+    "team": "Team & Members",
+    "settings": "Settings"
   }
 }
