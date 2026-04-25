@@ -99,5 +99,8 @@
     "team": "Team & Members",
     "settings": "Settings",
     "profile": "Profile"
+  },
+  "dashboard": {
+    "welcome": "Welcome to your workspace!"
   }
 }

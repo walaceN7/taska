@@ -103,5 +103,8 @@
     "team": "Equipe & Membros",
     "settings": "Configurações",
     "profile": "Profile"
+  },
+  "dashboard": {
+    "welcome": "Bem-vindo ao seu Workspace!"
   }
 }

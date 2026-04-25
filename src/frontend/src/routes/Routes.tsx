@@ -9,6 +9,7 @@ import { Dashboard } from "@/pages/dashboard/Dashboard";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import { TeamMembers } from "@/pages/team/TeamMembers";
 
 export const router = createBrowserRouter([
   {
@@ -32,7 +33,10 @@ export const router = createBrowserRouter([
       { path: "/onboarding", element: <Onboarding /> },
       {
         element: <MainLayout />,
-        children: [{ path: "/dashboard", element: <Dashboard /> }],
+        children: [
+          { path: "/dashboard", element: <Dashboard /> },
+          { path: "/team", element: <TeamMembers /> },
+        ],
       },
     ],
   },
