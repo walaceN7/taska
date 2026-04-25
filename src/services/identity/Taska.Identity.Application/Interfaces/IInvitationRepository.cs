@@ -8,4 +8,5 @@ public interface IInvitationRepository
     ValueTask<bool> HasPendingInvitationAsync(string email, Guid companyId, CancellationToken cancellationToken = default);
     ValueTask<Invitation?> GetByTokenAsync(string token, CancellationToken cancellationToken = default);
     ValueTask<Invitation> UpdateAsync(Invitation invitation, CancellationToken cancellationToken = default);
+    ValueTask<IEnumerable<Invitation>> GetPendingByCompanyIdAsync(Guid companyId, CancellationToken cancellationToken = default);
 }

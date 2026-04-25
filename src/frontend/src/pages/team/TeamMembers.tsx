@@ -1,6 +1,14 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -10,72 +18,115 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MoreHorizontal, Plus, Users } from "lucide-react";
+import {
+  Clock,
+  Mail,
+  MoreHorizontal,
+  Plus,
+  Shield,
+  ShieldAlert,
+  Trash2,
+  UserCog,
+  Users,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { InviteMemberModal } from "./components/InviteMemberModal";
 
 export function TeamMembers() {
   const { t } = useTranslation();
 
-  const members = [
+  const activeMembers = [
     {
       id: "1",
-      name: "John Doe",
-      email: "john@example.com",
+      name: "Walace Silva",
+      email: "walace@taska.com",
       role: "CompanyAdmin",
+      avatarUrl: "https://github.com/walaceN7.png",
     },
     {
       id: "2",
-      name: "Jane Smith",
-      email: "jane@example.com",
+      name: "John Doe",
+      email: "john@example.com",
       role: "Member",
+      avatarUrl: "",
     },
   ];
+
+  const pendingInvites = [
+    {
+      id: "inv-1",
+      email: "developer@example.com",
+      sentAt: "2 days ago",
+      expiresAt: "5 days left",
+    },
+  ];
+
+  const getInitials = (name: string) => {
+    return name.substring(0, 2).toUpperCase();
+  };
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {t("team.title", "Team & Members")}
+            {t("team.title", "Workspace Team")}
           </h1>
           <p className="text-muted-foreground mt-1">
-            {t("team.subtitle", "Manage your workspace members and teams.")}
+            {t(
+              "team.subtitle",
+              "Manage members, roles, and pending invitations.",
+            )}
           </p>
         </div>
 
         <InviteMemberModal />
       </header>
 
-      <Tabs defaultValue="members" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="members">
-            {t("team.tabs.members", "All Members")}
+      <Tabs defaultValue="active" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3 max-w-[500px]">
+          <TabsTrigger value="active">
+            {t("team.tabs.active", "Active Members")}
+            <Badge
+              variant="secondary"
+              className="ml-2 bg-primary/10 text-primary"
+            >
+              {activeMembers.length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value="pending">
+            {t("team.tabs.pending", "Pending Invites")}
+            {pendingInvites.length > 0 && (
+              <Badge variant="secondary" className="ml-2">
+                {pendingInvites.length}
+              </Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="teams">
             {t("team.tabs.teams", "Teams")}
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="members" className="space-y-4">
+        <TabsContent value="active" className="space-y-4">
           <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50 hover:bg-muted/50">
                   <TableHead>{t("team.user", "User")}</TableHead>
-                  <TableHead>{t("team.role", "System Role")}</TableHead>
+                  <TableHead>{t("team.role", "Role")}</TableHead>
                   <TableHead className="text-right">
                     {t("team.actions", "Actions")}
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {members.map((member) => (
+                {activeMembers.map((member) => (
                   <TableRow key={member.id}>
                     <TableCell className="flex items-center gap-3 py-4">
-                      <Avatar className="h-9 w-9">
-                        <AvatarFallback className="bg-primary/10 text-primary">
-                          {member.name.charAt(0)}
+                      <Avatar className="h-9 w-9 border">
+                        <AvatarImage src={member.avatarUrl} alt={member.name} />
+                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                          {getInitials(member.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
@@ -89,25 +140,112 @@ export function TeamMembers() {
                     </TableCell>
 
                     <TableCell>
-                      <Badge
-                        variant={
-                          member.role === "CompanyAdmin"
-                            ? "default"
-                            : "secondary"
-                        }
-                      >
-                        {member.role}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        {member.role === "CompanyAdmin" ? (
+                          <ShieldAlert className="h-4 w-4 text-primary" />
+                        ) : (
+                          <UserCog className="h-4 w-4 text-muted-foreground" />
+                        )}
+                        <span
+                          className={
+                            member.role === "CompanyAdmin"
+                              ? "font-medium"
+                              : "text-muted-foreground"
+                          }
+                        >
+                          {member.role === "CompanyAdmin" ? "Admin" : "Member"}
+                        </span>
+                      </div>
                     </TableCell>
 
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground hover:text-foreground"
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-muted-foreground"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuLabel>
+                            {t("team.manageAccess", "Manage Access")}
+                          </DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="cursor-pointer">
+                            <Shield className="mr-2 h-4 w-4" />
+                            {t("team.makeAdmin", "Make Admin")}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="cursor-pointer">
+                            <UserCog className="mr-2 h-4 w-4" />
+                            {t("team.makeMember", "Make Member")}
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            {t("team.removeMember", "Remove from Workspace")}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="pending" className="space-y-4">
+          <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50 hover:bg-muted/50">
+                  <TableHead>{t("team.email", "Email Address")}</TableHead>
+                  <TableHead>{t("team.status", "Status")}</TableHead>
+                  <TableHead className="text-right">
+                    {t("team.actions", "Actions")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pendingInvites.map((invite) => (
+                  <TableRow key={invite.id}>
+                    <TableCell className="py-4">
+                      <div className="flex items-center gap-2 font-medium">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        {invite.email}
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        Sent {invite.sentAt}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className="text-amber-500 border-amber-500/30 bg-amber-500/10"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
+                        {t("team.statusPending", "Pending")}
+                      </Badge>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {invite.expiresAt}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm">
+                          {t("team.resendInvite", "Resend")}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          {t("team.cancelInvite", "Cancel")}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
