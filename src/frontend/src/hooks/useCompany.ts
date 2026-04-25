@@ -1,16 +1,12 @@
 import { authService } from "@/services/authService";
 import { companyService } from "@/services/companyService";
 import { useAuthStore } from "@/stores/authStore";
+import type { ApiErrorResponse } from "@/types/api.types";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
-interface ApiErrorResponse {
-  error: string;
-  statusCode: number;
-}
 
 export function useCreateCompanyMutation() {
   const { t } = useTranslation();

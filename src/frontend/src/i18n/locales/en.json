@@ -126,6 +126,13 @@
     "inviteMember": "Invite Member",
     "inviteModalTitle": "Invite to Workspace",
     "inviteModalDesc": "Enter the email address of the person you want to invite to your team.",
-    "sendInvite": "Send Invite"
+    "sendInvite": "Send Invite",
+    "sent": "Sent",
+    "expires": "Expires",
+    "statusPending": "Pending",
+    "resendInvite": "Resend Invite",
+    "removeMember": "Remove Member",
+    "noMembersTitle": "No members yet",
+    "noMembersDesc": "Invite colleagues to join your workspace."
   }
 }

@@ -19,13 +19,7 @@ public class GetCompanyMembersQueryHandler(UserManager<User> userManager, ICurre
         var result = await userManager.Users
             .Where(u => u.CompanyId == currentUser.CompanyId && u.IsActive)
             .AsNoTracking()
-            .Select(u => new MemberDto(
-                u.Id,
-                u.FirstName + " " + u.LastName,
-                u.Email!,
-                u.AvatarUrl,
-                u.SystemRole.ToString()
-            ))
+            .ProjectToType<MemberDto>()
             .ToListAsync(cancellationToken);
 
         return result;

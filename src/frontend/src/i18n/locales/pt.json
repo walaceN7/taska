@@ -130,6 +130,13 @@
     "inviteMember": "Convidar Membro",
     "inviteModalTitle": "Convidar para o Workspace",
     "inviteModalDesc": "Insira o endereço de e-mail da pessoa que deseja convidar para sua equipe.",
-    "sendInvite": "Enviar Convite"    
+    "sendInvite": "Enviar Convite",
+    "sent": "Enviado",
+    "expires": "Expira em",
+    "statusPending": "Pendente",
+    "resendInvite": "Reenviar Convite",
+    "removeMember": "Remover Membro",
+    "noMembersTitle": "Nenhum membro ainda",
+    "noMembersDesc": "Convide colegas para ingressar no seu workspace."
   }
 }

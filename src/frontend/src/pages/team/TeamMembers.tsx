@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -18,11 +19,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCompanyMembers, usePendingInvites } from "@/hooks/useTeam";
+import { formatDate } from "@/lib/utils";
 import {
   Clock,
   Mail,
   MoreHorizontal,
   Plus,
+  RefreshCw,
   Shield,
   ShieldAlert,
   Trash2,
@@ -35,35 +39,35 @@ import { InviteMemberModal } from "./components/InviteMemberModal";
 export function TeamMembers() {
   const { t } = useTranslation();
 
-  const activeMembers = [
-    {
-      id: "1",
-      name: "Walace Silva",
-      email: "walace@taska.com",
-      role: "CompanyAdmin",
-      avatarUrl: "https://github.com/walaceN7.png",
-    },
-    {
-      id: "2",
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Member",
-      avatarUrl: "",
-    },
-  ];
+  const {
+    data: activeMembers = [],
+    isLoading: isLoadingMembers,
+    isFetching: isFetchingMembers,
+    refetch: refetchMembers,
+    dataUpdatedAt: membersUpdatedAt,
+  } = useCompanyMembers();
 
-  const pendingInvites = [
-    {
-      id: "inv-1",
-      email: "developer@example.com",
-      sentAt: "2 days ago",
-      expiresAt: "5 days left",
-    },
-  ];
+  const {
+    data: pendingInvites = [],
+    isLoading: isLoadingInvites,
+    isFetching: isFetchingInvites,
+    refetch: refetchInvites,
+    dataUpdatedAt: invitesUpdatedAt,
+  } = usePendingInvites();
 
   const getInitials = (name: string) => {
     return name.substring(0, 2).toUpperCase();
   };
+
+  const handleRefresh = () => {
+    refetchMembers();
+    refetchInvites();
+  };
+
+  const lastUpdated =
+    membersUpdatedAt || invitesUpdatedAt
+      ? new Date(Math.max(membersUpdatedAt, invitesUpdatedAt)).toISOString()
+      : undefined;
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -80,7 +84,27 @@ export function TeamMembers() {
           </p>
         </div>
 
-        <InviteMemberModal />
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col items-end">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isFetchingMembers || isFetchingInvites}
+            >
+              <RefreshCw
+                className={`mr-2 h-4 w-4 ${isFetchingMembers || isFetchingInvites ? "animate-spin" : ""}`}
+              />
+              {t("common.refresh", "Refresh")}
+            </Button>
+            {lastUpdated && (
+              <span className="text-[10px] text-muted-foreground mt-1">
+                {t("common.lastUpdated", "Updated:")} {formatDate(lastUpdated)}
+              </span>
+            )}
+          </div>
+          <InviteMemberModal />
+        </div>
       </header>
 
       <Tabs defaultValue="active" className="space-y-6">
@@ -120,78 +144,113 @@ export function TeamMembers() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {activeMembers.map((member) => (
-                  <TableRow key={member.id}>
-                    <TableCell className="flex items-center gap-3 py-4">
-                      <Avatar className="h-9 w-9 border">
-                        <AvatarImage src={member.avatarUrl} alt={member.name} />
-                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                          {getInitials(member.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <span className="font-medium leading-none">
-                          {member.name}
-                        </span>
-                        <span className="text-sm text-muted-foreground mt-1">
-                          {member.email}
-                        </span>
-                      </div>
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {member.role === "CompanyAdmin" ? (
-                          <ShieldAlert className="h-4 w-4 text-primary" />
-                        ) : (
-                          <UserCog className="h-4 w-4 text-muted-foreground" />
-                        )}
-                        <span
-                          className={
-                            member.role === "CompanyAdmin"
-                              ? "font-medium"
-                              : "text-muted-foreground"
-                          }
-                        >
-                          {member.role === "CompanyAdmin" ? "Admin" : "Member"}
-                        </span>
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-muted-foreground"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuLabel>
-                            {t("team.manageAccess", "Manage Access")}
-                          </DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="cursor-pointer">
-                            <Shield className="mr-2 h-4 w-4" />
-                            {t("team.makeAdmin", "Make Admin")}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer">
-                            <UserCog className="mr-2 h-4 w-4" />
-                            {t("team.makeMember", "Make Member")}
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            {t("team.removeMember", "Remove from Workspace")}
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                {isLoadingMembers ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell className="flex items-center gap-3 py-4">
+                        <Skeleton className="h-9 w-9 rounded-full" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-[150px]" />
+                          <Skeleton className="h-3 w-[100px]" />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-[80px]" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Skeleton className="h-8 w-8 ml-auto" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : activeMembers.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      className="h-32 text-center text-muted-foreground"
+                    >
+                      {t(
+                        "team.noActiveMembers",
+                        "No active members found in this workspace.",
+                      )}
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  activeMembers.map((member) => (
+                    <TableRow key={member.id}>
+                      <TableCell className="flex items-center gap-3 py-4">
+                        <Avatar className="h-9 w-9 border">
+                          <AvatarImage
+                            src={member.avatarUrl}
+                            alt={member.fullName}
+                          />
+                          <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                            {getInitials(member.fullName)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                          <span className="font-medium leading-none">
+                            {member.fullName}
+                          </span>
+                          <span className="text-sm text-muted-foreground mt-1">
+                            {member.email}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {member.systemRole === "CompanyAdmin" ? (
+                            <ShieldAlert className="h-4 w-4 text-primary" />
+                          ) : (
+                            <UserCog className="h-4 w-4 text-muted-foreground" />
+                          )}
+                          <span
+                            className={
+                              member.systemRole === "CompanyAdmin"
+                                ? "font-medium"
+                                : "text-muted-foreground"
+                            }
+                          >
+                            {member.systemRole === "CompanyAdmin"
+                              ? "Admin"
+                              : "Member"}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-muted-foreground"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuLabel>
+                              {t("team.manageAccess", "Manage Access")}
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="cursor-pointer">
+                              <Shield className="mr-2 h-4 w-4" />
+                              {t("team.makeAdmin", "Make Admin")}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">
+                              <UserCog className="mr-2 h-4 w-4" />
+                              {t("team.makeMember", "Make Member")}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              {t("team.removeMember", "Remove from Workspace")}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
@@ -210,45 +269,77 @@ export function TeamMembers() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pendingInvites.map((invite) => (
-                  <TableRow key={invite.id}>
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-2 font-medium">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        {invite.email}
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        Sent {invite.sentAt}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className="text-amber-500 border-amber-500/30 bg-amber-500/10"
-                      >
-                        {t("team.statusPending", "Pending")}
-                      </Badge>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {invite.expiresAt}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm">
-                          {t("team.resendInvite", "Resend")}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        >
-                          {t("team.cancelInvite", "Cancel")}
-                        </Button>
-                      </div>
+                {isLoadingInvites ? (
+                  Array.from({ length: 2 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell className="py-4">
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-[200px]" />
+                          <Skeleton className="h-3 w-[120px]" />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-6 w-[80px] rounded-full" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Skeleton className="h-8 w-[80px]" />
+                          <Skeleton className="h-8 w-[80px]" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : pendingInvites.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      className="h-32 text-center text-muted-foreground"
+                    >
+                      {t("team.noPendingInvites", "No pending invitations.")}
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  pendingInvites.map((invite) => (
+                    <TableRow key={invite.id}>
+                      <TableCell className="py-4">
+                        <div className="flex items-center gap-2 font-medium">
+                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          {invite.email}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {t("team.sent", "Sent")} {formatDate(invite.sentAt)}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className="text-amber-500 border-amber-500/30 bg-amber-500/10"
+                        >
+                          {t("team.statusPending", "Pending")}
+                        </Badge>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {t("team.expires", "Expires")}{" "}
+                          {formatDate(invite.expiresAt)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" size="sm">
+                            {t("team.resendInvite", "Resend")}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            {t("team.cancelInvite", "Cancel")}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
