@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
-using Taska.Identity.Domain.Exceptions;
+using Taska.Shared.Exceptions;
 
 namespace Taska.Identity.API.Middlewares;
 

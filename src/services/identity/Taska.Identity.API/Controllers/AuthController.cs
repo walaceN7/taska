@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Taska.Identity.Application.Features.RefreshTokens.Commands;
 using Taska.Identity.Application.Features.Users.Commands;
-using Taska.Identity.Domain.Exceptions;
+using Taska.Shared.Exceptions;
 
 namespace Taska.Identity.API.Controllers;
 
