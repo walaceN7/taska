@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Taska.Identity.Application.Interfaces;
@@ -7,7 +8,7 @@ using Taska.Identity.Infrastructure.Configurations;
 
 namespace Taska.Identity.Infrastructure.Services;
 
-public class SmtpEmailService(IOptions<SmtpSettings> smtpSettings) : IEmailService
+public class SmtpEmailService(IOptions<SmtpSettings> smtpSettings, IConfiguration configuration) : IEmailService
 {
     private readonly SmtpSettings _settings = smtpSettings.Value;
 
@@ -18,7 +19,9 @@ public class SmtpEmailService(IOptions<SmtpSettings> smtpSettings) : IEmailServi
         email.To.Add(new MailboxAddress(toEmail, toEmail));
         email.Subject = "You have been invited to join a workspace on Taska";
 
-        var registerUrl = $"http://localhost:3000/register/invite?token={token}";
+        var baseUrl = configuration["FrontendSettings:BaseUrl"];
+
+        var registerUrl = $"{baseUrl}/register/invite?token={token}";
 
         var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "InvitationEmail.html");
 
