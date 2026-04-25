@@ -29,4 +29,9 @@ public class InvitationRepository(TaskaIdentityDbContext context) : IInvitationR
         await context.SaveChangesAsync(cancellationToken);
         return invitation;
     }
+
+    public async ValueTask<IEnumerable<Invitation>> GetPendingByCompanyIdAsync(Guid companyId, CancellationToken cancellationToken = default)
+    {
+        return await context.Invitations.Where(i => i.CompanyId == companyId && i.AcceptedAt == null).AsNoTracking().ToListAsync(cancellationToken);
+    }
 }

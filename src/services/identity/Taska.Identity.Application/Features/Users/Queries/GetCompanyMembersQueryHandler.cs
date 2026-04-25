@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Taska.Identity.Application.Features.Users.DTOs;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
-using Taska.Identity.Domain.Exceptions;
+using Taska.Shared.Exceptions;
 
 namespace Taska.Identity.Application.Features.Users.Queries;
 
