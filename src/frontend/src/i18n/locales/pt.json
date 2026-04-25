@@ -9,7 +9,10 @@
     "everythingYouNeed": "Tudo o que você precisa para gerenciar seus projetos.",
     "manageProjects": "Gerencie projetos com a fluidez que sua equipe merece.",
     "joinThousandsOfCompanies": "Junte-se a milhares de empresas que usam o Taska para escalar seu desenvolvimento.",
-    "tryForFreeOrBoostYourTeam": "Experimente gratuitamente ou impulsione a sua equipa com recursos avançados."
+    "tryForFreeOrBoostYourTeam": "Experimente gratuitamente ou impulsione a sua equipa com recursos avançados.",
+    "switchLanguage": "Trocar Idioma",
+    "toggleTheme": "Alternar Tema",
+    "notifications": "Notificações"
   },
   "auth": {
     "loginTitle": "Acesse a sua conta",
@@ -98,6 +101,7 @@
     "myTasks": "Minhas Tarefas",
     "administration": "Administração",
     "team": "Equipe & Membros",
-    "settings": "Configurações"
+    "settings": "Configurações",
+    "profile": "Profile"
   }
 }

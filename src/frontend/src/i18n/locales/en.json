@@ -5,7 +5,10 @@
     "cancel": "Cancel",
     "acceptAll": "Accept All",
     "orContinueWith": "Or continue with",
-    "copyright": "© 2026 Taska Software Inc. All rights reserved."
+    "copyright": "© 2026 Taska Software Inc. All rights reserved.",
+    "switchLanguage": "Switch Language",
+    "toggleTheme": "Toggle Theme",
+    "notifications": "Notifications"
   },
   "auth": {
     "loginTitle": "Log in to your account",
@@ -94,6 +97,7 @@
     "myTasks": "My Tasks",
     "administration": "Administration",
     "team": "Team & Members",
-    "settings": "Settings"
+    "settings": "Settings",
+    "profile": "Profile"
   }
 }

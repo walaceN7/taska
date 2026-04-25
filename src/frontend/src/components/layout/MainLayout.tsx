@@ -1,6 +1,7 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
+import { Topbar } from "./Topbar";
 
 export function MainLayout() {
   return (
@@ -8,11 +9,8 @@ export function MainLayout() {
       <div className="flex min-h-screen w-full bg-background text-foreground">
         <AppSidebar />
 
-        <main className="flex-1 flex flex-col">
-          <header className="h-14 border-b px-4 flex items-center gap-4 bg-card/50 backdrop-blur-sm">
-            <SidebarTrigger />
-            <div className="flex-1" />
-          </header>
+        <main className="flex-1 flex flex-col min-w-0">
+          <Topbar />
 
           <div className="p-6 flex-1 overflow-auto">
             <Outlet />
