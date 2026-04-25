@@ -99,3 +99,26 @@ export function useGoogleLoginMutation() {
     },
   });
 }
+
+export function useRegisterWithInvitationMutation() {
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: authService.registerWithInvitation,
+    onSuccess: (data) => {
+      toast.success(
+        t("auth.inviteAccepted", "Welcome! Your account is ready."),
+      );
+      login(data.user!, data.accessToken!);
+      navigate("/dashboard");
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const message =
+        error.response?.data?.error ||
+        t("auth.inviteError", "Failed to accept invitation.");
+      toast.error(message);
+    },
+  });
+}

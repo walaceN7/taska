@@ -3,13 +3,14 @@ import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { Login } from "@/pages/auth/Login";
 import { Onboarding } from "@/pages/auth/Onboarding";
 import { Register } from "@/pages/auth/Register";
+import { RegisterInvite } from "@/pages/auth/RegisterInvite";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { Verify2FA } from "@/pages/auth/Verify2FA";
 import { Dashboard } from "@/pages/dashboard/Dashboard";
+import { TeamMembers } from "@/pages/team/TeamMembers";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
-import { TeamMembers } from "@/pages/team/TeamMembers";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
+      { path: "/register/invite", element: <RegisterInvite /> },
       { path: "/forgot-password", element: <ForgotPassword /> },
       { path: "/reset-password", element: <ResetPassword /> },
       { path: "/verify-2fa", element: <Verify2FA /> },

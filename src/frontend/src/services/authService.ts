@@ -1,9 +1,10 @@
 import { api } from "@/lib/api";
 import type {
-  SsoLoginRequest,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
+  RegisterWithInvitationRequest,
+  SsoLoginRequest,
   Verify2FARequest,
 } from "@/types/auth.types";
 
@@ -43,6 +44,16 @@ export const authService = {
 
   refreshToken: async (): Promise<LoginResponse> => {
     const response = await api.post<LoginResponse>(`${urlBase}/refresh`);
+    return response.data;
+  },
+
+  registerWithInvitation: async (
+    payload: RegisterWithInvitationRequest,
+  ): Promise<LoginResponse> => {
+    const response = await api.post<LoginResponse>(
+      `${urlBase}/register/invite`,
+      payload,
+    );
     return response.data;
   },
 };

@@ -43,3 +43,10 @@ export interface RegisterRequest {
 export interface SsoLoginRequest {
   accessToken: string;
 }
+
+export interface RegisterWithInvitationRequest {
+  token: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}

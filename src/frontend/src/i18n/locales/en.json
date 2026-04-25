@@ -8,7 +8,8 @@
     "copyright": "© 2026 Taska Software Inc. All rights reserved.",
     "switchLanguage": "Switch Language",
     "toggleTheme": "Toggle Theme",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "sending": "Sending..."
   },
   "auth": {
     "loginTitle": "Log in to your account",
@@ -77,7 +78,13 @@
     "companyCreatedErrorLoginAgain": "Company created successfully, but please login again to access.",
     "welcome": "Welcome!",
     "welcomeSubtitle": "You are just one step away from accessing Taska.",
-    "welcomeButton": "Continue"
+    "welcomeButton": "Continue",
+    "acceptInvitationButton": "Accept Invitation",
+    "inviteAccepted": "Invitation accepted successfully!",
+    "inviteError": "Failed to accept invitation.",
+    "acceptInviteTitle": "Join your Workspace",
+    "acceptInviteSubtitle": "Set up your profile to get started.",
+    "joinWorkspaceButton": "Join Workspace"
   },
   "marketing": {
     "heroTitle": "Manage projects with the fluidity your team deserves.",
@@ -102,5 +109,23 @@
   },
   "dashboard": {
     "welcome": "Welcome to your workspace!"
+  },
+  "team": {
+    "title": "Team & Members",
+    "subtitle": "Manage your workspace members and teams.",
+    "tabs": {
+      "members": "All Members",
+      "teams": "Teams"
+    },
+    "user": "User",
+    "role": "System Role",
+    "actions": "Actions",
+    "noTeamsTitle": "No teams created yet",
+    "noTeamsDesc": "Organize your members into teams like 'Frontend', 'Marketing', or 'Design'.",
+    "createTeam": "Create Team",
+    "inviteMember": "Invite Member",
+    "inviteModalTitle": "Invite to Workspace",
+    "inviteModalDesc": "Enter the email address of the person you want to invite to your team.",
+    "sendInvite": "Send Invite"
   }
 }

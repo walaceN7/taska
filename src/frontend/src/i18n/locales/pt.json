@@ -12,7 +12,8 @@
     "tryForFreeOrBoostYourTeam": "Experimente gratuitamente ou impulsione a sua equipa com recursos avançados.",
     "switchLanguage": "Trocar Idioma",
     "toggleTheme": "Alternar Tema",
-    "notifications": "Notificações"
+    "notifications": "Notificações",
+    "sending": "A enviar..."
   },
   "auth": {
     "loginTitle": "Acesse a sua conta",
@@ -48,7 +49,7 @@
     "resetPasswordTitle": "Redefinir sua senha",
     "resetPasswordSubtitle": "Insira sua nova senha abaixo.",
     "newPasswordLabel": "Nova Senha",
-    "confirmPasswordLabel": "Confirmar Nova Senha",
+    "confirmPasswordLabel": "Confirmar Senha",
     "passwordMismatch": "As senhas não coincidem.",
     "resetButton": "Redefinir senha",
     "planRequired": "Por favor, selecione um plano.",
@@ -81,7 +82,13 @@
     "companyCreateError": "Falha ao criar workspace. Por favor, tente novamente.",
     "welcome": "Bem-vindo!",
     "welcomeSubtitle": "Você está a apenas um passo de acessar o Taska.",
-    "welcomeButton": "Continuar"
+    "welcomeButton": "Continuar",
+    "acceptInvitationButton": "Aceitar Convite",
+    "inviteAccepted": "Convite aceito com sucesso!",
+    "inviteError": "Falha ao aceitar convite.",
+    "acceptInviteTitle": "Junte-se ao seu Workspace",
+    "acceptInviteSubtitle": "Configure seu perfil para começar.",
+    "joinWorkspaceButton": "Juntar-se ao Workspace"
   },
   "marketing": {
     "heroTitle": "Gerencie projetos com a fluidez que sua equipe merece.",
@@ -106,5 +113,23 @@
   },
   "dashboard": {
     "welcome": "Bem-vindo ao seu Workspace!"
+  },
+  "team": {
+    "title": "Equipe & Membros",
+    "subtitle": "Gerencie os membros e equipes da sua empresa.",
+    "tabs": {
+      "members": "Todos os Membros",
+      "teams": "Equipes"
+    },
+    "user": "Usuário",
+    "role": "Função do Sistema",
+    "actions": "Ações",
+    "noTeamsTitle": "Nenhuma equipe criada ainda",
+    "noTeamsDesc": "Organize seus membros em equipes como 'Frontend', 'Marketing' ou 'Design'.",
+    "createTeam": "Criar Equipe",
+    "inviteMember": "Convidar Membro",
+    "inviteModalTitle": "Convidar para o Workspace",
+    "inviteModalDesc": "Insira o endereço de e-mail da pessoa que deseja convidar para sua equipe.",
+    "sendInvite": "Enviar Convite"    
   }
 }
