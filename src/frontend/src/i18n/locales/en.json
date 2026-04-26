@@ -9,7 +9,9 @@
     "switchLanguage": "Switch Language",
     "toggleTheme": "Toggle Theme",
     "notifications": "Notifications",
-    "sending": "Sending..."
+    "sending": "Sending...",
+    "refresh": "Refresh",
+    "lastUpdated": "Updated:"
   },
   "auth": {
     "loginTitle": "Log in to your account",

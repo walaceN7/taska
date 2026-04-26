@@ -35,9 +35,12 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { InviteMemberModal } from "./components/InviteMemberModal";
+import { useAuthStore } from "@/stores/authStore";
 
 export function TeamMembers() {
   const { t } = useTranslation();
+
+  const { user } = useAuthStore();
 
   const {
     data: activeMembers = [],
@@ -84,8 +87,8 @@ export function TeamMembers() {
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-end">
+        <div className="flex flex-col items-end gap-1">
+          <div className="flex items-center gap-3">
             <Button
               variant="outline"
               size="sm"
@@ -97,13 +100,15 @@ export function TeamMembers() {
               />
               {t("common.refresh", "Refresh")}
             </Button>
-            {lastUpdated && (
-              <span className="text-[10px] text-muted-foreground mt-1">
-                {t("common.lastUpdated", "Updated:")} {formatDate(lastUpdated)}
-              </span>
-            )}
+
+            <InviteMemberModal />
           </div>
-          <InviteMemberModal />
+
+          {lastUpdated && (
+            <span className="text-[10px] text-muted-foreground mr-1">
+              {t("common.lastUpdated", "Updated:")} {formatDate(lastUpdated)}
+            </span>
+          )}
         </div>
       </header>
 
@@ -121,7 +126,10 @@ export function TeamMembers() {
           <TabsTrigger value="pending">
             {t("team.tabs.pending", "Pending Invites")}
             {pendingInvites.length > 0 && (
-              <Badge variant="secondary" className="ml-2">
+              <Badge
+                variant="secondary"
+                className="ml-2 bg-primary/10 text-primary"
+              >
                 {pendingInvites.length}
               </Badge>
             )}
@@ -143,6 +151,7 @@ export function TeamMembers() {
                   </TableHead>
                 </TableRow>
               </TableHeader>
+
               <TableBody>
                 {isLoadingMembers ? (
                   Array.from({ length: 3 }).map((_, i) => (
@@ -223,6 +232,7 @@ export function TeamMembers() {
                               variant="ghost"
                               size="icon"
                               className="text-muted-foreground"
+                              disabled={member.id === user?.userId}
                             >
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>

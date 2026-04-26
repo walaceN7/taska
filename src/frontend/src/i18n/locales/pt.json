@@ -13,7 +13,9 @@
     "switchLanguage": "Trocar Idioma",
     "toggleTheme": "Alternar Tema",
     "notifications": "Notificações",
-    "sending": "A enviar..."
+    "sending": "Enviando...",
+    "refresh": "Atualizar",
+    "lastUpdated": "Atualizado:"
   },
   "auth": {
     "loginTitle": "Acesse a sua conta",
