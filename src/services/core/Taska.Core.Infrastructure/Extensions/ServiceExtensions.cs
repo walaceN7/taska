@@ -34,6 +34,8 @@ public static class ServiceExtensions
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IAttachmentRepository, AttachmentRepository>();
         services.AddScoped<ITaskAssigneeRepository, TaskAssigneeRepository>();
+        services.AddScoped<ITeamRepository, TeamRepository>();
+
 
         var s3Config = new AmazonS3Config
         {

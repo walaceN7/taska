@@ -120,7 +120,8 @@
     "title": "Equipe & Membros",
     "subtitle": "Gerencie os membros e equipes da sua empresa.",
     "tabs": {
-      "members": "Todos os Membros",
+      "active": "Membros Ativos",
+      "pending": "Convites Pendentes",
       "teams": "Equipes"
     },
     "user": "Usuário",
@@ -139,6 +140,17 @@
     "resendInvite": "Reenviar Convite",
     "removeMember": "Remover Membro",
     "noMembersTitle": "Nenhum membro ainda",
-    "noMembersDesc": "Convide colegas para ingressar no seu workspace."
+    "noMembersDesc": "Convide colegas para ingressar no seu workspace.",
+    "createSuccess": "Equipe criada com sucesso!",
+    "createError": "Falha ao criar equipe.",
+    "manageAccess": "Gerenciar Acesso",
+    "makeAdmin": "Tornar Admin",
+    "makeMember": "Tornar Membro",
+    "email": "E-mail",
+    "status": "Status",
+    "teamsSubtitle": "Organize seus membros em grupos funcionais.",
+    "name": "Nome",
+    "memberCount": "Contagem de Membros",
+    "membersCount": "membros"
   }
 }

@@ -116,7 +116,8 @@
     "title": "Team & Members",
     "subtitle": "Manage your workspace members and teams.",
     "tabs": {
-      "members": "All Members",
+      "active": "Active Members",
+      "pending": "Pending Invites",
       "teams": "Teams"
     },
     "user": "User",
@@ -135,6 +136,17 @@
     "resendInvite": "Resend Invite",
     "removeMember": "Remove Member",
     "noMembersTitle": "No members yet",
-    "noMembersDesc": "Invite colleagues to join your workspace."
+    "noMembersDesc": "Invite colleagues to join your workspace.",
+    "createSuccess": "Team created successfully!",
+    "createError": "Failed to create team.",
+    "manageAccess": "Manage Access",
+    "makeAdmin": "Make Admin",
+    "makeMember": "Make Member",
+    "email": "E-mail",
+    "status": "Status",
+    "teamsSubtitle": "Organize your members into functional groups.",
+    "name": "Name",
+    "memberCount": "Member Count",
+    "membersCount": "members"
   }
 }

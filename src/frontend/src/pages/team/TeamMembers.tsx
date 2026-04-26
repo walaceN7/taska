@@ -19,8 +19,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useCompanyMembers, usePendingInvites } from "@/hooks/useTeam";
+import {
+  useCompanyMembers,
+  usePendingInvites,
+  useTeams,
+} from "@/hooks/useTeam";
 import { formatDate } from "@/lib/utils";
+import { useAuthStore } from "@/stores/authStore";
 import {
   Clock,
   Mail,
@@ -34,8 +39,8 @@ import {
   Users,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { CreateTeamModal } from "./components/CreateTeamModal";
 import { InviteMemberModal } from "./components/InviteMemberModal";
-import { useAuthStore } from "@/stores/authStore";
 
 export function TeamMembers() {
   const { t } = useTranslation();
@@ -58,6 +63,14 @@ export function TeamMembers() {
     dataUpdatedAt: invitesUpdatedAt,
   } = usePendingInvites();
 
+  const {
+    data: teams = [],
+    isLoading: isLoadingTeams,
+    isFetching: isFetchingTeams,
+    refetch: refetchTeams,
+    dataUpdatedAt: teamsUpdatedAt,
+  } = useTeams();
+
   const getInitials = (name: string) => {
     return name.substring(0, 2).toUpperCase();
   };
@@ -65,11 +78,14 @@ export function TeamMembers() {
   const handleRefresh = () => {
     refetchMembers();
     refetchInvites();
+    refetchTeams();
   };
 
   const lastUpdated =
-    membersUpdatedAt || invitesUpdatedAt
-      ? new Date(Math.max(membersUpdatedAt, invitesUpdatedAt)).toISOString()
+    membersUpdatedAt || invitesUpdatedAt || teamsUpdatedAt
+      ? new Date(
+          Math.max(membersUpdatedAt, invitesUpdatedAt, teamsUpdatedAt),
+        ).toISOString()
       : undefined;
 
   return (
@@ -93,10 +109,12 @@ export function TeamMembers() {
               variant="outline"
               size="sm"
               onClick={handleRefresh}
-              disabled={isFetchingMembers || isFetchingInvites}
+              disabled={
+                isFetchingMembers || isFetchingInvites || isFetchingTeams
+              }
             >
               <RefreshCw
-                className={`mr-2 h-4 w-4 ${isFetchingMembers || isFetchingInvites ? "animate-spin" : ""}`}
+                className={`mr-2 h-4 w-4 ${isFetchingMembers || isFetchingInvites || isFetchingTeams ? "animate-spin" : ""}`}
               />
               {t("common.refresh", "Refresh")}
             </Button>
@@ -136,6 +154,14 @@ export function TeamMembers() {
           </TabsTrigger>
           <TabsTrigger value="teams">
             {t("team.tabs.teams", "Teams")}
+            {teams.length > 0 && (
+              <Badge
+                variant="secondary"
+                className="ml-2 bg-primary/10 text-primary"
+              >
+                {teams.length}
+              </Badge>
+            )}
           </TabsTrigger>
         </TabsList>
 
@@ -343,7 +369,7 @@ export function TeamMembers() {
                             size="sm"
                             className="text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
-                            {t("team.cancelInvite", "Cancel")}
+                            {t("common.cancel", "Cancel")}
                           </Button>
                         </div>
                       </TableCell>
@@ -355,24 +381,139 @@ export function TeamMembers() {
           </div>
         </TabsContent>
 
-        <TabsContent value="teams">
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-card/50 p-12 text-center shadow-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4">
-              <Users className="h-6 w-6 text-primary" />
+        <TabsContent value="teams" className="space-y-4">
+          <div className="flex justify-between items-center bg-card p-4 rounded-xl border shadow-sm">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight">
+                {t("team.tabs.teams", "Teams")}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {t(
+                  "team.teamsSubtitle",
+                  "Organize members into functional groups.",
+                )}
+              </p>
             </div>
-            <h3 className="text-lg font-semibold">
-              {t("team.noTeamsTitle", "No teams created yet")}
-            </h3>
-            <p className="text-sm text-muted-foreground mt-2 mb-6 max-w-sm">
-              {t(
-                "team.noTeamsDesc",
-                "Organize your members into teams like 'Frontend', 'Marketing', or 'Design'.",
-              )}
-            </p>
-            <Button variant="outline">
-              <Plus className="mr-2 h-4 w-4" />
-              {t("team.createTeam", "Create Team")}
-            </Button>
+            <CreateTeamModal />
+          </div>
+
+          <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50 hover:bg-muted/50">
+                  <TableHead>{t("team.name", "Team Name")}</TableHead>
+                  <TableHead>{t("team.memberCount", "Member Count")}</TableHead>
+                  <TableHead className="text-right">
+                    {t("team.actions", "Actions")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoadingTeams ? (
+                  Array.from({ length: 2 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell className="py-4">
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-[200px]" />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-6 w-[80px] rounded-full" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Skeleton className="h-8 w-8 ml-auto" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : teams.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      className="h-48 text-center text-muted-foreground"
+                    >
+                      <div className="flex flex-col items-center justify-center space-y-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                          <Users className="h-6 w-6 text-primary" />
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="text-lg font-semibold text-foreground">
+                            {t("team.noTeamsTitle", "No teams created yet")}
+                          </h3>
+                          <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                            {t(
+                              "team.noTeamsDesc",
+                              "Organize your members into teams like 'Frontend', 'Marketing', or 'Design'.",
+                            )}
+                          </p>
+                        </div>
+                        <div className="mt-4">
+                          <CreateTeamModal
+                            customTrigger={
+                              <Button variant="outline">
+                                <Plus className="mr-2 h-4 w-4" />
+                                {t("team.createTeam", "Create Team")}
+                              </Button>
+                            }
+                          />
+                        </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  teams.map((team) => (
+                    <TableRow key={team.id}>
+                      <TableCell className="py-4">
+                        <div className="flex items-center gap-3 font-medium">
+                          <div className="bg-primary/10 p-2 rounded-md">
+                            <Users className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span>{team.name}</span>
+                            {team.description && (
+                              <span className="text-xs text-muted-foreground font-normal">
+                                {team.description}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className="bg-primary/10 text-primary"
+                        >
+                          {team.memberCount} {t("team.membersCount", "members")}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-muted-foreground"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40">
+                            <DropdownMenuItem className="cursor-pointer">
+                              <UserCog className="mr-2 h-4 w-4" />
+                              {t("team.manageMembers", "Manage")}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              {t("common.delete", "Delete")}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
           </div>
         </TabsContent>
       </Tabs>
