@@ -26,7 +26,8 @@
     "actions": "Ações",
     "admin": "Administrador",
     "member": "Membro",
-    "loadMore": "Carregar mais"
+    "loadMore": "Carregar mais",
+    "pickDate": "Escolher data"
   },
   "auth": {
     "loginTitle": "Acesse a sua conta",
@@ -178,6 +179,16 @@
       "completed": "Concluído",
       "cancelled": "Cancelado",
       "unknown": "Desconhecido"
-    }
+    },
+    "name": "Nome do Projeto",
+    "description": "Descrição",
+    "startDate": "Data de Início",
+    "endDate": "Data de Fim",
+    "namePlaceholder": "Insira o nome do projeto",
+    "descriptionPlaceholder": "Insira a descrição do projeto",
+    "startDatePlaceholder": "Insira a data de início do projeto",
+    "endDatePlaceholder": "Insira a data de fim do projeto",
+    "createProject": "Criar Projeto",
+    "createProjectDescription": "Crie um novo projeto para sua empresa."
   }
 }

@@ -1,10 +1,15 @@
 import { api } from "@/lib/api";
 import type { PagedResult } from "@/types/api.types";
-import type { ProjectDto } from "@/types/project.types";
+import type { CreateProjectRequest, ProjectDto } from "@/types/project.types";
 
 const urlBase = "core/api/project";
 
 export const projectService = {
+  createProject: async (request: CreateProjectRequest): Promise<ProjectDto> => {
+    const response = await api.post<ProjectDto>(`${urlBase}`, request);
+    return response.data;
+  },
+
   getPagedCompanyProjects: async (
     pageNumber: number,
     pageSize: number,

@@ -22,7 +22,8 @@
     "actions": "Actions",
     "admin": "Admin",
     "member": "Member",
-    "loadMore": "Load More"
+    "loadMore": "Load More",
+    "pickDate": "Pick a date"
   },
   "auth": {
     "loginTitle": "Log in to your account",
@@ -174,6 +175,16 @@
       "completed": "Completed",
       "cancelled": "Cancelled",
       "unknown": "Unknown"
-    }
+    },
+    "name": "Project Name",
+    "description": "Description",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "namePlaceholder": "Enter project name",
+    "descriptionPlaceholder": "Enter project description",
+    "startDatePlaceholder": "Enter project start date",
+    "endDatePlaceholder": "Enter project end date",
+    "createProject": "Create Project",
+    "createProjectDescription": "Create a new project"
   }
 }

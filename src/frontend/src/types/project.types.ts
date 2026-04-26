@@ -8,6 +8,13 @@ export interface ProjectDto {
   companyName: string;
 }
 
+export interface CreateProjectRequest {
+  name: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
 export const ProjectStatus = {
   Planning: 1,
   Active: 2,

@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useInfiniteProjects } from "@/hooks/useProject";
-import { LayoutGrid, List, Loader2, Plus } from "lucide-react";
+import { LayoutGrid, List, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { CreateProjectModal } from "./components/CreateProjectModal";
 import { ProjectCard } from "./components/ProjectCard";
 
 export function Projects() {
@@ -44,10 +45,7 @@ export function Projects() {
             </Button>
           </div>
 
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            {t("projects.create", "Create Project")}
-          </Button>
+          <CreateProjectModal />
         </div>
       </header>
 
