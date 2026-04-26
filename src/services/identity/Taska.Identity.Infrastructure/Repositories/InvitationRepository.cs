@@ -2,6 +2,7 @@
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
 using Taska.Identity.Infrastructure.Persistence;
+using Taska.Shared.Pagination;
 
 namespace Taska.Identity.Infrastructure.Repositories;
 
@@ -33,5 +34,14 @@ public class InvitationRepository(TaskaIdentityDbContext context) : IInvitationR
     public async ValueTask<IEnumerable<Invitation>> GetPendingByCompanyIdAsync(Guid companyId, CancellationToken cancellationToken = default)
     {
         return await context.Invitations.Where(i => i.CompanyId == companyId && i.AcceptedAt == null).AsNoTracking().ToListAsync(cancellationToken);
+    }
+
+    public async ValueTask<PagedResult<Invitation>> GetPendingByCompanyIdAsync(Guid companyId, PaginationParams paginationParams, CancellationToken cancellationToken)
+    {
+        return await context.Invitations
+            .Where(t => t.CompanyId == companyId && t.AcceptedAt == null)            
+            .OrderBy(t => t.CreatedAt)
+            .AsNoTracking()
+            .ToPagedResultAsync(paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     }
 }

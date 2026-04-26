@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  useCompanyMembers,
-  usePendingInvites,
-  useTeams,
+  usePagedCompanyMembers,
+  usePagedPendingInvites,
+  usePagedTeams,
 } from "@/hooks/useTeam";
 import { formatDate } from "@/lib/utils";
 import { useAuthStore } from "@/stores/authStore";
 import { Mail, Plus, RefreshCw, UserCog, Users } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getActiveMembersColumns } from "./columns/active-members-columns";
 import { getPendingInvitesColumns } from "./columns/pending-invites-columns";
@@ -20,8 +20,20 @@ import { InviteMemberModal } from "./components/InviteMemberModal";
 
 export function TeamMembers() {
   const { t } = useTranslation();
-
   const { user } = useAuthStore();
+
+  const [membersPagination, setMembersPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+  const [invitesPagination, setInvitesPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+  const [teamsPagination, setTeamsPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
 
   const activeMembersColumns = useMemo(
     () => getActiveMembersColumns(t, user?.userId),
@@ -31,28 +43,34 @@ export function TeamMembers() {
   const teamColumns = useMemo(() => getTeamColumns(t), [t]);
 
   const {
-    data: activeMembers = [],
-    isLoading: isLoadingMembers,
+    data: pagedActiveMembers,
+    isLoading: isLoadingActiveMembers,
     isFetching: isFetchingMembers,
     refetch: refetchMembers,
     dataUpdatedAt: membersUpdatedAt,
-  } = useCompanyMembers();
+  } = usePagedCompanyMembers(
+    membersPagination.pageIndex + 1,
+    membersPagination.pageSize,
+  );
 
   const {
-    data: pendingInvites = [],
-    isLoading: isLoadingInvites,
+    data: pagedPendingInvites,
+    isLoading: isLoadingPendingInvites,
     isFetching: isFetchingInvites,
     refetch: refetchInvites,
     dataUpdatedAt: invitesUpdatedAt,
-  } = usePendingInvites();
+  } = usePagedPendingInvites(
+    invitesPagination.pageIndex + 1,
+    invitesPagination.pageSize,
+  );
 
   const {
-    data: teams = [],
+    data: pagedTeams,
     isLoading: isLoadingTeams,
     isFetching: isFetchingTeams,
     refetch: refetchTeams,
     dataUpdatedAt: teamsUpdatedAt,
-  } = useTeams();
+  } = usePagedTeams(teamsPagination.pageIndex + 1, teamsPagination.pageSize);
 
   const handleRefresh = () => {
     refetchMembers();
@@ -63,7 +81,11 @@ export function TeamMembers() {
   const lastUpdated =
     membersUpdatedAt || invitesUpdatedAt || teamsUpdatedAt
       ? new Date(
-          Math.max(membersUpdatedAt, invitesUpdatedAt, teamsUpdatedAt),
+          Math.max(
+            membersUpdatedAt || 0,
+            invitesUpdatedAt || 0,
+            teamsUpdatedAt || 0,
+          ),
         ).toISOString()
       : undefined;
 
@@ -117,39 +139,41 @@ export function TeamMembers() {
               variant="secondary"
               className="ml-2 bg-primary/10 text-primary"
             >
-              {activeMembers.length}
+              {pagedActiveMembers?.totalCount || 0}
             </Badge>
           </TabsTrigger>
+
           <TabsTrigger value="pending">
             {t("team.tabs.pending", "Pending Invites")}
-            {pendingInvites.length > 0 && (
+            {(pagedPendingInvites?.totalCount ?? 0) > 0 && (
               <Badge
                 variant="secondary"
                 className="ml-2 bg-primary/10 text-primary"
               >
-                {pendingInvites.length}
+                {pagedPendingInvites?.totalCount}
               </Badge>
             )}
           </TabsTrigger>
+
           <TabsTrigger value="teams">
             {t("team.tabs.teams", "Teams")}
-            {teams.length > 0 && (
+            {(pagedTeams?.totalCount ?? 0) > 0 && (
               <Badge
                 variant="secondary"
                 className="ml-2 bg-primary/10 text-primary"
               >
-                {teams.length}
+                {pagedTeams?.totalCount}
               </Badge>
             )}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="active" className="space-y-4">
-          {isLoadingMembers ? (
+          {isLoadingActiveMembers ? (
             <div className="h-32 flex items-center justify-center border rounded-xl bg-card">
               <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
-          ) : activeMembers.length === 0 ? (
+          ) : pagedActiveMembers?.items.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-xl border bg-card p-12 text-center shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4">
                 <UserCog className="h-6 w-6 text-primary" />
@@ -159,16 +183,23 @@ export function TeamMembers() {
               </h3>
             </div>
           ) : (
-            <DataTable columns={activeMembersColumns} data={activeMembers} />
+            <DataTable
+              columns={activeMembersColumns}
+              data={pagedActiveMembers?.items ?? []}
+              pageCount={pagedActiveMembers?.totalPages ?? 0}
+              pagination={membersPagination}
+              onPaginationChange={setMembersPagination}
+              totalCount={pagedActiveMembers?.totalCount ?? 0}
+            />
           )}
         </TabsContent>
 
         <TabsContent value="pending" className="space-y-4">
-          {isLoadingInvites ? (
+          {isLoadingPendingInvites ? (
             <div className="h-32 flex items-center justify-center border rounded-xl bg-card">
               <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
-          ) : pendingInvites.length === 0 ? (
+          ) : pagedPendingInvites?.items?.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-xl border bg-card p-12 text-center shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4">
                 <Mail className="h-6 w-6 text-primary" />
@@ -178,7 +209,14 @@ export function TeamMembers() {
               </h3>
             </div>
           ) : (
-            <DataTable columns={pendingInvitesColumns} data={pendingInvites} />
+            <DataTable
+              columns={pendingInvitesColumns}
+              data={pagedPendingInvites?.items ?? []}
+              pageCount={pagedPendingInvites?.totalPages ?? 0}
+              pagination={invitesPagination}
+              onPaginationChange={setInvitesPagination}
+              totalCount={pagedPendingInvites?.totalCount ?? 0}
+            />
           )}
         </TabsContent>
 
@@ -202,7 +240,7 @@ export function TeamMembers() {
             <div className="h-32 flex items-center justify-center border rounded-xl bg-card">
               <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
-          ) : teams.length === 0 ? (
+          ) : pagedTeams?.items.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-xl border bg-card p-12 text-center shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4">
                 <Users className="h-6 w-6 text-primary" />
@@ -226,7 +264,14 @@ export function TeamMembers() {
               />
             </div>
           ) : (
-            <DataTable columns={teamColumns} data={teams} />
+            <DataTable
+              columns={teamColumns}
+              data={pagedTeams?.items ?? []}
+              pageCount={pagedTeams?.totalPages ?? 0}
+              pagination={teamsPagination}
+              onPaginationChange={setTeamsPagination}
+              totalCount={pagedTeams?.totalCount ?? 0}
+            />
           )}
         </TabsContent>
       </Tabs>

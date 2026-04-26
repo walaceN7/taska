@@ -12,10 +12,26 @@ export function useCompanyMembers() {
   });
 }
 
+export function usePagedCompanyMembers(pageNumber: number, pageSize: number) {
+  return useQuery({
+    queryKey: ["companyMembers", "paged", pageNumber, pageSize],
+    queryFn: () => teamService.getPagedCompanyMembers(pageNumber, pageSize),
+    placeholderData: (previousData) => previousData,
+  });
+}
+
 export function usePendingInvites() {
   return useQuery({
     queryKey: ["pendingInvites"],
     queryFn: teamService.getPendingInvites,
+  });
+}
+
+export function usePagedPendingInvites(pageNumber: number, pageSize: number) {
+  return useQuery({
+    queryKey: ["pendingInvites", "paged", pageNumber, pageSize],
+    queryFn: () => teamService.getPagedPendingInvites(pageNumber, pageSize),
+    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -42,5 +58,13 @@ export function useCreateTeamMutation() {
         t("team.createError", "Failed to create team.");
       toast.error(message);
     },
+  });
+}
+
+export function usePagedTeams(pageNumber: number, pageSize: number) {
+  return useQuery({
+    queryKey: ["teams", "paged", pageNumber, pageSize],
+    queryFn: () => teamService.getPagedTeams(pageNumber, pageSize),
+    placeholderData: (previousData) => previousData,
   });
 }
