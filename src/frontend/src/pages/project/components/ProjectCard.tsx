@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate } from "@/lib/utils";
+import { formatDateWithoutTime } from "@/lib/utils";
 import { type ProjectDto, ProjectStatus } from "@/types/project.types";
 import { Calendar, FolderKanban } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -50,7 +50,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Calendar className="h-3 w-3" />
             <span>
-              {project.startDate ? formatDate(project.startDate) : "---"}
+              {project.startDate
+                ? formatDateWithoutTime(project.startDate)
+                : "---"}
             </span>
           </div>
 
