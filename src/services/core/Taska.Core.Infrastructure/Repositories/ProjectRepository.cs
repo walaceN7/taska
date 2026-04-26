@@ -2,6 +2,7 @@
 using Taska.Core.Application.Interfaces;
 using Taska.Core.Domain.Entities;
 using Taska.Core.Infrastructure.Persistence;
+using Taska.Shared.Pagination;
 
 namespace Taska.Core.Infrastructure.Repositories;
 
@@ -32,6 +33,16 @@ public class ProjectRepository(TaskaCoreDbContext context) : IProjectRepository
             .Include(p => p.Company)
             .Where(p => p.CompanyId == companyId)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<PagedResult<Project>> GetByCompanyAsync(Guid companyId, PaginationParams paginationParams, CancellationToken cancellationToken)
+    {
+        return await context.Projects            
+            .Where(p => p.CompanyId == companyId)
+            .Include(p => p.Company)
+            .OrderBy(p => p.Name)
+            .AsNoTracking()
+            .ToPagedResultAsync(paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     }
 
     public async Task<Project> UpdateAsync(Project project, CancellationToken cancellationToken)

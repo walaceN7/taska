@@ -1,8 +1,6 @@
-﻿using Mapster;
-using Mediator;
+﻿using Mediator;
 using Taska.Core.Application.Features.Teams.DTOs;
 using Taska.Core.Application.Interfaces;
-using Taska.Core.Domain.Entities;
 using Taska.Shared.Exceptions;
 
 namespace Taska.Core.Application.Features.Teams.Queries;

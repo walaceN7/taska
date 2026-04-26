@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Taska.Core.Application.Features.Boards.Queries;
 using Taska.Core.Application.Features.Projects.Commands;
 using Taska.Core.Application.Features.Projects.Queries;
+using Taska.Shared.Pagination;
 
 namespace Taska.Core.API.Controllers;
 
@@ -28,10 +29,17 @@ public class ProjectController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet]
+    [HttpGet("company")]
     public async Task<IActionResult> GetByCompany()
     {
         var result = await _mediator.Send(new GetProjectsByCompanyQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("company/paged")]
+    public async Task<IActionResult> GetPagedByCompany([FromQuery] PaginationParams paginationParams)
+    {
+        var result = await _mediator.Send(new GetPagedProjectsByCompanyQuery(paginationParams));
         return Ok(result);
     }
 
