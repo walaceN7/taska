@@ -23,6 +23,7 @@ const getInitials = (name: string) => {
   if (!name) return "US";
   return name.substring(0, 2).toUpperCase();
 };
+
 export const getActiveMembersColumns = (
   t: TFunction,
   currentUserId?: string,
@@ -65,7 +66,9 @@ export const getActiveMembersColumns = (
             <UserCog className="h-4 w-4 text-muted-foreground" />
           )}
           <span className={isAdmin ? "font-medium" : "text-muted-foreground"}>
-            {isAdmin ? "Admin" : "Member"}
+            {isAdmin
+              ? t("common.admin", "Admin")
+              : t("common.member", "Member")}
           </span>
         </div>
       );
@@ -79,41 +82,48 @@ export const getActiveMembersColumns = (
     cell: ({ row }) => {
       const member = row.original;
       const isSelf = member.id === currentUserId;
+      const role = row.original.systemRole;
+      const isAdmin = role === "CompanyAdmin" || role === "SaasAdmin";
 
       return (
-        <div className="text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground"
-                disabled={isSelf}
-              >
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel>
-                {t("team.manageAccess", "Manage Access")}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <Shield className="mr-2 h-4 w-4" />
-                {t("team.makeAdmin", "Make Admin")}
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                <UserCog className="mr-2 h-4 w-4" />
-                {t("team.makeMember", "Make Member")}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
-                <Trash2 className="mr-2 h-4 w-4" />
-                {t("team.removeMember", "Remove from Workspace")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        !isSelf && (
+          <div className="text-right">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-muted-foreground"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>
+                  {t("team.manageAccess", "Manage Access")}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {!isAdmin && (
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Shield className="mr-2 h-4 w-4" />
+                    {t("team.makeAdmin", "Make Admin")}
+                  </DropdownMenuItem>
+                )}
+                {isAdmin && (
+                  <DropdownMenuItem className="cursor-pointer">
+                    <UserCog className="mr-2 h-4 w-4" />
+                    {t("team.makeMember", "Make Member")}
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {t("team.removeMember", "Remove from Workspace")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )
       );
     },
   },

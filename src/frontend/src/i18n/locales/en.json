@@ -19,7 +19,9 @@
     "total": "Total",
     "rowsPerPage": "Rows per page",
     "noResults": "No results found.",
-    "actions": "Actions"
+    "actions": "Actions",
+    "admin": "Admin",
+    "member": "Member"
   },
   "auth": {
     "loginTitle": "Log in to your account",

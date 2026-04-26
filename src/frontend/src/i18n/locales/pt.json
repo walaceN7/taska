@@ -23,7 +23,9 @@
     "total": "Total",
     "rowsPerPage": "Linhas por página",
     "noResults": "Nenhum resultado encontrado.",
-    "actions": "Ações"
+    "actions": "Ações",
+    "admin": "Administrador",
+    "member": "Membro"
   },
   "auth": {
     "loginTitle": "Acesse a sua conta",
@@ -152,7 +154,7 @@
     "createSuccess": "Equipe criada com sucesso!",
     "createError": "Falha ao criar equipe.",
     "manageAccess": "Gerenciar Acesso",
-    "makeAdmin": "Tornar Admin",
+    "makeAdmin": "Tornar Administrador",
     "makeMember": "Tornar Membro",
     "email": "E-mail",
     "status": "Status",
