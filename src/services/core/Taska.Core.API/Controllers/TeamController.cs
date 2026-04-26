@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Taska.Core.Application.Features.Teams.Commands;
 using Taska.Core.Application.Features.Teams.Queries;
+using Taska.Shared.Pagination;
 
 namespace Taska.Core.API.Controllers
 {
@@ -22,6 +23,13 @@ namespace Taska.Core.API.Controllers
         public async Task<IActionResult> GetByCompany()
         {
             var result = await mediator.Send(new GetTeamsQuery());
+            return Ok(result);
+        }
+
+        [HttpGet("company/paged")]
+        public async Task<IActionResult> GetPagedByCompany([FromQuery] PaginationParams paginationParams)
+        {
+            var result = await mediator.Send(new GetPagedTeamsQuery(paginationParams));
             return Ok(result);
         }
     }
