@@ -29,6 +29,9 @@ import z from "zod";
 export function CreateProjectModal() {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isStartOpen, setIsStartOpen] = useState(false);
+  const [isEndOpen, setIsEndOpen] = useState(false);
+
   const createSchema = z.object({
     name: z
       .string()
@@ -150,7 +153,7 @@ export function CreateProjectModal() {
                 control={control}
                 name="startDate"
                 render={({ field }) => (
-                  <Popover>
+                  <Popover open={isStartOpen} onOpenChange={setIsStartOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
@@ -172,8 +175,11 @@ export function CreateProjectModal() {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          setIsStartOpen(false);
+                        }}
+                        autoFocus
                       />
                     </PopoverContent>
                   </Popover>
@@ -187,7 +193,7 @@ export function CreateProjectModal() {
                 control={control}
                 name="endDate"
                 render={({ field }) => (
-                  <Popover>
+                  <Popover open={isEndOpen} onOpenChange={setIsEndOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
@@ -209,8 +215,11 @@ export function CreateProjectModal() {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          setIsEndOpen(false);
+                        }}
+                        autoFocus
                       />
                     </PopoverContent>
                   </Popover>

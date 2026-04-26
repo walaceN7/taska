@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { useInfiniteProjects } from "@/hooks/useProject";
+import { DataTable } from "@/components/ui/data-table";
+import { usePagedProjects } from "@/hooks/useProject";
+import type { PaginationState } from "@tanstack/react-table";
 import { LayoutGrid, List, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useProjectColumns } from "./columns/project-columns";
 import { CreateProjectModal } from "./components/CreateProjectModal";
 import { ProjectCard } from "./components/ProjectCard";
 
@@ -10,13 +13,22 @@ export function Projects() {
   const { t } = useTranslation();
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteProjects(6);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
 
-  const allProjects = data?.pages.flatMap((page) => page.items) ?? [];
+  const columns = useProjectColumns();
+
+  const { data, isLoading } = usePagedProjects(
+    pagination.pageIndex,
+    pagination.pageSize,
+  );
+
+  const projects = data?.items ?? [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-6xl mx-auto">
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -54,42 +66,69 @@ export function Projects() {
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : (
-        <>
+        <div className="space-y-8">
           {viewMode === "grid" ? (
-            <div className="space-y-8">
+            <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {allProjects.map((project) => (
+                {projects.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
               </div>
 
-              {hasNextPage && (
-                <div className="flex justify-center pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                  >
-                    {isFetchingNextPage ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      t("common.loadMore", "Load More")
-                    )}
-                  </Button>
+              {data && data.totalPages > 1 && (
+                <div className="flex items-center justify-between px-2">
+                  <div className="text-sm text-muted-foreground">
+                    {t("common.pageInfo", {
+                      current: data.pageNumber,
+                      total: data.totalPages,
+                      defaultValue: `Page ${data.pageNumber} of ${data.totalPages}`,
+                    })}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setPagination((prev) => ({
+                          ...prev,
+                          pageIndex: prev.pageIndex - 1,
+                        }))
+                      }
+                      disabled={!data.hasPreviousPage}
+                    >
+                      {t("common.previous", "Previous")}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setPagination((prev) => ({
+                          ...prev,
+                          pageIndex: prev.pageIndex + 1,
+                        }))
+                      }
+                      disabled={!data.hasNextPage}
+                    >
+                      {t("common.next", "Next")}
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
           ) : (
-            <div className="rounded-md border p-4 bg-card">
-              <p className="text-center text-muted-foreground py-10">
-                {t(
-                  "projects.tablePlaceholder",
-                  "Projects table (Implement columns later)",
-                )}
-              </p>
+            <div className="rounded-md border bg-card">
+              {/* Agora o DataTable recebe todas as props que ele exige! */}
+              <DataTable
+                columns={columns}
+                data={projects}
+                pageCount={data?.totalPages ?? 0}
+                pagination={pagination}
+                onPaginationChange={setPagination}
+                totalCount={data?.totalCount ?? 0}
+              />
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
