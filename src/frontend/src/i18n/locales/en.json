@@ -11,7 +11,15 @@
     "notifications": "Notifications",
     "sending": "Sending...",
     "refresh": "Refresh",
-    "lastUpdated": "Updated:"
+    "lastUpdated": "Updated:",
+    "next": "Next",
+    "previous": "Previous",
+    "page": "Page",
+    "of": "of",
+    "total": "Total",
+    "rowsPerPage": "Rows per page",
+    "noResults": "No results found.",
+    "actions": "Actions"
   },
   "auth": {
     "loginTitle": "Log in to your account",

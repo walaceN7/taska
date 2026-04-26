@@ -15,7 +15,15 @@
     "notifications": "Notificações",
     "sending": "Enviando...",
     "refresh": "Atualizar",
-    "lastUpdated": "Atualizado:"
+    "lastUpdated": "Atualizado:",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "page": "Página",
+    "of": "de",
+    "total": "Total",
+    "rowsPerPage": "Linhas por página",
+    "noResults": "Nenhum resultado encontrado.",
+    "actions": "Ações"
   },
   "auth": {
     "loginTitle": "Acesse a sua conta",
