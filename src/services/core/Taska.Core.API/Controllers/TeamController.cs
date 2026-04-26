@@ -1,0 +1,28 @@
+﻿using Mediator;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Taska.Core.Application.Features.Teams.Commands;
+using Taska.Core.Application.Features.Teams.Queries;
+
+namespace Taska.Core.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class TeamController(IMediator mediator) : ControllerBase
+    {
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateTeamCommand command)
+        {
+            var result = await mediator.Send(command);
+            return CreatedAtAction(nameof(Create), result);
+        }
+
+        [HttpGet("company")]
+        public async Task<IActionResult> GetByCompany()
+        {
+            var result = await mediator.Send(new GetTeamsQuery());
+            return Ok(result);
+        }
+    }
+}
