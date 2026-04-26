@@ -25,7 +25,8 @@
     "noResults": "Nenhum resultado encontrado.",
     "actions": "Ações",
     "admin": "Administrador",
-    "member": "Membro"
+    "member": "Membro",
+    "loadMore": "Carregar mais"
   },
   "auth": {
     "loginTitle": "Acesse a sua conta",
@@ -162,5 +163,21 @@
     "name": "Nome",
     "memberCount": "Contagem de Membros",
     "membersCount": "membros"
+  },
+  "projects": {
+    "title": "Projetos",
+    "subtitle": "Gerencie os projetos da sua empresa.",
+    "create": "Criar Projeto",
+    "tablePlaceholder": "Tabela de projetos (Implementar colunas depois)"
+  },
+  "project": {
+    "status": {
+      "planning": "Planejamento",
+      "active": "Ativo",
+      "onhold": "Em Espera",
+      "completed": "Concluído",
+      "cancelled": "Cancelado",
+      "unknown": "Desconhecido"
+    }
   }
 }

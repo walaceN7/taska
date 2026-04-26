@@ -11,6 +11,7 @@ import { TeamMembers } from "@/pages/team/TeamMembers";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import { Projects } from "@/pages/project/Projects";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "/dashboard", element: <Dashboard /> },
           { path: "/team", element: <TeamMembers /> },
+          { path: "/projects", element: <Projects /> },
         ],
       },
     ],

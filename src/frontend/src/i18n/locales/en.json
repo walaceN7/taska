@@ -21,7 +21,8 @@
     "noResults": "No results found.",
     "actions": "Actions",
     "admin": "Admin",
-    "member": "Member"
+    "member": "Member",
+    "loadMore": "Load More"
   },
   "auth": {
     "loginTitle": "Log in to your account",
@@ -158,5 +159,21 @@
     "name": "Name",
     "memberCount": "Member Count",
     "membersCount": "members"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Manage your workspace projects.",
+    "create": "Create Project",
+    "tablePlaceholder": "Projects table (Implement columns later)"
+  },
+  "project": {
+    "status": {
+      "planning": "Planning",
+      "active": "Active",
+      "onhold": "On Hold",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "unknown": "Unknown"
+    }
   }
 }

@@ -8,10 +8,7 @@ export function useInfiniteProjects(pageSize: number = 6) {
       projectService.getPagedCompanyProjects(pageParam, pageSize),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      if (lastPage.hasNextPage) {
-        return lastPage.pageNumber + 1;
-      }
-      return undefined;
+      return lastPage.hasNextPage ? lastPage.pageNumber + 1 : undefined;
     },
   });
 }
