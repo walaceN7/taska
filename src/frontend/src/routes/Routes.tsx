@@ -7,11 +7,12 @@ import { RegisterInvite } from "@/pages/auth/RegisterInvite";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { Verify2FA } from "@/pages/auth/Verify2FA";
 import { Dashboard } from "@/pages/dashboard/Dashboard";
+import { ProjectDashboard } from "@/pages/project/ProjectDashboard";
+import { Projects } from "@/pages/project/Projects";
 import { TeamMembers } from "@/pages/team/TeamMembers";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
-import { Projects } from "@/pages/project/Projects";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,7 @@ export const router = createBrowserRouter([
           { path: "/dashboard", element: <Dashboard /> },
           { path: "/team", element: <TeamMembers /> },
           { path: "/projects", element: <Projects /> },
+          { path: "/projects/:projectId", element: <ProjectDashboard /> },
         ],
       },
     ],

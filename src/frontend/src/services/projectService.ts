@@ -5,6 +5,11 @@ import type { CreateProjectRequest, ProjectDto } from "@/types/project.types";
 const urlBase = "core/api/project";
 
 export const projectService = {
+  getProjectById: async (id: string): Promise<ProjectDto> => {
+    const response = await api.get<ProjectDto>(`${urlBase}/${id}`);
+    return response.data;
+  },
+
   createProject: async (request: CreateProjectRequest): Promise<ProjectDto> => {
     const response = await api.post<ProjectDto>(`${urlBase}`, request);
     return response.data;

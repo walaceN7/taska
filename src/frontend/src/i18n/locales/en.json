@@ -23,7 +23,26 @@
     "admin": "Admin",
     "member": "Member",
     "loadMore": "Load More",
-    "pickDate": "Pick a date"
+    "pickDate": "Pick a date",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "edit": "Edit",
+    "remove": "Remove",
+    "invite": "Invite",
+    "accept": "Accept",
+    "decline": "Decline",
+    "send": "Send",
+    "resend": "Resend",
+    "confirm": "Confirm",
+    "close": "Close",
+    "title": "Title",
+    "description": "Description",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "status": "Status",
+    "type": "Type",
+    "name": "Name"
   },
   "auth": {
     "loginTitle": "Log in to your account",
@@ -185,6 +204,47 @@
     "startDatePlaceholder": "Enter project start date",
     "endDatePlaceholder": "Enter project end date",
     "createProject": "Create Project",
-    "createProjectDescription": "Create a new project"
+    "createProjectDescription": "Create a new project",
+    "tabs": {
+      "general": "General",
+      "boards": "Boards",
+      "members": "Members",
+      "settings": "Settings"
+    },
+    "membersPlaceholder": "Project members management will be implemented here.",
+    "settingsPlaceholder": "Project settings will be implemented here.",
+    "noBoardsTitle": "No boards created yet",
+    "noBoardsDesc": "Create boards to organize your project tasks.",
+    "createBoard": "Create Board",
+    "boardNamePlaceholder": "Enter board name",
+    "createBoardDescription": "Create a new board",
+    "basicInfo": "Basic Information",
+    "scrumBoard": "Scrum Board",
+    "kanbanBoard": "Kanban Board",
+    "notFound": "Project not found"    
+  },
+  "boards": {
+    "title": "Boards",
+    "subtitle": "Manage your project boards.",
+    "create": "Create Board",
+    "tablePlaceholder": "Boards table (Implement columns later)",
+    "createSuccess": "Board created successfully!",
+    "createError": "Failed to create board.",
+    "updateSuccess": "Board updated successfully!",
+    "updateError": "Failed to update board.",
+    "deleteSuccess": "Board deleted successfully!",
+    "deleteError": "Failed to delete board.",
+    "notFound": "Board not found",
+    "empty": "No boards found. Create your first board!",
+    "nameMin": "Board name must be at least 3 characters",
+    "createDescription": "Add a new board to your project",
+    "namePlaceholder": "Enter board name",
+    "boardName": "Board Name",
+    "typeLabel": "Type",
+    "name": "Board Name",
+    "type": {
+      "scrum": "Scrum",
+      "kanban": "Kanban"
+    }
   }
 }

@@ -5,6 +5,14 @@ import type { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+export function useProject(id: string) {
+  return useQuery({
+    queryKey: ["project", id],
+    queryFn: () => projectService.getProjectById(id),
+    enabled: !!id,
+  });
+}
+
 export function useCreateProjectMutation() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();

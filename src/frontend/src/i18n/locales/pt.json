@@ -27,7 +27,26 @@
     "admin": "Administrador",
     "member": "Membro",
     "loadMore": "Carregar mais",
-    "pickDate": "Escolher data"
+    "pickDate": "Escolher data",
+    "create": "Criar",
+    "update": "Atualizar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "remove": "Remover",
+    "invite": "Convidar",
+    "accept": "Aceitar",
+    "decline": "Recusar",
+    "send": "Enviar",
+    "resend": "Reenviar",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "title": "Título",
+    "description": "Descrição",
+    "startDate": "Data de início",
+    "endDate": "Data de fim",
+    "status": "Status",
+    "type": "Tipo",
+    "name": "Nome"
   },
   "auth": {
     "loginTitle": "Acesse a sua conta",
@@ -189,6 +208,46 @@
     "startDatePlaceholder": "Insira a data de início do projeto",
     "endDatePlaceholder": "Insira a data de fim do projeto",
     "createProject": "Criar Projeto",
-    "createProjectDescription": "Crie um novo projeto para sua empresa."
+    "createProjectDescription": "Crie um novo projeto para sua empresa.",
+    "tabs": {
+      "general": "Geral",
+      "boards": "Quadros",
+      "members": "Membros",
+      "settings": "Configurações"
+    },
+    "membersPlaceholder": "O gerenciamento de membros do projeto será implementado aqui.",
+    "settingsPlaceholder": "As configurações do projeto serão implementadas aqui.",
+    "noBoardsTitle": "Nenhum quadro criado ainda",
+    "noBoardsDesc": "Crie quadros para organizar as tarefas do seu projeto.",
+    "createBoard": "Criar Quadro",
+    "boardNamePlaceholder": "Insira o nome do quadro",
+    "createBoardDescription": "Crie um novo quadro",
+    "basicInfo": "Informações Básicas",
+    "scrumBoard": "Quadro Scrum",
+    "kanbanBoard": "Quadro Kanban",
+    "notFound": "Projeto não encontrado"
+  },
+  "boards": {
+    "title": "Quadros",
+    "subtitle": "Gerencie os quadros do seu projeto.",
+    "create": "Criar Quadro",
+    "tablePlaceholder": "Tabela de quadros (Implementar colunas depois)",
+    "createSuccess": "Quadro criado com sucesso!",
+    "createError": "Falha ao criar quadro.",
+    "updateSuccess": "Quadro atualizado com sucesso!",
+    "updateError": "Falha ao atualizar quadro.",
+    "deleteSuccess": "Quadro excluído com sucesso!",
+    "deleteError": "Falha ao excluir quadro.",
+    "notFound": "Quadro não encontrado",
+    "empty": "Nenhum quadro encontrado. Crie seu primeiro quadro!",
+    "nameMin": "O nome do quadro deve ter pelo menos 3 caracteres",
+    "createDescription": "Adicione um novo quadro ao seu projeto",
+    "namePlaceholder": "Insira o nome do quadro",
+    "typeLabel": "Tipo",
+    "name": "Nome do Quadro",
+    "type": {
+      "scrum": "Scrum",
+      "kanban": "Kanban"
+    }
   }
 }
