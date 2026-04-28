@@ -45,4 +45,14 @@ public class ColumnRepository(TaskaCoreDbContext context) : IColumnRepository
 
         return column;
     }
+
+    public async Task<List<Column>> GetColumnsWithTasksByBoardIdAsync(Guid boardId, CancellationToken cancellationToken = default)
+    {
+        return await context.Columns
+            .Where(c => c.BoardId == boardId)
+            .Include(c => c.Tasks.Where(t => t.IsActive).OrderBy(t => t.Order)) // Eager Loading das tarefas ativas ordenadas
+            .OrderBy(c => c.Order)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 }

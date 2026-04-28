@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Taska.Core.Application.Features.Boards.Commands;
+using Taska.Core.Application.Features.Boards.Queries;
 using Taska.Core.Application.Features.Columns.Commands;
+using Taska.Core.Application.Features.Columns.Queries;
 
 namespace Taska.Core.API.Controllers;
 
@@ -11,6 +13,13 @@ namespace Taska.Core.API.Controllers;
 [Authorize]
 public class BoardController(IMediator mediator) : ControllerBase
 {
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var result = await mediator.Send(new GetBoardByIdQuery(id));
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateBoardCommand command)
     {
@@ -37,5 +46,12 @@ public class BoardController(IMediator mediator) : ControllerBase
     {
         await mediator.Send(new DeleteBoardCommand(id));
         return NoContent();
+    }
+
+    [HttpGet("{boardId}/columns")]
+    public async Task<IActionResult> GetColumns(Guid boardId)
+    {
+        var result = await mediator.Send(new GetColumnsWithTasksByBoardQuery(boardId));
+        return Ok(result);
     }
 }
