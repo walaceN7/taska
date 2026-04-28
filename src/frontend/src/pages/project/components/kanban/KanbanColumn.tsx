@@ -1,15 +1,18 @@
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { ColumnDto } from "@/types/column.types";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { TaskCard } from "./TaskCard";
-import { useTranslation } from "react-i18next";
 
 interface KanbanColumnProps {
   column: ColumnDto;
 }
 
 export function KanbanColumn({ column }: KanbanColumnProps) {
-  const { t } = useTranslation();
+  const taskIds = column.tasks.map((task) => task.id);
 
   return (
     <div className="flex flex-col bg-muted/50 rounded-xl w-80 min-w-80 max-h-full border">
@@ -21,14 +24,19 @@ export function KanbanColumn({ column }: KanbanColumnProps) {
       </div>
 
       <ScrollArea className="flex-1 p-3">
-        <div className="flex flex-col gap-3 pb-4">
-          {column.tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
+        <div className="flex flex-col gap-3 pb-4 min-h-[100px]">
+          <SortableContext
+            items={taskIds}
+            strategy={verticalListSortingStrategy}
+          >
+            {column.tasks.map((task) => (
+              <TaskCard key={task.id} task={task} />
+            ))}
+          </SortableContext>
 
           {column.tasks.length === 0 && (
             <div className="text-xs text-center text-muted-foreground py-4 border-2 border-dashed rounded-lg">
-              {t("board.emptyColumn", "No tasks here!")}
+              Arraste tarefas para cá
             </div>
           )}
         </div>
