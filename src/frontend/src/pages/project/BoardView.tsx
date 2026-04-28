@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { KanbanColumn } from "./components/kanban/KanbanColumn";
+import { CreateColumnButton } from "./components/kanban/CreateColumnButton";
 
 export function BoardView() {
   const { t } = useTranslation();
@@ -117,14 +118,14 @@ export function BoardView() {
                 <div className="text-sm text-muted-foreground animate-pulse">
                   {t("common.loading", "Loading...")}
                 </div>
-              ) : localColumns?.length === 0 ? (
-                <div className="text-sm text-muted-foreground">
-                  {t("boards.emptyColumns", "No columns found")}
-                </div>
               ) : (
-                localColumns?.map((column) => (
-                  <KanbanColumn key={column.id} column={column} />
-                ))
+                <>
+                  {localColumns?.map((column) => (
+                    <KanbanColumn key={column.id} column={column} />
+                  ))}
+
+                  <CreateColumnButton />
+                </>
               )}
             </div>
           </DndContext>

@@ -6,3 +6,7 @@ export interface ColumnDto {
   order: number;
   tasks: TaskItemDto[];
 }
+
+export interface CreateColumnRequest {
+  name: string;
+}
