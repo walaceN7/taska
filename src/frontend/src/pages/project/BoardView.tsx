@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBoard } from "@/hooks/useBoard";
+import { useBoard, useColumnsBoard } from "@/hooks/useBoard";
 import { BoardType } from "@/types/board.types";
 import { ArrowLeft, LayoutDashboard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { KanbanColumn } from "./components/kanban/KanbanColumn";
 
 export function BoardView() {
   const { t } = useTranslation();
@@ -14,7 +15,12 @@ export function BoardView() {
     projectId: string;
     boardId: string;
   }>();
+
   const { data: board, isLoading } = useBoard(boardId!);
+
+  const { data: columns, isLoading: isColumnsLoading } = useColumnsBoard(
+    boardId!,
+  );
 
   if (isLoading) {
     return <BoardViewSkeleton />;
@@ -59,10 +65,19 @@ export function BoardView() {
 
       <div className="flex-1 overflow-x-auto overflow-y-hidden">
         {board.type === BoardType.Kanban ? (
-          <div className="h-full flex items-center justify-center border-2 border-dashed rounded-lg text-muted-foreground">
-            {t(
-              "boards.kanbanPlaceholder",
-              "Kanban Board Component will be here (dnd-kit)",
+          <div className="h-full flex items-start gap-4 p-1 overflow-x-auto">
+            {isColumnsLoading ? (
+              <div className="text-sm text-muted-foreground animate-pulse">
+                {t("common.loading", "Loading...")}
+              </div>
+            ) : columns?.length === 0 ? (
+              <div className="text-sm text-muted-foreground">
+                {t("boards.emptyColumns", "No columns found")}
+              </div>
+            ) : (
+              columns?.map((column) => (
+                <KanbanColumn key={column.id} column={column} />
+              ))
             )}
           </div>
         ) : (
