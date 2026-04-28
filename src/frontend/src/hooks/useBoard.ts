@@ -6,6 +6,14 @@ import type { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+export function useBoard(id: string) {
+  return useQuery({
+    queryKey: ["board", id],
+    queryFn: () => boardService.getBoardById(id),
+    enabled: !!id,
+  });
+}
+
 export function useCreateBoardMutation() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -85,5 +93,13 @@ export function usePagedBoards(
     queryFn: () =>
       boardService.getPagedBoards(projectId, pageIndex + 1, pageSize),
     placeholderData: (previousData) => previousData,
+  });
+}
+
+export function useColumnsBoard(id: string) {
+  return useQuery({
+    queryKey: ["columns", "board", id],
+    queryFn: () => boardService.getColumnsBoard(id),
+    enabled: !!id,
   });
 }

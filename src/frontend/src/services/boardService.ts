@@ -5,10 +5,16 @@ import type {
   CreateBoardRequest,
   UpdateBoardRequest,
 } from "@/types/board.types";
+import type { ColumnDto } from "@/types/column.types";
 
 const urlBase = "core/api/board";
 
 export const boardService = {
+  getBoardById: async (id: string): Promise<BoardDto> => {
+    const response = await api.get<BoardDto>(`${urlBase}/${id}`);
+    return response.data;
+  },
+
   createBoard: async (request: CreateBoardRequest): Promise<BoardDto> => {
     const response = await api.post<BoardDto>(`${urlBase}`, request);
     return response.data;
@@ -37,6 +43,11 @@ export const boardService = {
         params: { pageNumber, pageSize },
       },
     );
+    return response.data;
+  },
+
+  getColumnsBoard: async (id: string): Promise<ColumnDto[]> => {
+    const response = await api.get<ColumnDto[]>(`${urlBase}/${id}/columns`);
     return response.data;
   },
 };

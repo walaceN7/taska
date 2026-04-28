@@ -7,6 +7,7 @@ import { RegisterInvite } from "@/pages/auth/RegisterInvite";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { Verify2FA } from "@/pages/auth/Verify2FA";
 import { Dashboard } from "@/pages/dashboard/Dashboard";
+import { BoardView } from "@/pages/project/BoardView";
 import { ProjectDashboard } from "@/pages/project/ProjectDashboard";
 import { Projects } from "@/pages/project/Projects";
 import { TeamMembers } from "@/pages/team/TeamMembers";
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
           { path: "/team", element: <TeamMembers /> },
           { path: "/projects", element: <Projects /> },
           { path: "/projects/:projectId", element: <ProjectDashboard /> },
+          {
+            path: "/projects/:projectId/boards/:boardId",
+            element: <BoardView />,
+          },
         ],
       },
     ],
