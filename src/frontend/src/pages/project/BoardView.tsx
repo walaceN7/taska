@@ -1,6 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBoard, useColumnsBoard } from "@/hooks/useBoard";
+import {
+  useBoardRealtime,
+  type TaskMovedEvent,
+} from "@/hooks/useBoardRealtime";
+import { useMoveTaskMutation } from "@/hooks/useTask";
 import { BoardType } from "@/types/board.types";
 import type { ColumnDto } from "@/types/column.types";
 import type { TaskItemDto } from "@/types/taskItem.types";
@@ -17,13 +22,12 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { ArrowLeft, LayoutDashboard } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { CreateColumnButton } from "./components/kanban/CreateColumnButton";
 import { KanbanColumn } from "./components/kanban/KanbanColumn";
 import { TaskCard } from "./components/kanban/TaskCard";
-import { useMoveTaskMutation } from "@/hooks/useTask";
 
 export function BoardView() {
   const { t } = useTranslation();
@@ -45,6 +49,34 @@ export function BoardView() {
     undefined,
   );
   const [activeTask, setActiveTask] = useState<TaskItemDto | null>(null);
+
+  const handleRemoteTaskMove = useCallback((event: TaskMovedEvent) => {
+    setLocalColumns((prev) => {
+      const newColumns = prev.map((c) => ({ ...c, tasks: [...c.tasks] }));
+
+      const fromColIndex = newColumns.findIndex(
+        (c) => c.id === event.fromColumnId,
+      );
+      const toColIndex = newColumns.findIndex((c) => c.id === event.toColumnId);
+
+      if (fromColIndex === -1 || toColIndex === -1) return prev;
+
+      const taskIndex = newColumns[fromColIndex].tasks.findIndex(
+        (t) => t.id === event.taskId,
+      );
+      if (taskIndex === -1) return prev;
+
+      const [movedTask] = newColumns[fromColIndex].tasks.splice(taskIndex, 1);
+
+      movedTask.columnId = event.toColumnId;
+
+      newColumns[toColIndex].tasks.splice(event.newOrder, 0, movedTask);
+
+      return newColumns;
+    });
+  }, []);
+
+  useBoardRealtime(boardId!, handleRemoteTaskMove);
 
   if (columns !== prevColumns) {
     setPrevColumns(columns);
