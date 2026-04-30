@@ -1,18 +1,18 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatDateWithoutTime } from "@/lib/utils";
 import { type TaskItemDto, TaskPriority } from "@/types/taskItem.types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Calendar, GripVertical } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface TaskCardProps {
   task: TaskItemDto;
+  isOverlay?: boolean;
 }
 
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskCard({ task, isOverlay }: TaskCardProps) {
   const { t } = useTranslation();
 
   const {
@@ -24,6 +24,7 @@ export function TaskCard({ task }: TaskCardProps) {
     isDragging,
   } = useSortable({
     id: task.id,
+    disabled: isOverlay ?? false,
     data: {
       type: "Task",
       task,
@@ -31,9 +32,9 @@ export function TaskCard({ task }: TaskCardProps) {
   });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
-    opacity: isDragging ? 0.4 : 1,
+    opacity: isDragging ? 0.3 : 1,
   };
 
   const getPriorityColor = (priority: number) => {
@@ -58,25 +59,12 @@ export function TaskCard({ task }: TaskCardProps) {
     return key ? t(`task.priority.${key.toLowerCase()}`, key) : "Unknown";
   };
 
-  return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      className={`hover:ring-1 hover:ring-primary/50 transition-all ${isDragging ? "ring-2 ring-primary shadow-lg cursor-grabbing" : ""}`}
-    >
+  const cardContent = (
+    <>
       <CardHeader className="p-3 pb-0 flex flex-row items-start justify-between space-y-0">
         <div className="font-medium text-sm leading-tight line-clamp-2">
           {task.title}
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-5 w-5 -mr-1 -mt-1 text-muted-foreground cursor-grab hover:bg-muted"
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical className="h-4 w-4" />
-        </Button>
       </CardHeader>
       <CardContent className="p-3 pt-2 flex flex-col gap-2">
         {task.description && (
@@ -84,7 +72,6 @@ export function TaskCard({ task }: TaskCardProps) {
             {task.description}
           </p>
         )}
-
         <div className="flex items-center justify-between mt-1">
           <Badge
             variant="secondary"
@@ -92,7 +79,6 @@ export function TaskCard({ task }: TaskCardProps) {
           >
             {getPriorityText(task.priority)}
           </Badge>
-
           {task.dueDate && (
             <div className="flex items-center text-[10px] text-muted-foreground">
               <Calendar className="h-3 w-3 mr-1" />
@@ -101,6 +87,28 @@ export function TaskCard({ task }: TaskCardProps) {
           )}
         </div>
       </CardContent>
+    </>
+  );
+
+  if (isOverlay) {
+    return (
+      <Card className="cursor-grabbing ring-2 ring-primary shadow-2xl rotate-2 opacity-100">
+        {cardContent}
+      </Card>
+    );
+  }
+
+  return (
+    <Card
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={`cursor-grab active:cursor-grabbing hover:ring-1 hover:ring-primary/50 transition-colors ${
+        isDragging ? "ring-2 ring-primary shadow-lg" : ""
+      }`}
+    >
+      {cardContent}
     </Card>
   );
 }

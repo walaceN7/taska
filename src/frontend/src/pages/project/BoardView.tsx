@@ -3,22 +3,26 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useBoard, useColumnsBoard } from "@/hooks/useBoard";
 import { BoardType } from "@/types/board.types";
 import type { ColumnDto } from "@/types/column.types";
+import type { TaskItemDto } from "@/types/taskItem.types";
 import {
+  closestCenter,
   DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
   type DragEndEvent,
   type DragOverEvent,
   type DragStartEvent,
-  PointerSensor,
-  closestCorners,
-  useSensor,
-  useSensors,
 } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { ArrowLeft, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { KanbanColumn } from "./components/kanban/KanbanColumn";
 import { CreateColumnButton } from "./components/kanban/CreateColumnButton";
+import { KanbanColumn } from "./components/kanban/KanbanColumn";
+import { TaskCard } from "./components/kanban/TaskCard";
 
 export function BoardView() {
   const { t } = useTranslation();
@@ -34,13 +38,16 @@ export function BoardView() {
   );
 
   const [localColumns, setLocalColumns] = useState<ColumnDto[]>([]);
-  const [lastFetchedColumns, setLastFetchedColumns] = useState<
-    ColumnDto[] | undefined
-  >(undefined);
+  const [prevColumns, setPrevColumns] = useState<ColumnDto[] | undefined>(
+    undefined,
+  );
+  const [activeTask, setActiveTask] = useState<TaskItemDto | null>(null);
 
-  if (columns && columns !== lastFetchedColumns) {
-    setLocalColumns(columns);
-    setLastFetchedColumns(columns);
+  if (columns !== prevColumns) {
+    setPrevColumns(columns);
+    if (columns) {
+      setLocalColumns(columns);
+    }
   }
 
   const sensors = useSensors(
@@ -51,16 +58,126 @@ export function BoardView() {
     }),
   );
 
+  const findColumn = (uniqueId: string) => {
+    if (localColumns.find((c) => c.id === uniqueId)) {
+      return localColumns.find((c) => c.id === uniqueId);
+    }
+    return localColumns.find((c) => c.tasks.find((t) => t.id === uniqueId));
+  };
+
   const handleDragStart = (event: DragStartEvent) => {
-    console.log("Começou a arrastar:", event.active.id);
+    const id = String(event.active.id);
+    const column = findColumn(id);
+    if (column) {
+      const task = column.tasks.find((t) => t.id === id);
+      if (task) setActiveTask(task);
+    }
   };
 
   const handleDragOver = (event: DragOverEvent) => {
-    console.log("Passou por cima", event.over?.id);
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = String(active.id);
+    const overId = String(over.id);
+
+    if (activeId === overId) return;
+
+    const activeColumn = findColumn(activeId);
+    const overColumn = findColumn(overId);
+
+    if (!activeColumn || !overColumn) return;
+
+    if (activeColumn.id !== overColumn.id) {
+      setLocalColumns((prev) => {
+        const activeColIndex = prev.findIndex((c) => c.id === activeColumn.id);
+        const overColIndex = prev.findIndex((c) => c.id === overColumn.id);
+
+        const activeTasks = [...prev[activeColIndex].tasks];
+        const overTasks = [...prev[overColIndex].tasks];
+
+        const activeIndex = activeTasks.findIndex((t) => t.id === activeId);
+        const overIndex = overTasks.findIndex((t) => t.id === overId);
+
+        const [movedTask] = activeTasks.splice(activeIndex, 1);
+        const taskToInsert = { ...movedTask, columnId: overColumn.id };
+
+        let newIndex: number;
+        if (overId === overColumn.id) {
+          newIndex = overTasks.length;
+        } else {
+          const isBelowOverItem =
+            active.rect.current.translated &&
+            active.rect.current.translated.top >
+              over.rect.top + over.rect.height;
+          const modifier = isBelowOverItem ? 1 : 0;
+          newIndex = overIndex >= 0 ? overIndex + modifier : overTasks.length;
+        }
+
+        overTasks.splice(newIndex, 0, taskToInsert);
+
+        const newColumns = [...prev];
+        newColumns[activeColIndex] = {
+          ...newColumns[activeColIndex],
+          tasks: activeTasks,
+        };
+        newColumns[overColIndex] = {
+          ...newColumns[overColIndex],
+          tasks: overTasks,
+        };
+
+        return newColumns;
+      });
+    }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    console.log("Soltou o item", event.over?.id);
+    setActiveTask(null);
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = String(active.id);
+    const overId = String(over.id);
+
+    const activeColumn = findColumn(activeId);
+    const overColumn = findColumn(overId);
+
+    if (!activeColumn || !overColumn) return;
+
+    if (activeColumn.id === overColumn.id) {
+      setLocalColumns((prev) => {
+        const colIndex = prev.findIndex((c) => c.id === activeColumn.id);
+
+        const activeIndex = prev[colIndex].tasks.findIndex(
+          (t) => t.id === activeId,
+        );
+        const overIndex = prev[colIndex].tasks.findIndex(
+          (t) => t.id === overId,
+        );
+
+        if (activeIndex === overIndex) return prev;
+
+        const newColumns = [...prev];
+        newColumns[colIndex] = {
+          ...newColumns[colIndex],
+          tasks: arrayMove(newColumns[colIndex].tasks, activeIndex, overIndex),
+        };
+
+        console.log("Reordered within column", {
+          id: activeId,
+          from: activeIndex,
+          to: overIndex,
+        });
+
+        return newColumns;
+      });
+    } else {
+      console.log("Moved to new column", {
+        id: activeId,
+        fromColumn: activeColumn.id,
+        toColumn: overColumn.id,
+      });
+    }
   };
 
   if (isLoading) {
@@ -108,7 +225,7 @@ export function BoardView() {
         {board.type === BoardType.Kanban ? (
           <DndContext
             sensors={sensors}
-            collisionDetection={closestCorners}
+            collisionDetection={closestCenter}
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
@@ -128,6 +245,10 @@ export function BoardView() {
                 </>
               )}
             </div>
+
+            <DragOverlay>
+              {activeTask ? <TaskCard task={activeTask} isOverlay /> : null}
+            </DragOverlay>
           </DndContext>
         ) : (
           <div className="h-full flex items-center justify-center border-2 border-dashed rounded-lg text-muted-foreground">
@@ -138,8 +259,6 @@ export function BoardView() {
     </div>
   );
 }
-
-// ... manter o esqueleto embaixo (BoardViewSkeleton)
 
 function BoardViewSkeleton() {
   return (

@@ -10,6 +10,15 @@ export interface TaskItemDto {
   columnId: string;
 }
 
+export interface CreateTaskItemRequest {
+  title: string;
+  description?: string;
+  dueDate?: string;
+  priority: TaskPriority;
+  type: TaskType;
+  storyPoints?: number;
+}
+
 export const TaskPriority = {
   Low: 1,
   Medium: 2,
