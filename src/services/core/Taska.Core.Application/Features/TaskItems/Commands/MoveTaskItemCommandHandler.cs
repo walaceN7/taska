@@ -15,6 +15,8 @@ public class MoveTaskItemCommandHandler(ITaskItemRepository repository, ICurrent
         var task = await repository.GetByIdAsync(request.TaskId, cancellationToken) ?? throw new NotFoundException("Task not found");
                 
         var originalColumnId = task.ColumnId;
+        var boardId = task.Column.BoardId;
+
         if (task.ColumnId == request.NewColumnId)
         {
             if (task.Order == request.NewOrder)
@@ -41,7 +43,7 @@ public class MoveTaskItemCommandHandler(ITaskItemRepository repository, ICurrent
         task.Order = request.NewOrder;
         var updatedTask = await repository.UpdateAsync(task, cancellationToken);
 
-        await publishEndpoint.Publish(new TaskMovedEvent(task.Id, task.Column.BoardId, originalColumnId, request.NewColumnId, task.Order, currentUser.UserId, DateTime.UtcNow), cancellationToken);
+        await publishEndpoint.Publish(new TaskMovedEvent(task.Id, boardId, originalColumnId, request.NewColumnId, task.Order, currentUser.UserId, DateTime.UtcNow), cancellationToken);
 
         return updatedTask.Adapt<TaskItemResult>();
     }

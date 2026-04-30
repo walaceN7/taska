@@ -23,6 +23,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CreateColumnButton } from "./components/kanban/CreateColumnButton";
 import { KanbanColumn } from "./components/kanban/KanbanColumn";
 import { TaskCard } from "./components/kanban/TaskCard";
+import { useMoveTaskMutation } from "@/hooks/useTask";
 
 export function BoardView() {
   const { t } = useTranslation();
@@ -36,6 +37,8 @@ export function BoardView() {
   const { data: columns, isLoading: isColumnsLoading } = useColumnsBoard(
     boardId!,
   );
+
+  const moveTaskMutation = useMoveTaskMutation(boardId!);
 
   const [localColumns, setLocalColumns] = useState<ColumnDto[]>([]);
   const [prevColumns, setPrevColumns] = useState<ColumnDto[] | undefined>(
@@ -134,6 +137,7 @@ export function BoardView() {
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveTask(null);
     const { active, over } = event;
+
     if (!over) return;
 
     const activeId = String(active.id);
@@ -144,38 +148,42 @@ export function BoardView() {
 
     if (!activeColumn || !overColumn) return;
 
+    const activeIndex = activeColumn.tasks.findIndex((t) => t.id === activeId);
+    let overIndex = overColumn.tasks.findIndex((t) => t.id === overId);
+
+    if (overIndex === -1) {
+      overIndex = overColumn.tasks.length > 0 ? overColumn.tasks.length - 1 : 0;
+    }
+
+    moveTaskMutation.mutate({
+      taskId: activeId,
+      request: {
+        newColumnId: overColumn.id,
+        newOrder: overIndex,
+      },
+    });
+
     if (activeColumn.id === overColumn.id) {
       setLocalColumns((prev) => {
         const colIndex = prev.findIndex((c) => c.id === activeColumn.id);
-
-        const activeIndex = prev[colIndex].tasks.findIndex(
-          (t) => t.id === activeId,
-        );
-        const overIndex = prev[colIndex].tasks.findIndex(
-          (t) => t.id === overId,
-        );
-
-        if (activeIndex === overIndex) return prev;
-
         const newColumns = [...prev];
+
         newColumns[colIndex] = {
           ...newColumns[colIndex],
           tasks: arrayMove(newColumns[colIndex].tasks, activeIndex, overIndex),
         };
 
-        console.log("Reordered within column", {
-          id: activeId,
-          from: activeIndex,
-          to: overIndex,
-        });
-
         return newColumns;
       });
     } else {
-      console.log("Moved to new column", {
-        id: activeId,
-        fromColumn: activeColumn.id,
-        toColumn: overColumn.id,
+      const finalIndex = overColumn.tasks.findIndex((t) => t.id === activeId);
+
+      moveTaskMutation.mutate({
+        taskId: activeId,
+        request: {
+          newColumnId: overColumn.id,
+          newOrder: finalIndex >= 0 ? finalIndex : overColumn.tasks.length,
+        },
       });
     }
   };

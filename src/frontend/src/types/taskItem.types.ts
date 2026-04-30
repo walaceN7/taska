@@ -19,6 +19,11 @@ export interface CreateTaskItemRequest {
   storyPoints?: number;
 }
 
+export interface MoveTaskItemRequest {
+  newColumnId: string;
+  newOrder: number;
+}
+
 export const TaskPriority = {
   Low: 1,
   Medium: 2,
