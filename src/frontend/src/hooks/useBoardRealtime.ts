@@ -66,22 +66,19 @@ export function useBoardRealtime(
         setIsConnected(true);
         await connection.invoke("JoinBoard", boardId);
 
-        // Listener para Mover Tarefa
         connection.on("TaskMoved", (event: TaskMovedEvent) => {
           if (event.userId !== user?.userId) onTaskMoved(event);
         });
 
-        // Listener para Nova Coluna
         connection.on("ColumnCreated", (event: ColumnCreatedEvent) => {
           if (event.userId !== user?.userId) onColumnCreated(event);
         });
 
-        // Listener para Nova Tarefa
         connection.on("TaskCreated", (event: TaskCreatedEvent) => {
           if (event.userId !== user?.userId) onTaskCreated(event);
         });
       } catch (err) {
-        console.error("Erro ao conectar no SignalR:", err);
+        console.error("Error connecting to SignalR:", err);
       }
     };
 
