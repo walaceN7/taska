@@ -17,7 +17,7 @@ public class GoogleLoginCommandHandler(UserManager<User> userManager, IJwtServic
     {
         var googleUser = await GetGoogleUserInfoAsync(request.AccessToken, cancellationToken);
         if (googleUser == null || string.IsNullOrEmpty(googleUser.Email))
-            throw new UnauthorizedException("Token do Google inválido ou expirado.");
+            throw new UnauthorizedException("Google Token invalid or expired.");
 
         var user = await userManager.FindByEmailAsync(googleUser.Email);
 
