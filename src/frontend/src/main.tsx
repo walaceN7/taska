@@ -7,6 +7,7 @@ import { Toaster } from "./components/ui/sonner";
 import "./i18n";
 import "./index.css";
 import { router } from "./routes/Routes";
+import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,8 +24,14 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={googleClientId}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <Toaster richColors position="top-right" />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          storageKey="taska-theme"
+        >
+          <RouterProvider router={router} />
+          <Toaster richColors position="top-center" closeButton />
+        </ThemeProvider>
       </QueryClientProvider>
     </GoogleOAuthProvider>
   </StrictMode>,

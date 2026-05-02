@@ -1,17 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Languages, LayoutGrid, Palette } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { TaskaLogo } from "./components/branding/TaskaLogo";
 
 export default function App() {
   const { t, i18n } = useTranslation();
-  const [isDark, setIsDark] = useState(true);
+  const { setTheme, resolvedTheme } = useTheme();
 
-  useEffect(() => {
-    if (isDark) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
-  }, [isDark]);
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
 
   const toggleLanguage = () => {
     const nextLang = i18n.language === "en" ? "pt" : "en";
@@ -29,11 +28,7 @@ export default function App() {
           <Button variant="ghost" size="icon" onClick={toggleLanguage}>
             <Languages className="h-5 w-5" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsDark(!isDark)}
-          >
+          <Button variant="ghost" size="icon" onClick={toggleTheme}>
             <Palette className="h-5 w-5" />
           </Button>
         </div>
