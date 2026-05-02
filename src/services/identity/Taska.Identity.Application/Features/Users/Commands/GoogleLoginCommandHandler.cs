@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Taska.Identity.Application.Features.Users.DTOs;
 using Taska.Identity.Application.Interfaces;
 using Taska.Identity.Domain.Entities;
@@ -93,5 +94,10 @@ public class GoogleLoginCommandHandler(UserManager<User> userManager, IJwtServic
         return JsonSerializer.Deserialize<GoogleUserInfo>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 
-    public record GoogleUserInfo(string Email, string? GivenName, string? FamilyName, string? Picture);
+    public record GoogleUserInfo(
+        [property: JsonPropertyName("email")] string Email,
+        [property: JsonPropertyName("given_name")] string? GivenName,
+        [property: JsonPropertyName("family_name")] string? FamilyName,
+        [property: JsonPropertyName("picture")] string? Picture
+    );
 }
