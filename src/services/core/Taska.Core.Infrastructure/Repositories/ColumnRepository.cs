@@ -50,9 +50,21 @@ public class ColumnRepository(TaskaCoreDbContext context) : IColumnRepository
     {
         return await context.Columns
             .Where(c => c.BoardId == boardId)
-            .Include(c => c.Tasks.Where(t => t.IsActive).OrderBy(t => t.Order)) // Eager Loading das tarefas ativas ordenadas
+            .Include(c => c.Tasks.Where(t => t.IsActive).OrderBy(t => t.Order))
             .OrderBy(c => c.Order)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+    }
+    
+    public async Task ShiftOrdersAsync(Guid boardId, int startOrder, int? endOrder, int shiftAmount, CancellationToken cancellationToken = default)
+    {
+        var query = context.Columns.Where(c => c.BoardId == boardId && c.Order >= startOrder);
+
+        if (endOrder.HasValue)
+        {
+            query = query.Where(c => c.Order <= endOrder.Value);
+        }
+
+        await query.ExecuteUpdateAsync(s => s.SetProperty(c => c.Order, c => c.Order + shiftAmount), cancellationToken);
     }
 }

@@ -10,3 +10,7 @@ export interface ColumnDto {
 export interface CreateColumnRequest {
   name: string;
 }
+
+export interface MoveColumnRequest {
+  newOrder: number;
+}

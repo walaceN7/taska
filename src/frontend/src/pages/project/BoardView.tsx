@@ -11,6 +11,10 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import {
+  horizontalListSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
 import { ArrowLeft, LayoutDashboard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -34,6 +38,7 @@ export function BoardView() {
   const {
     localColumns,
     activeTask,
+    activeColumn,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
@@ -101,17 +106,23 @@ export function BoardView() {
                   {t("common.loading", "Loading...")}
                 </div>
               ) : (
-                <>
+                <SortableContext
+                  items={localColumns.map((c) => c.id)}
+                  strategy={horizontalListSortingStrategy}
+                >
                   {localColumns?.map((column) => (
                     <KanbanColumn key={column.id} column={column} />
                   ))}
                   <CreateColumnButton />
-                </>
+                </SortableContext>
               )}
             </div>
 
             <DragOverlay>
               {activeTask ? <TaskCard task={activeTask} isOverlay /> : null}
+              {activeColumn ? (
+                <KanbanColumn column={activeColumn} isOverlay />
+              ) : null}
             </DragOverlay>
           </DndContext>
         ) : (

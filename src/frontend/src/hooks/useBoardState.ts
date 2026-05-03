@@ -1,12 +1,3 @@
-import {
-  useBoardRealtime,
-  type ColumnCreatedEvent,
-  type TaskCreatedEvent,
-  type TaskMovedEvent,
-} from "@/hooks/useBoardRealtime";
-import { useMoveTaskMutation } from "@/hooks/useTask";
-import type { ColumnDto } from "@/types/column.types";
-import type { TaskItemDto } from "@/types/taskItem.types";
 import type {
   DragEndEvent,
   DragOverEvent,
@@ -14,6 +5,18 @@ import type {
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useCallback, useState } from "react";
+
+import {
+  useBoardRealtime,
+  type ColumnCreatedEvent,
+  type ColumnMovedEvent,
+  type TaskCreatedEvent,
+  type TaskMovedEvent,
+} from "@/hooks/useBoardRealtime";
+import { useMoveColumnMutation } from "@/hooks/useColumn";
+import { useMoveTaskMutation } from "@/hooks/useTask";
+import type { ColumnDto } from "@/types/column.types";
+import type { TaskItemDto } from "@/types/taskItem.types";
 
 export function useBoardState(
   boardId: string | undefined,
@@ -23,7 +26,9 @@ export function useBoardState(
   const [prevColumns, setPrevColumns] = useState<ColumnDto[] | undefined>(
     undefined,
   );
+
   const [activeTask, setActiveTask] = useState<TaskItemDto | null>(null);
+  const [activeColumn, setActiveColumn] = useState<ColumnDto | null>(null);
 
   if (initialColumns !== prevColumns) {
     setPrevColumns(initialColumns);
@@ -33,6 +38,7 @@ export function useBoardState(
   }
 
   const moveTaskMutation = useMoveTaskMutation(boardId!);
+  const moveColumnMutation = useMoveColumnMutation(boardId!);
 
   const findColumn = useCallback(
     (uniqueId: string) => {
@@ -43,6 +49,14 @@ export function useBoardState(
     },
     [localColumns],
   );
+
+  const handleRemoteColumnMove = useCallback((event: ColumnMovedEvent) => {
+    setLocalColumns((prev) => {
+      const oldIndex = prev.findIndex((c) => c.id === event.columnId);
+      if (oldIndex === -1 || oldIndex === event.newOrder) return prev;
+      return arrayMove(prev, oldIndex, event.newOrder);
+    });
+  }, []);
 
   const handleRemoteTaskMove = useCallback((event: TaskMovedEvent) => {
     setLocalColumns((prev) => {
@@ -70,14 +84,12 @@ export function useBoardState(
   const handleRemoteColumnCreate = useCallback((event: ColumnCreatedEvent) => {
     setLocalColumns((prev) => {
       if (prev.some((c) => c.id === event.columnId)) return prev;
-
       const newColumn: ColumnDto = {
         id: event.columnId,
         name: event.name,
         order: event.order,
         tasks: [],
       };
-
       return [...prev, newColumn].sort((a, b) => a.order - b.order);
     });
   }, []);
@@ -99,14 +111,10 @@ export function useBoardState(
         order: event.order,
         columnId: event.columnId,
       };
-
-      if (event.description) {
-        newTask.description = event.description;
-      }
+      if (event.description) newTask.description = event.description;
 
       newColumns[colIndex].tasks.push(newTask);
       newColumns[colIndex].tasks.sort((a, b) => a.order - b.order);
-
       return newColumns;
     });
   }, []);
@@ -116,10 +124,19 @@ export function useBoardState(
     handleRemoteTaskMove,
     handleRemoteColumnCreate,
     handleRemoteTaskCreate,
+    handleRemoteColumnMove,
   );
 
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
+      const { type } = event.active.data.current ?? {};
+
+      if (type === "Column") {
+        const column = localColumns.find((c) => c.id === event.active.id);
+        if (column) setActiveColumn(column);
+        return;
+      }
+
       const id = String(event.active.id);
       const column = findColumn(id);
       if (column) {
@@ -127,7 +144,7 @@ export function useBoardState(
         if (task) setActiveTask(task);
       }
     },
-    [findColumn],
+    [findColumn, localColumns],
   );
 
   const handleDragOver = useCallback(
@@ -135,9 +152,11 @@ export function useBoardState(
       const { active, over } = event;
       if (!over) return;
 
+      const { type } = active.data.current ?? {};
+      if (type === "Column") return;
+
       const activeId = String(active.id);
       const overId = String(over.id);
-
       if (activeId === overId) return;
 
       const activeColumn = findColumn(activeId);
@@ -195,12 +214,28 @@ export function useBoardState(
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       setActiveTask(null);
-      const { active, over } = event;
+      setActiveColumn(null);
 
+      const { active, over } = event;
       if (!over) return;
 
       const activeId = String(active.id);
       const overId = String(over.id);
+
+      const { type } = active.data.current ?? {};
+      if (type === "Column") {
+        const activeIndex = localColumns.findIndex((c) => c.id === activeId);
+        const overIndex = localColumns.findIndex((c) => c.id === overId);
+
+        if (activeIndex !== overIndex) {
+          setLocalColumns((prev) => arrayMove(prev, activeIndex, overIndex));
+          moveColumnMutation.mutate({
+            columnId: activeId,
+            request: { newOrder: overIndex },
+          });
+        }
+        return;
+      }
 
       const activeColumn = findColumn(activeId);
       const overColumn = findColumn(overId);
@@ -219,17 +254,13 @@ export function useBoardState(
 
       moveTaskMutation.mutate({
         taskId: activeId,
-        request: {
-          newColumnId: overColumn.id,
-          newOrder: overIndex,
-        },
+        request: { newColumnId: overColumn.id, newOrder: overIndex },
       });
 
       if (activeColumn.id === overColumn.id && activeIndex !== overIndex) {
         setLocalColumns((prev) => {
           const colIndex = prev.findIndex((c) => c.id === activeColumn.id);
           const newColumns = [...prev];
-
           newColumns[colIndex] = {
             ...newColumns[colIndex],
             tasks: arrayMove(
@@ -238,17 +269,17 @@ export function useBoardState(
               overIndex,
             ),
           };
-
           return newColumns;
         });
       }
     },
-    [findColumn, moveTaskMutation],
+    [findColumn, moveTaskMutation, moveColumnMutation, localColumns],
   );
 
   return {
     localColumns,
     activeTask,
+    activeColumn,
     handleDragStart,
     handleDragOver,
     handleDragEnd,

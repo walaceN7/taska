@@ -32,6 +32,7 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<TaskMovedEventConsumer>();
     x.AddConsumer<ColumnCreatedEventConsumer>();
     x.AddConsumer<TaskCreatedEventConsumer>();
+    x.AddConsumer<ColumnMovedEventConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -47,6 +48,7 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("notify-task-moved", e => e.ConfigureConsumer<TaskMovedEventConsumer>(context));
         cfg.ReceiveEndpoint("notify-column-created", e => e.ConfigureConsumer<ColumnCreatedEventConsumer>(context));
         cfg.ReceiveEndpoint("notify-task-created", e => e.ConfigureConsumer<TaskCreatedEventConsumer>(context));
+        cfg.ReceiveEndpoint("notify-column-moved", e => e.ConfigureConsumer<ColumnMovedEventConsumer>(context));
     });
 });
 

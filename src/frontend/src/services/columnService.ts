@@ -1,4 +1,5 @@
 import { api } from "@/lib/api";
+import type { MoveColumnRequest } from "@/types/column.types";
 import type {
   CreateTaskItemRequest,
   TaskItemDto,
@@ -16,5 +17,12 @@ export const columnService = {
       request,
     );
     return response.data;
+  },
+
+  moveColumn: async (
+    columnId: string,
+    request: MoveColumnRequest,
+  ): Promise<void> => {
+    await api.post(`${urlBase}/${columnId}/move`, request);
   },
 };

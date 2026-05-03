@@ -39,4 +39,11 @@ public class ColumnController(IMediator mediator) : ControllerBase
         await mediator.Send(new DeleteColumnCommand(id));
         return NoContent();
     }
+
+    [HttpPost("{columnId}/move")]
+    public async Task<IActionResult> MoveColumn(Guid columnId, [FromBody] MoveColumnCommand command)
+    {        
+        var result = await mediator.Send(command with { ColumnId = columnId });
+        return Ok(result);
+    }
 }

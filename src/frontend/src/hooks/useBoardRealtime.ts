@@ -34,11 +34,20 @@ export interface TaskCreatedEvent {
   createdAt: string;
 }
 
+export interface ColumnMovedEvent {
+  columnId: string;
+  boardId: string;
+  newOrder: number;
+  userId: string;
+  movedAt: string;
+}
+
 export function useBoardRealtime(
   boardId: string | undefined,
   onTaskMoved: (event: TaskMovedEvent) => void,
   onColumnCreated: (event: ColumnCreatedEvent) => void,
   onTaskCreated: (event: TaskCreatedEvent) => void,
+  onColumnMoved: (event: ColumnMovedEvent) => void,
 ) {
   const { accessToken, user } = useAuthStore();
   const [isConnected, setIsConnected] = useState(false);
@@ -77,6 +86,10 @@ export function useBoardRealtime(
         connection.on("TaskCreated", (event: TaskCreatedEvent) => {
           if (event.userId !== user?.userId) onTaskCreated(event);
         });
+
+        connection.on("ColumnMoved", (event: ColumnMovedEvent) => {
+          if (event.userId !== user?.userId) onColumnMoved(event);
+        });
       } catch (err) {
         console.error("Error connecting to SignalR:", err);
       }
@@ -102,6 +115,7 @@ export function useBoardRealtime(
     onTaskMoved,
     onColumnCreated,
     onTaskCreated,
+    onColumnMoved,
   ]);
 
   return { isConnected };
