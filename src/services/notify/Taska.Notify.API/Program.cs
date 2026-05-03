@@ -1,9 +1,11 @@
 using HealthChecks.UI.Client;
 using MassTransit;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using MongoDB.Driver;
 using Serilog;
 using Taska.Notify.API.Consumers;
 using Taska.Notify.API.Hubs;
+using Taska.Notify.API.Repositories;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -52,9 +54,18 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var connectionString = builder.Configuration["MongoDB:ConnectionString"];
+    return new MongoClient(connectionString);
+});
+
+builder.Services.AddSingleton<INotificationRepository, NotificationRepository>();
+
 builder.Services.AddOpenApi();
 
-builder.Services.AddHealthChecks()
+builder.Services.AddHealthChecks()    
+    .AddMongoDb(sp => sp.GetRequiredService<IMongoClient>(), name: "mongodb", tags: new[] { "db" })
     .AddProcessAllocatedMemoryHealthCheck(512, name: "memory", tags: new[] { "memory" })
     .AddDiskStorageHealthCheck(options =>
         options.AddDrive("C:\\", 1024), name: "disk", tags: new[] { "disk" });

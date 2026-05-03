@@ -62,7 +62,6 @@ export function useMoveColumnMutation(boardId: string) {
         t("columns.moveError", "Failed to move column.");
       toast.error(message);
 
-      // Rollback visual em caso de erro na API
       queryClient.invalidateQueries({
         queryKey: ["columns", "board", boardId],
       });

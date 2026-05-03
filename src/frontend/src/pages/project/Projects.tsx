@@ -117,7 +117,6 @@ export function Projects() {
             </div>
           ) : (
             <div className="rounded-md border bg-card">
-              {/* Agora o DataTable recebe todas as props que ele exige! */}
               <DataTable
                 columns={columns}
                 data={projects}
