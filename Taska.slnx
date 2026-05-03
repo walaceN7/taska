@@ -1,2 +1,23 @@
 <Solution>
+  <Folder Name="/Core/">
+    <Project Path="src/services/core/Taska.Core.API/Taska.Core.API.csproj" />
+    <Project Path="src/services/core/Taska.Core.Application/Taska.Core.Application.csproj" />
+    <Project Path="src/services/core/Taska.Core.Domain/Taska.Core.Domain.csproj" />
+    <Project Path="src/services/core/Taska.Core.Infrastructure/Taska.Core.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Gateway/">
+    <Project Path="src/services/gateway/Taska.Gateway.API/Taska.Gateway.API.csproj" />
+  </Folder>
+  <Folder Name="/Identity/">
+    <Project Path="src/services/identity/Taska.Identity.API/Taska.Identity.API.csproj" />
+    <Project Path="src/services/identity/Taska.Identity.Application/Taska.Identity.Application.csproj" />
+    <Project Path="src/services/identity/Taska.Identity.Domain/Taska.Identity.Domain.csproj" />
+    <Project Path="src/services/identity/Taska.Identity.Infrastructure/Taska.Identity.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Notify/">
+    <Project Path="src/services/notify/Taska.Notify.API/Taska.Notify.API.csproj" />
+  </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="src/shared/Taska.Shared/Taska.Shared/Taska.Shared.csproj" />
+  </Folder>
 </Solution>
