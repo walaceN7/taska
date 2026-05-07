@@ -15,7 +15,7 @@ public class GetPagedProjectsByCompanyQueryHandler(IProjectRepository repository
 
         var pagedProjects = await repository.GetByCompanyAsync(currentUser.UserId, currentUser.SystemRole, currentUser.CompanyId.Value, request.PaginationParams, cancellationToken);
 
-        var projectResults = pagedProjects.Items.Select(p => new ProjectResult(p.Id, p.Name, p.StartDate, p.EndDate, p.Status, p.CompanyId, p.Company.Name)).ToList();
+        var projectResults = pagedProjects.Items.Select(p => new ProjectResult(p.Id, p.Name, p.StartDate, p.EndDate, p.Status, p.CompanyId, p.Company.Name, p.ProjectMembers.Select(m => new ProjectMemberResult(m.UserId, m.Role)).ToList())).ToList();
 
         return new PagedResult<ProjectResult>(
             projectResults,

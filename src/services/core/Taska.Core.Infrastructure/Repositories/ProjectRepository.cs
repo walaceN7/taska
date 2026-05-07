@@ -32,6 +32,7 @@ public class ProjectRepository(TaskaCoreDbContext context) : IProjectRepository
     {
         var query = context.Projects
             .Include(p => p.Company)
+            .Include(p => p.ProjectMembers)
             .Where(p => p.CompanyId == companyId)
             .AsNoTracking()
             .AsQueryable();
@@ -48,12 +49,13 @@ public class ProjectRepository(TaskaCoreDbContext context) : IProjectRepository
     {
         var query = context.Projects
             .Include(p => p.Company)
+            .Include(p => p.ProjectMembers)
             .Where(p => p.CompanyId == companyId)
             .OrderBy(p => p.Name)
             .AsNoTracking()
             .AsQueryable();
 
-        if (systemRole != "SaasAdmin" && systemRole != "CompanyAdmin")
+        if (systemRole != SystemRole.SaasAdmin.ToString() && systemRole != SystemRole.CompanyAdmin.ToString())
         {
             query = query.Where(p => p.ProjectMembers.Any(u => u.UserId == userId));
         }
