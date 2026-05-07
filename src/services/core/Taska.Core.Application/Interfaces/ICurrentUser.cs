@@ -6,4 +6,5 @@ public interface ICurrentUser
     Guid? CompanyId { get; }
     string Email { get; }
     string SystemRole { get; }
+    string FullName { get; }
 }

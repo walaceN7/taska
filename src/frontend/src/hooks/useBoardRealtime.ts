@@ -8,16 +8,20 @@ export interface TaskMovedEvent {
   fromColumnId: string;
   toColumnId: string;
   newOrder: number;
-  userId: string;
+  actorUserId: string;
+  actorName: string;
+  recipientUserIds: string[];
   movedAt: string;
 }
 
 export interface ColumnCreatedEvent {
   columnId: string;
   boardId: string;
-  name: string;
+  columnName: string;
   order: number;
-  userId: string;
+  actorUserId: string;
+  actorName: string;
+  recipientUserIds: string[];
   createdAt: string;
 }
 
@@ -25,12 +29,14 @@ export interface TaskCreatedEvent {
   taskId: string;
   boardId: string;
   columnId: string;
-  title: string;
+  taskTitle: string;
   description?: string;
   priority: number;
   type: number;
   order: number;
-  userId: string;
+  actorUserId: string;
+  actorName: string;
+  recipientUserIds: string[];
   createdAt: string;
 }
 
@@ -38,7 +44,7 @@ export interface ColumnMovedEvent {
   columnId: string;
   boardId: string;
   newOrder: number;
-  userId: string;
+  actorUserId: string;
   movedAt: string;
 }
 
@@ -76,19 +82,19 @@ export function useBoardRealtime(
         await connection.invoke("JoinBoard", boardId);
 
         connection.on("TaskMoved", (event: TaskMovedEvent) => {
-          if (event.userId !== user?.userId) onTaskMoved(event);
+          if (event.actorUserId !== user?.userId) onTaskMoved(event);
         });
 
         connection.on("ColumnCreated", (event: ColumnCreatedEvent) => {
-          if (event.userId !== user?.userId) onColumnCreated(event);
+          if (event.actorUserId !== user?.userId) onColumnCreated(event);
         });
 
         connection.on("TaskCreated", (event: TaskCreatedEvent) => {
-          if (event.userId !== user?.userId) onTaskCreated(event);
+          if (event.actorUserId !== user?.userId) onTaskCreated(event);
         });
 
         connection.on("ColumnMoved", (event: ColumnMovedEvent) => {
-          if (event.userId !== user?.userId) onColumnMoved(event);
+          if (event.actorUserId !== user?.userId) onColumnMoved(event);
         });
       } catch (err) {
         console.error("Error connecting to SignalR:", err);

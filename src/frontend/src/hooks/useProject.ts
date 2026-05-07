@@ -24,7 +24,7 @@ export function useCreateProjectMutation() {
         t("projects.createSuccess", "Project created successfully!"),
       );
       await queryClient.invalidateQueries({
-        queryKey: ["projects", "infinite"],
+        queryKey: ["projects", "paged"],
       });
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {

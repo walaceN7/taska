@@ -8,7 +8,7 @@ using Taska.Shared.Events;
 
 namespace Taska.Core.Application.Features.Columns.Commands;
 
-public class CreateColumnCommandHandler(IColumnRepository repository, ICurrentUser currentUser, IPublishEndpoint publishEndpoint) : IRequestHandler<CreateColumnCommand, ColumnResult>
+public class CreateColumnCommandHandler(IColumnRepository repository, IBoardRepository boardRepository, ICurrentUser currentUser, IPublishEndpoint publishEndpoint) : IRequestHandler<CreateColumnCommand, ColumnResult>
 {
     public async ValueTask<ColumnResult> Handle(CreateColumnCommand request, CancellationToken cancellationToken)
     {
@@ -20,7 +20,9 @@ public class CreateColumnCommandHandler(IColumnRepository repository, ICurrentUs
 
         var created = await repository.AddAsync(column, cancellationToken);
 
-        await publishEndpoint.Publish(new ColumnCreatedEvent(column.Id, column.BoardId, column.Name, column.Order, currentUser.UserId, column.CreatedAt), cancellationToken);
+        var recipientIds = await boardRepository.GetProjectMemberIdsAsync(request.BoardId, cancellationToken);
+
+        await publishEndpoint.Publish(new ColumnCreatedEvent(column.Id, column.BoardId, column.Name, column.Order, currentUser.UserId, currentUser.FullName, recipientIds, column.CreatedAt), cancellationToken);
 
         return created.Adapt<ColumnResult>();
     }

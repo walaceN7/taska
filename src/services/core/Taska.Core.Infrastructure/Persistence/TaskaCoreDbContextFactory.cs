@@ -35,5 +35,6 @@ public class TaskaCoreDbContextFactory : IDesignTimeDbContextFactory<TaskaCoreDb
         public string Email => string.Empty;
 
         public string SystemRole => string.Empty;
+        public string FullName => string.Empty;
     }
 }

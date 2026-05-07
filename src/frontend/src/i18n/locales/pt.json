@@ -48,6 +48,17 @@
     "type": "Tipo",
     "name": "Nome"
   },
+  "notifications": {
+    "title": "Notificações",
+    "markAllRead": "Marcar todas como lidas",
+    "empty": "Nenhuma notificação nova",
+    "task.createdTitle": "Nova Tarefa",
+    "task.created": "{{actorName}} criou a tarefa \"{{taskTitle}}\"",
+    "task.movedTitle": "Tarefa Movida",
+    "task.moved": "{{actorName}} moveu a tarefa \"{{taskTitle}}\"",
+    "column.createdTitle": "Nova Coluna",
+    "column.created": "{{actorName}} criou a coluna \"{{columnName}}\""
+  },
   "auth": {
     "loginTitle": "Acesse a sua conta",
     "loginSubtitle": "Insira seus dados abaixo para acessar a plataforma.",

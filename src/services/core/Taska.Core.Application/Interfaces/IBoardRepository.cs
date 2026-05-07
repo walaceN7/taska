@@ -11,4 +11,5 @@ public interface IBoardRepository
     Task<PagedResult<Board>> GetByProjectIdAsync(Guid projectId, PaginationParams paginationParams, CancellationToken cancellationToken = default);
     Task UpdateAsync(Board board, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(Board board, CancellationToken cancellationToken = default);
+    Task<List<Guid>> GetProjectMemberIdsAsync(Guid boardId, CancellationToken cancellationToken = default);
 }

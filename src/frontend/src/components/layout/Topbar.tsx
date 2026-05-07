@@ -11,6 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  useMarkAllNotificationsAsReadMutation,
+  useMarkNotificationAsReadMutation,
+  useUnreadNotifications,
+} from "@/hooks/useNotification";
+import { useNotificationRealtime } from "@/hooks/useNotificationRealtime";
+import { formatDate } from "@/lib/utils";
 import { useAuthStore } from "@/stores/authStore";
 import { Bell, Check, Languages, LogOut, Moon, Sun, User } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -21,6 +28,11 @@ export function Topbar() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
+
+  useNotificationRealtime();
+  const { data: notifications } = useUnreadNotifications(!!user);
+  const markAsReadMutation = useMarkNotificationAsReadMutation();
+  const markAllMutation = useMarkAllNotificationsAsReadMutation();
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window !== "undefined") {
@@ -48,6 +60,8 @@ export function Topbar() {
     if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
     return name.substring(0, 2).toUpperCase();
   };
+
+  const unreadCount = notifications?.length || 0;
 
   return (
     <header className="h-14 border-b px-4 flex items-center gap-4 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
@@ -105,9 +119,11 @@ export function Topbar() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5 text-muted-foreground" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] bg-destructive text-destructive-foreground text-white">
-                3
-              </Badge>
+              {unreadCount > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] bg-destructive text-destructive-foreground">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </Badge>
+              )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
@@ -115,62 +131,60 @@ export function Topbar() {
               <span className="font-semibold">
                 {t("notifications.title", "Notifications")}
               </span>
-              <span className="text-xs text-primary cursor-pointer hover:underline">
-                {t("notifications.markAllRead", "Mark all as read")}
-              </span>
+              {unreadCount > 0 && (
+                <span
+                  className="text-xs text-primary cursor-pointer hover:underline"
+                  onClick={() => markAllMutation.mutate()}
+                >
+                  {t("notifications.markAllRead", "Mark all as read")}
+                </span>
+              )}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
             <ScrollArea className="h-[300px] pr-3">
               <div className="flex flex-col gap-1 pb-2">
-                <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 min-w-[8px] rounded-full bg-primary" />
-                    <span className="font-semibold text-sm">
-                      Welcome to Taska!
-                    </span>
+                {unreadCount === 0 ? (
+                  <div className="p-6 text-center text-sm text-muted-foreground">
+                    {t("notifications.empty", "No new notifications")}
                   </div>
-                  <span className="text-xs text-muted-foreground pl-4 warp-break-words whitespace-normal">
-                    Your workspace is ready. Let's create your first project.
-                  </span>
-                  <span className="text-[10px] text-muted-foreground mt-1 pl-4">
-                    2 hours ago
-                  </span>
-                </DropdownMenuItem>
+                ) : (
+                  notifications?.map((notif) => {
+                    const payloadData = JSON.parse(notif.payload);
 
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 min-w-[8px] rounded-full bg-primary" />
-                    <span className="font-semibold text-sm">
-                      New Feature Assigned
-                    </span>
-                  </div>
-                  <span className="text-xs text-muted-foreground pl-4 warp-break-words whitespace-normal">
-                    You were assigned to "Implement Drag and Drop".
-                  </span>
-                  <span className="text-[10px] text-muted-foreground mt-1 pl-4">
-                    4 hours ago
-                  </span>
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 min-w-[8px] rounded-full bg-primary" />
-                    <span className="font-semibold text-sm">
-                      Mention in Comments
-                    </span>
-                  </div>
-                  <span className="text-xs text-muted-foreground pl-4 warp-break-words whitespace-normal">
-                    John Doe mentioned you in "Fix navigation bug".
-                  </span>
-                  <span className="text-[10px] text-muted-foreground mt-1 pl-4">
-                    1 day ago
-                  </span>
-                </DropdownMenuItem>
+                    return (
+                      <div key={notif.id}>
+                        <DropdownMenuItem
+                          className="flex flex-col items-start gap-1 p-3 cursor-pointer focus:bg-accent/50"
+                          onClick={() => markAsReadMutation.mutate(notif.id)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 min-w-[8px] rounded-full bg-primary" />
+                            <span className="font-semibold text-sm">
+                              {
+                                t(`notifications.${notif.type}Title`, {
+                                  defaultValue: "Notification",
+                                }) as string
+                              }
+                            </span>
+                          </div>
+                          <span className="text-xs text-muted-foreground pl-4 warp-break-words whitespace-normal">
+                            {
+                              t(`notifications.${notif.type}`, {
+                                ...payloadData,
+                                actorName: notif.actorName,
+                              }) as string
+                            }
+                          </span>
+                          <span className="text-[10px] text-muted-foreground mt-1 pl-4">
+                            {formatDate(notif.createdAt)}
+                          </span>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </ScrollArea>
           </DropdownMenuContent>

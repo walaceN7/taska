@@ -49,4 +49,17 @@ public class BoardRepository(TaskaCoreDbContext context) : IBoardRepository
         await context.SaveChangesAsync(cancellationToken);
         return true;
     }
+
+    public async Task<List<Guid>> GetProjectMemberIdsAsync(Guid boardId, CancellationToken cancellationToken = default)
+    {
+        var board = await context.Boards
+            .Include(b => b.Project)
+            .ThenInclude(p => p.ProjectMembers)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(b => b.Id == boardId, cancellationToken);
+
+        if (board == null) return [];
+                
+        return board.Project.ProjectMembers.Select(pm => pm.UserId).ToList();
+    }
 }

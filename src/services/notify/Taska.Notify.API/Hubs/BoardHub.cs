@@ -13,4 +13,14 @@ public class BoardHub : Hub
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, boardId);
     }
+
+    public async Task JoinUserNotifications(string userId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"user-{userId}");
+    }
+
+    public async Task LeaveUserNotifications(string userId)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"user-{userId}");
+    }
 }

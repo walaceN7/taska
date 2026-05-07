@@ -8,7 +8,7 @@ using Taska.Shared.Exceptions;
 
 namespace Taska.Core.Application.Features.TaskItems.Commands;
 
-public class MoveTaskItemCommandHandler(ITaskItemRepository repository, ICurrentUser currentUser, IPublishEndpoint publishEndpoint) : IRequestHandler<MoveTaskItemCommand, TaskItemResult>
+public class MoveTaskItemCommandHandler(ITaskItemRepository repository, IBoardRepository boardRepository, ICurrentUser currentUser, IPublishEndpoint publishEndpoint) : IRequestHandler<MoveTaskItemCommand, TaskItemResult>
 {
     public async ValueTask<TaskItemResult> Handle(MoveTaskItemCommand request, CancellationToken cancellationToken)
     {
@@ -43,7 +43,9 @@ public class MoveTaskItemCommandHandler(ITaskItemRepository repository, ICurrent
         task.Order = request.NewOrder;
         var updatedTask = await repository.UpdateAsync(task, cancellationToken);
 
-        await publishEndpoint.Publish(new TaskMovedEvent(task.Id, boardId, originalColumnId, request.NewColumnId, task.Order, currentUser.UserId, DateTime.UtcNow), cancellationToken);
+        var recipientIds = await boardRepository.GetProjectMemberIdsAsync(boardId, cancellationToken);
+
+        await publishEndpoint.Publish(new TaskMovedEvent(task.Id, task.Title, boardId, originalColumnId, request.NewColumnId, task.Order, currentUser.UserId, currentUser.FullName, recipientIds, DateTime.UtcNow), cancellationToken);
 
         return updatedTask.Adapt<TaskItemResult>();
     }

@@ -44,6 +44,17 @@
     "type": "Type",
     "name": "Name"
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No new notifications",
+    "task.createdTitle": "New Task",
+    "task.created": "{{actorName}} created the task \"{{taskTitle}}\"",
+    "task.movedTitle": "Task Moved",
+    "task.moved": "{{actorName}} moved \"{{taskTitle}}\"",
+    "column.createdTitle": "New Column",
+    "column.created": "{{actorName}} created the column \"{{columnName}}\""
+  },
   "auth": {
     "loginTitle": "Log in to your account",
     "loginSubtitle": "Enter your details below to access the platform.",

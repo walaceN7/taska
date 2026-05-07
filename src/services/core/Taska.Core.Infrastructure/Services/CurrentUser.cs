@@ -14,4 +14,5 @@ public class CurrentUser(IHttpContextAccessor httpContextAccessor) : ICurrentUse
     public Guid? CompanyId => Guid.TryParse(User.FindFirstValue("companyId"), out var id) ? id : null;
     public string Email => User.FindFirstValue(ClaimTypes.Email)!;
     public string SystemRole => User.FindFirstValue("systemRole")!;
+    public string FullName => User.FindFirstValue(ClaimTypes.Name) ?? "User";
 }
