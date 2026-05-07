@@ -86,7 +86,7 @@ export function useBoardState(
       if (prev.some((c) => c.id === event.columnId)) return prev;
       const newColumn: ColumnDto = {
         id: event.columnId,
-        name: event.name,
+        name: event.columnName,
         order: event.order,
         tasks: [],
       };
@@ -105,7 +105,7 @@ export function useBoardState(
 
       const newTask: TaskItemDto = {
         id: event.taskId,
-        title: event.title,
+        title: event.taskTitle,
         priority: event.priority,
         type: event.type,
         order: event.order,

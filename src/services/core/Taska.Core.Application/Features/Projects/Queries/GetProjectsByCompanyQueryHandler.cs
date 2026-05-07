@@ -13,7 +13,7 @@ public class GetProjectsByCompanyQueryHandler(IProjectRepository projectReposito
         if (currentUser.CompanyId == null)
             throw new UnauthorizedException("Current user does not belong to a company.");        
 
-        var result = await projectRepository.GetByCompanyAsync(currentUser.CompanyId.Value, cancellationToken);
+        var result = await projectRepository.GetByCompanyAsync(currentUser.UserId, currentUser.SystemRole, currentUser.CompanyId.Value, cancellationToken);
 
         return result.Adapt<IEnumerable<ProjectResult>>();
     }

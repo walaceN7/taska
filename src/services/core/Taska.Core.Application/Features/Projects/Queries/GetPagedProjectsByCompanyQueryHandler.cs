@@ -13,7 +13,7 @@ public class GetPagedProjectsByCompanyQueryHandler(IProjectRepository repository
         if (currentUser.CompanyId == null)
             throw new UnauthorizedException("Current user does not belong to a company.");
 
-        var pagedProjects = await repository.GetByCompanyAsync(currentUser.CompanyId.Value, request.PaginationParams, cancellationToken);
+        var pagedProjects = await repository.GetByCompanyAsync(currentUser.UserId, currentUser.SystemRole, currentUser.CompanyId.Value, request.PaginationParams, cancellationToken);
 
         var projectResults = pagedProjects.Items.Select(p => new ProjectResult(p.Id, p.Name, p.StartDate, p.EndDate, p.Status, p.CompanyId, p.Company.Name)).ToList();
 
