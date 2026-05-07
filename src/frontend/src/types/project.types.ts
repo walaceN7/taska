@@ -15,6 +15,17 @@ export interface CreateProjectRequest {
   endDate?: string;
 }
 
+export interface AddProjectMemberRequest {
+  projectId: string;
+  userId: string;
+  role: ProjectRole;
+}
+
+export interface RemoveProjectMemberRequest {
+  projectId: string;
+  userId: string;
+}
+
 export const ProjectStatus = {
   Planning: 1,
   Active: 2,
@@ -24,3 +35,11 @@ export const ProjectStatus = {
 } as const;
 
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];
+
+export const ProjectRole = {
+  Manager: 1,
+  Developer: 2,
+  Viewer: 3,
+} as const;
+
+export type ProjectRole = (typeof ProjectRole)[keyof typeof ProjectRole];

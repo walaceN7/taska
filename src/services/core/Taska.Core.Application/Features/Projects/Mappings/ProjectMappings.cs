@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using Taska.Core.Application.Features.Projects.Commands;
-using Taska.Core.Application.Features.Projects.DTOs;
 using Taska.Core.Domain.Entities;
 using Taska.Core.Domain.Enums;
 
@@ -20,8 +19,5 @@ public class ProjectMappings : IRegister
             .Map(dest => dest.EndDate, src => src.EndDate.HasValue
                 ? DateTime.SpecifyKind(src.EndDate.Value, DateTimeKind.Utc)
                 : (DateTime?)null);
-
-        config.NewConfig<Project, ProjectResult>()
-            .Map(dest => dest.Status, src => src.Status.ToString());
     }
 }

@@ -24,7 +24,7 @@ export function useCreateProjectMutation() {
         t("projects.createSuccess", "Project created successfully!"),
       );
       await queryClient.invalidateQueries({
-        queryKey: ["projects", "paged"],
+        queryKey: ["projects"],
       });
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -44,3 +44,51 @@ export function usePagedProjects(pageIndex: number, pageSize: number) {
     placeholderData: (previousData) => previousData,
   });
 }
+
+export const useAddProjectMember = () => {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: projectService.addProjectMember,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({
+        queryKey: ["project", variables.projectId],
+      });
+      toast.success(
+        t("projects.addMemberSuccess", "Member added successfully!"),
+      );
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const errorMessage =
+        error.response?.data?.error ||
+        t("projects.addMemberError", "Failed to add member");
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useRemoveProjectMember = () => {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: projectService.removeProjectMember,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({
+        queryKey: ["project", variables.projectId],
+      });
+      toast.success(
+        t("projects.removeMemberSuccess", "Member removed successfully!"),
+      );
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const errorMessage =
+        error.response?.data?.error ||
+        t("projects.removeMemberError", "Failed to remove member");
+      toast.error(errorMessage);
+    },
+  });
+};

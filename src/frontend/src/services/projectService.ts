@@ -1,6 +1,11 @@
 import { api } from "@/lib/api";
 import type { PagedResult } from "@/types/api.types";
-import type { CreateProjectRequest, ProjectDto } from "@/types/project.types";
+import type {
+  AddProjectMemberRequest,
+  CreateProjectRequest,
+  ProjectDto,
+  RemoveProjectMemberRequest,
+} from "@/types/project.types";
 
 const urlBase = "core/api/project";
 
@@ -26,5 +31,27 @@ export const projectService = {
       },
     );
     return response.data;
+  },
+
+  addProjectMember: async ({
+    projectId,
+    userId,
+    role,
+  }: AddProjectMemberRequest) => {
+    const response = await api.post<ProjectDto>(
+      `${urlBase}/${projectId}/members`,
+      {
+        userId,
+        role,
+      },
+    );
+    return response.data;
+  },
+
+  removeProjectMember: async ({
+    projectId,
+    userId,
+  }: RemoveProjectMemberRequest): Promise<void> => {
+    await api.delete(`${urlBase}/${projectId}/members/${userId}`);
   },
 };
