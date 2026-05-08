@@ -6,6 +6,7 @@ export interface ProjectDto {
   status: ProjectStatus;
   companyId: string;
   companyName: string;
+  members: ProjectMemberResult[];
 }
 
 export interface CreateProjectRequest {
@@ -24,6 +25,11 @@ export interface AddProjectMemberRequest {
 export interface RemoveProjectMemberRequest {
   projectId: string;
   userId: string;
+}
+
+export interface ProjectMemberResult {
+  userId: string;
+  role: ProjectRole;
 }
 
 export const ProjectStatus = {

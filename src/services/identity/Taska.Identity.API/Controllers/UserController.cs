@@ -24,4 +24,11 @@ public class UserController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(new GetPagedCompanyMembersQuery(paginationParams));
         return Ok(result);
     }
+
+    [HttpPost("by/ids")]
+    public async Task<IActionResult> GetUsersByIds([FromBody] IEnumerable<Guid> userIds)
+    {
+        var result = await mediator.Send(new GetByIdsQuery(userIds));
+        return Ok(result);
+    }
 }

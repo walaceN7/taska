@@ -2,11 +2,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { usePagedTeams } from "@/hooks/useTeam";
 import {
   usePagedCompanyMembers,
   usePagedPendingInvites,
-  usePagedTeams,
-} from "@/hooks/useTeam";
+} from "@/hooks/useUser";
 import { formatDate } from "@/lib/utils";
 import { useAuthStore } from "@/stores/authStore";
 import { Mail, Plus, RefreshCw, UserCog, Users } from "lucide-react";

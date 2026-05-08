@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { MemberDto } from "@/types/team.types";
+import type { MemberDto } from "@/types/user.types";
 import { type ColumnDef } from "@tanstack/react-table";
 import { type TFunction } from "i18next";
 import {

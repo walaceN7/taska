@@ -5,36 +5,6 @@ import type { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export function useCompanyMembers() {
-  return useQuery({
-    queryKey: ["companyMembers"],
-    queryFn: teamService.getCompanyMembers,
-  });
-}
-
-export function usePagedCompanyMembers(pageNumber: number, pageSize: number) {
-  return useQuery({
-    queryKey: ["companyMembers", "paged", pageNumber, pageSize],
-    queryFn: () => teamService.getPagedCompanyMembers(pageNumber, pageSize),
-    placeholderData: (previousData) => previousData,
-  });
-}
-
-export function usePendingInvites() {
-  return useQuery({
-    queryKey: ["pendingInvites"],
-    queryFn: teamService.getPendingInvites,
-  });
-}
-
-export function usePagedPendingInvites(pageNumber: number, pageSize: number) {
-  return useQuery({
-    queryKey: ["pendingInvites", "paged", pageNumber, pageSize],
-    queryFn: () => teamService.getPagedPendingInvites(pageNumber, pageSize),
-    placeholderData: (previousData) => previousData,
-  });
-}
-
 export function useTeams() {
   return useQuery({
     queryKey: ["teams"],
