@@ -86,7 +86,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
           <div className="mt-4 flex items-center justify-between border-t pt-4">
             <div className="text-xs text-muted-foreground font-medium">
-              {t("team.membersCount", "Members")}
+              {t("team.members", "Members")}
             </div>
 
             <div className="flex items-center -space-x-2">
@@ -97,6 +97,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 </>
               ) : (
                 <>
+                  {displayMembers.length === 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      {t("team.noMembers", "No members")}
+                    </p>
+                  )}
+
                   {displayMembers.map((member) => (
                     <Avatar
                       key={member.id}
@@ -112,7 +118,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
                       </AvatarFallback>
                     </Avatar>
                   ))}
-
                   {remainingMembers > 0 && (
                     <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-[10px] font-medium text-muted-foreground z-0">
                       +{remainingMembers}

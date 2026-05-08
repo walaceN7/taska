@@ -193,7 +193,9 @@
     "teamsSubtitle": "Organize seus membros em grupos funcionais.",
     "name": "Nome",
     "memberCount": "Contagem de Membros",
-    "membersCount": "membros"
+    "membersCount": "membros",
+    "members": "Membros",
+    "noMembers": "Nenhum membro"
   },
   "projects": {
     "title": "Projetos",
