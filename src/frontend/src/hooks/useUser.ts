@@ -1,5 +1,5 @@
 import { userService } from "@/services/userService";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export function usePagedCompanyMembers(pageNumber: number, pageSize: number) {
   return useQuery({
@@ -30,5 +30,17 @@ export function useUsersByIds(ids: string[]) {
     queryFn: () => userService.getUsersByIds(ids),
     placeholderData: (previousData) => previousData,
     enabled: ids.length > 0,
+  });
+}
+
+export function useSearchCompanyMembers(searchTerm: string) {
+  return useInfiniteQuery({
+    queryKey: ["companyMembers", "search", searchTerm],
+    queryFn: ({ pageParam = 1 }) =>
+      userService.searchCompanyMembers(searchTerm, pageParam, 10),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasNextPage ? lastPage.pageNumber + 1 : undefined;
+    },
   });
 }

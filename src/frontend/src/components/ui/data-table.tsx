@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+      <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden m-4">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -111,7 +111,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2 m-4">
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <div>
             {t("common.total", "Total:")}{" "}

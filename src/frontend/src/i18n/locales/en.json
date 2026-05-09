@@ -42,7 +42,8 @@
     "endDate": "End Date",
     "status": "Status",
     "type": "Type",
-    "name": "Name"
+    "name": "Name",
+    "add": "Add"
   },
   "notifications": {
     "title": "Notifications",
@@ -234,7 +235,20 @@
     "basicInfo": "Basic Information",
     "scrumBoard": "Scrum Board",
     "kanbanBoard": "Kanban Board",
-    "notFound": "Project not found"    
+    "notFound": "Project not found",
+    "membersManagement": "Members Management",
+    "manageMembersDesc": "Add or remove members and define their roles.",
+    "membersSearch": "Search to add members...",
+    "noUsersFound": "No users found.",
+    "noMembersToAdd": "All members are in the project.",
+    "addMember": "Add Member",
+    "removeMember": "Remove Member",
+    "updateRole": "Update Role",
+    "role": {
+      "manager": "Manager",
+      "developer": "Developer",
+      "viewer": "Viewer"
+    }
   },
   "boards": {
     "title": "Boards",
@@ -259,5 +273,43 @@
       "scrum": "Scrum",
       "kanban": "Kanban"
     }
+  },
+  "columns": {
+    "backlog": "Backlog",
+    "todo": "To Do",
+    "inProgress": "In Progress",
+    "review": "Review",
+    "done": "Done",
+    "addAnother": "Add another list",
+    "namePlaceholder": "Enter list title..."
+  },
+  "task": {
+    "add": "Add a task",
+    "title": "Title",
+    "titlePlaceholder": "Task title",
+    "description": "Description",
+    "descPlaceholder": "Add details...",
+    "priorityLabel": "Priority",
+    "typeLabel": "Type",
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "type": {
+      "feature": "Feature",
+      "bug": "Bug",
+      "chore": "Chore"
+    },
+    "createTask": "Create Task",
+    "createTaskError": "Failed to create task.",
+    "createTaskSuccess": "Task created successfully!",
+    "updateTask": "Update Task",
+    "updateTaskError": "Failed to update task.",
+    "updateTaskSuccess": "Task updated successfully!",
+    "deleteTask": "Delete Task",
+    "deleteTaskError": "Failed to delete task.",
+    "deleteTaskSuccess": "Task deleted successfully!"
   }
 }

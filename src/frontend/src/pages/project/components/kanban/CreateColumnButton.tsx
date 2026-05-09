@@ -37,7 +37,7 @@ export function CreateColumnButton() {
 
   if (isEditing) {
     return (
-      <div className="bg-muted/50 rounded-xl w-80 min-w-80 p-3 border h-fit shadow-sm">
+      <div className="bg-secondary/75 rounded-xl w-80 min-w-80 p-3 border h-fit shadow-sm">
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <Input
             autoFocus
@@ -61,7 +61,7 @@ export function CreateColumnButton() {
             </Button>
             <Button
               type="button"
-              variant="ghost"
+              variant="secondary"
               size="icon"
               onClick={handleCancel}
               disabled={createMutation.isPending}
@@ -77,7 +77,7 @@ export function CreateColumnButton() {
   return (
     <Button
       variant="ghost"
-      className="w-80 min-w-80 h-12 border-2 border-dashed bg-muted/30 hover:bg-muted/50 justify-start text-muted-foreground"
+      className="w-80 min-w-80 h-12 border-2 border-dashed bg-secondary/75 hover:bg-secondary justify-start text-muted-foreground"
       onClick={() => setIsEditing(true)}
     >
       <Plus className="mr-2 h-4 w-4" />

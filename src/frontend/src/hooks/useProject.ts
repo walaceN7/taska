@@ -51,11 +51,14 @@ export const useAddProjectMember = () => {
 
   return useMutation({
     mutationFn: projectService.addProjectMember,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-      queryClient.invalidateQueries({
-        queryKey: ["project", variables.projectId],
-      });
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["projects"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["project", variables.projectId],
+        }),
+      ]);
+
       toast.success(
         t("projects.addMemberSuccess", "Member added successfully!"),
       );
@@ -75,11 +78,15 @@ export const useRemoveProjectMember = () => {
 
   return useMutation({
     mutationFn: projectService.removeProjectMember,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-      queryClient.invalidateQueries({
-        queryKey: ["project", variables.projectId],
-      });
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["projects"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["project", variables.projectId],
+        }),
+        queryClient.removeQueries({ queryKey: ["usersByIds"] }),
+      ]);
+
       toast.success(
         t("projects.removeMemberSuccess", "Member removed successfully!"),
       );
@@ -88,6 +95,33 @@ export const useRemoveProjectMember = () => {
       const errorMessage =
         error.response?.data?.error ||
         t("projects.removeMemberError", "Failed to remove member");
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useUpdateProjectMemberRole = () => {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: projectService.updateProjectMemberRole,
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["projects"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["project", variables.projectId],
+        }),
+      ]);
+
+      toast.success(
+        t("projects.updateRoleSuccess", "Role updated successfully!"),
+      );
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const errorMessage =
+        error.response?.data?.error ||
+        t("projects.updateRoleError", "Failed to update role");
       toast.error(errorMessage);
     },
   });

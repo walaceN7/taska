@@ -31,4 +31,11 @@ public class UserController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(new GetByIdsQuery(userIds));
         return Ok(result);
     }
+
+    [HttpGet("company/members/search")]
+    public async Task<IActionResult> SearchCompanyMembers([FromQuery] string? searchTerm, [FromQuery] PaginationParams paginationParams)
+    {
+        var result = await mediator.Send(new SearchCompanyMembersQuery(searchTerm, paginationParams));
+        return Ok(result);
+    }
 }

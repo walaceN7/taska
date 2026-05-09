@@ -58,7 +58,7 @@ export function KanbanColumn({ column, isOverlay }: KanbanColumnProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex flex-col bg-muted/50 rounded-xl w-80 min-w-80 max-h-full border shrink-0"
+      className="flex flex-col bg-secondary/50 rounded-xl w-80 min-w-80 max-h-full border shrink-0"
     >
       <div
         {...attributes}

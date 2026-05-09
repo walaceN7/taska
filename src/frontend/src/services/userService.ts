@@ -48,4 +48,18 @@ export const userService = {
     const response = await api.post<MemberDto[]>(`${urlBase}/by/ids`, ids);
     return response.data;
   },
+
+  searchCompanyMembers: async (
+    searchTerm: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PagedResult<MemberDto>> => {
+    const response = await api.get<PagedResult<MemberDto>>(
+      `${urlBase}/company/members/search`,
+      {
+        params: { searchTerm, pageNumber, pageSize },
+      },
+    );
+    return response.data;
+  },
 };

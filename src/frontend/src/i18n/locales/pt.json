@@ -46,7 +46,8 @@
     "endDate": "Data de fim",
     "status": "Status",
     "type": "Tipo",
-    "name": "Nome"
+    "name": "Nome",
+    "add": "Adicionar"
   },
   "notifications": {
     "title": "Notificações",
@@ -238,7 +239,20 @@
     "basicInfo": "Informações Básicas",
     "scrumBoard": "Quadro Scrum",
     "kanbanBoard": "Quadro Kanban",
-    "notFound": "Projeto não encontrado"
+    "notFound": "Projeto não encontrado",
+    "membersManagement": "Gerenciamento de Membros",
+    "manageMembersDesc": "Adicione ou remova membros e defina suas funções.",
+    "membersSearch": "Pesquisar para adicionar membros...",
+    "noUsersFound": "Nenhum usuário encontrado.",
+    "noMembersToAdd": "Todos os membros estão no projeto.",
+    "addMember": "Adicionar Membro",
+    "removeMember": "Remover Membro",
+    "updateRole": "Atualizar Função",
+    "role": {
+      "manager": "Gerente",
+      "developer": "Desenvolvedor",
+      "viewer": "Visualizador"
+    }
   },
   "boards": {
     "title": "Quadros",
@@ -262,5 +276,45 @@
       "scrum": "Scrum",
       "kanban": "Kanban"
     }
+  },
+  "columns": {
+    "backlog": "Backlog",
+    "todo": "A Fazer",
+    "inProgress": "Em Progresso",
+    "review": "Em Revisão",
+    "done": "Concluído",
+    "addAnother": "Adicionar outra lista",
+    "namePlaceholder": "Insira o nome da lista",
+    "createSuccess": "Lista criada com sucesso!",
+    "createError": "Falha ao criar lista."
+  },
+  "task": {
+    "add": "Adicionar Tarefa",
+    "title": "Título",
+    "titlePlaceholder": "Título da Tarefa",
+    "description": "Descrição",
+    "descPlaceholder": "Adicione detalhes...",
+    "priorityLabel": "Prioridade",
+    "typeLabel": "Tipo",
+    "priority": {
+      "low": "Baixa",
+      "medium": "Média",
+      "high": "Alta",
+      "critical": "Crítica"
+    },
+    "type": {
+      "feature": "Funcionalidade",
+      "bug": "Bug",
+      "chore": "Tarefa"
+    },
+    "createTask": "Criar Tarefa",
+    "createTaskError": "Falha ao criar tarefa.",
+    "createTaskSuccess": "Tarefa criada com sucesso!",
+    "updateTask": "Atualizar Tarefa",
+    "updateTaskError": "Falha ao atualizar tarefa.",
+    "updateTaskSuccess": "Tarefa atualizada com sucesso!",
+    "deleteTask": "Excluir Tarefa",
+    "deleteTaskError": "Falha ao excluir tarefa.",
+    "deleteTaskSuccess": "Tarefa excluída com sucesso!"
   }
 }

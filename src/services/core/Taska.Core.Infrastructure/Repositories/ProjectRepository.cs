@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Taska.Core.Application.Interfaces;
 using Taska.Core.Domain.Entities;
+using Taska.Core.Domain.Enums;
 using Taska.Core.Infrastructure.Persistence;
 using Taska.Shared.Enums;
 using Taska.Shared.Pagination;
@@ -85,6 +86,19 @@ public class ProjectRepository(TaskaCoreDbContext context) : IProjectRepository
             await context.SaveChangesAsync(cancellationToken);
         }
     }
+
+    public async Task UpdateMemberAsync(Guid projectId, Guid userId, ProjectRole newRole, CancellationToken cancellationToken)
+    {
+        var member = await context.ProjectMembers.FirstOrDefaultAsync(m => m.ProjectId == projectId && m.UserId == userId, cancellationToken);
+
+        if (member != null)
+        {
+            member.Role = newRole;
+            context.ProjectMembers.Update(member);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+    }
+
     public async Task<bool> IsMemberAsync(Guid projectId, Guid userId, CancellationToken cancellationToken)
     {
         return await context.ProjectMembers.AnyAsync(pm => pm.ProjectId == projectId && pm.UserId == userId, cancellationToken);

@@ -22,6 +22,12 @@ export interface AddProjectMemberRequest {
   role: ProjectRole;
 }
 
+export interface UpdateProjectMemberRoleRequest {
+  projectId: string;
+  userId: string;
+  role: ProjectRole;
+}
+
 export interface RemoveProjectMemberRequest {
   projectId: string;
   userId: string;

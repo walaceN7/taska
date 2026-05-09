@@ -5,6 +5,7 @@ import type {
   CreateProjectRequest,
   ProjectDto,
   RemoveProjectMemberRequest,
+  UpdateProjectMemberRoleRequest,
 } from "@/types/project.types";
 
 const urlBase = "core/api/project";
@@ -53,5 +54,17 @@ export const projectService = {
     userId,
   }: RemoveProjectMemberRequest): Promise<void> => {
     await api.delete(`${urlBase}/${projectId}/members/${userId}`);
+  },
+
+  updateProjectMemberRole: async ({
+    projectId,
+    userId,
+    role,
+  }: UpdateProjectMemberRoleRequest) => {
+    const response = await api.patch<ProjectDto>(
+      `${urlBase}/${projectId}/members/${userId}`,
+      { role },
+    );
+    return response.data;
   },
 };

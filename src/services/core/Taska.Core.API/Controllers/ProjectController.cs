@@ -76,4 +76,11 @@ public class ProjectController(IMediator mediator) : ControllerBase
         await mediator.Send(new RemoveProjectMemberCommand(projectId, userId));
         return NoContent();
     }
+
+    [HttpPatch("{projectId}/members/{userId}")]
+    public async Task<IActionResult> UpdateMember(Guid projectId, Guid userId, [FromBody] UpdateProjectMemberCommand command)
+    {
+        var result = await mediator.Send(command with { ProjectId = projectId, UserId = userId });
+        return Ok(result);
+    }
 }
