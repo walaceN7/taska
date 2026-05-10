@@ -6,6 +6,7 @@ import type {
   ProjectDto,
   RemoveProjectMemberRequest,
   UpdateProjectMemberRoleRequest,
+  UpdateProjectRequest,
 } from "@/types/project.types";
 
 const urlBase = "core/api/project";
@@ -19,6 +20,16 @@ export const projectService = {
   createProject: async (request: CreateProjectRequest): Promise<ProjectDto> => {
     const response = await api.post<ProjectDto>(`${urlBase}`, request);
     return response.data;
+  },
+
+  updateProject: async (request: UpdateProjectRequest): Promise<ProjectDto> => {
+    const { projectId, ...body } = request;
+    const response = await api.put<ProjectDto>(`${urlBase}/${projectId}`, body);
+    return response.data;
+  },
+
+  deleteProject: async (id: string): Promise<void> => {
+    await api.delete<void>(`${urlBase}/${id}`);
   },
 
   getPagedCompanyProjects: async (

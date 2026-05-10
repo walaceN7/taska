@@ -71,6 +71,16 @@ public class ProjectRepository(TaskaCoreDbContext context) : IProjectRepository
         return project;
     }
 
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var project = await context.Projects.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        if (project != null)
+        {
+            context.Projects.Remove(project);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+    }
+
     public async Task AddMemberAsync(ProjectMember member, CancellationToken cancellationToken)
     {
         await context.ProjectMembers.AddAsync(member, cancellationToken);

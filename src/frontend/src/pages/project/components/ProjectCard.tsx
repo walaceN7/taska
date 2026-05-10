@@ -52,8 +52,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
   };
 
   const maxAvatars = 3;
-  const displayMembers = members?.slice(0, maxAvatars) || [];
-  const remainingMembers = (members?.length || 0) - maxAvatars;
+  const validMembers = members?.filter((m) => memberIds.includes(m.id)) || [];
+  const displayMembers = validMembers.slice(0, maxAvatars);
+  const remainingMembers = memberIds.length > maxAvatars ? memberIds.length - maxAvatars : 0;
 
   return (
     <Link to={`/projects/${project.id}`}>

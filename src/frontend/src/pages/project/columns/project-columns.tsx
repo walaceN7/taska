@@ -1,18 +1,9 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { formatDateWithoutTime } from "@/lib/utils";
 import { type ProjectDto, ProjectStatus } from "@/types/project.types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Edit, FolderKanban, MoreHorizontal, Trash } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { ProjectActionCell } from "../components/ProjectActionCell";
 
 export function useProjectColumns(): ColumnDef<ProjectDto>[] {
   const { t } = useTranslation();
@@ -84,38 +75,7 @@ export function useProjectColumns(): ColumnDef<ProjectDto>[] {
     },
     {
       id: "actions",
-      cell: () => {
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">
-                  {t("common.openMenu", "Open menu")}
-                </span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>
-                {t("common.actions", "Actions")}
-              </DropdownMenuLabel>
-              <DropdownMenuItem className="cursor-pointer">
-                <FolderKanban className="mr-2 h-4 w-4" />
-                {t("project.viewBoard", "View Board")}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <Edit className="mr-2 h-4 w-4" />
-                {t("common.edit", "Edit")}
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
-                <Trash className="mr-2 h-4 w-4" />
-                {t("common.delete", "Delete")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+      cell: ({ row }) => <ProjectActionCell project={row.original} />,
     },
   ];
 }

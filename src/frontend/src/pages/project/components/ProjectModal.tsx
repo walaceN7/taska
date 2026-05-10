@@ -16,21 +16,35 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useCreateProjectMutation } from "@/hooks/useProject";
+import {
+  useCreateProjectMutation,
+  useUpdateProjectMutation,
+} from "@/hooks/useProject";
 import { cn, formatDate } from "@/lib/utils";
-import type { CreateProjectRequest } from "@/types/project.types";
+import type {
+  CreateProjectRequest,
+  ProjectDto,
+  UpdateProjectRequest,
+} from "@/types/project.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, Loader2, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import z from "zod";
 
-export function CreateProjectModal() {
+interface ProjectModalProps {
+  project?: ProjectDto;
+  customTrigger?: React.ReactNode;
+}
+
+export function ProjectModal({ project, customTrigger }: ProjectModalProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isEndOpen, setIsEndOpen] = useState(false);
+
+  const isEditing = !!project;
 
   const createSchema = z.object({
     name: z
@@ -48,7 +62,7 @@ export function CreateProjectModal() {
     endDate: z.date().optional(),
   });
 
-  type CreateProjectFormValues = z.infer<typeof createSchema>;
+  type ProjectFormValues = z.infer<typeof createSchema>;
 
   const {
     register,
@@ -56,57 +70,104 @@ export function CreateProjectModal() {
     reset,
     control,
     formState: { errors },
-  } = useForm<CreateProjectFormValues>({
+  } = useForm<ProjectFormValues>({
     resolver: zodResolver(createSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      startDate: undefined,
-      endDate: undefined,
+      name: project?.name || "",
+      description: project?.description || "",
+      startDate: project?.startDate ? new Date(project.startDate) : undefined,
+      endDate: project?.endDate ? new Date(project.endDate) : undefined,
     },
   });
 
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        name: project?.name || "",
+        description: project?.description || "",
+        startDate: project?.startDate ? new Date(project.startDate) : undefined,
+        endDate: project?.endDate ? new Date(project.endDate) : undefined,
+      });
+    }
+  }, [isOpen, project, reset]);
+
   const createMutation = useCreateProjectMutation();
+  const updateMutation = useUpdateProjectMutation();
+  const isPending = createMutation.isPending || updateMutation.isPending;
 
-  const onSubmit = (values: CreateProjectFormValues) => {
-    const payload: CreateProjectRequest = { name: values.name };
+  const onSubmit = (values: ProjectFormValues) => {
+    if (isEditing) {
+      const payload: UpdateProjectRequest = {
+        projectId: project.id,
+        name: values.name,
+      };
 
-    if (values.description && values.description.trim() !== "") {
-      payload.description = values.description;
+      if (values.description && values.description.trim() !== "") {
+        payload.description = values.description;
+      }
+
+      if (values.startDate) {
+        payload.startDate = values.startDate.toISOString();
+      }
+
+      if (values.endDate) {
+        payload.endDate = values.endDate.toISOString();
+      }
+
+      updateMutation.mutate(payload, {
+        onSuccess: () => {
+          setIsOpen(false);
+          reset();
+        },
+      });
+    } else {
+      const payload: CreateProjectRequest = { name: values.name };
+
+      if (values.description && values.description.trim() !== "") {
+        payload.description = values.description;
+      }
+
+      if (values.startDate) {
+        payload.startDate = values.startDate.toISOString();
+      }
+
+      if (values.endDate) {
+        payload.endDate = values.endDate.toISOString();
+      }
+
+      createMutation.mutate(payload, {
+        onSuccess: () => {
+          setIsOpen(false);
+          reset();
+        },
+      });
     }
-
-    if (values.startDate) {
-      payload.startDate = values.startDate.toISOString();
-    }
-
-    if (values.endDate) {
-      payload.endDate = values.endDate.toISOString();
-    }
-
-    createMutation.mutate(payload, {
-      onSuccess: () => {
-        setIsOpen(false);
-        reset();
-      },
-    });
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          {t("project.createProject", "Create Project")}
-        </Button>
+        {customTrigger ? (
+          customTrigger
+        ) : (
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            {t("project.createProject", "Create Project")}
+          </Button>
+        )}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>
-            {t("project.createProject", "Create Project")}
+            {isEditing
+              ? t("project.editProject", "Edit Project")
+              : t("project.createProject", "Create Project")}
           </DialogTitle>
           <DialogDescription>
-            {t("project.createProjectDescription", "Create a new project")}
+            {isEditing
+              ? t("project.editProjectDescription", "Update project details")
+              : t("project.createProjectDescription", "Create a new project")}
           </DialogDescription>
         </DialogHeader>
 
@@ -117,7 +178,7 @@ export function CreateProjectModal() {
               id="name"
               {...register("name")}
               placeholder={t("project.namePlaceholder", "Enter project name")}
-              disabled={createMutation.isPending}
+              disabled={isPending}
             />
             {errors.name && (
               <p className="text-destructive text-sm font-medium">
@@ -137,7 +198,7 @@ export function CreateProjectModal() {
                 "project.descriptionPlaceholder",
                 "Enter project description",
               )}
-              disabled={createMutation.isPending}
+              disabled={isPending}
             />
             {errors.description && (
               <p className="text-destructive text-sm font-medium">
@@ -157,7 +218,7 @@ export function CreateProjectModal() {
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
-                        disabled={createMutation.isPending}
+                        disabled={isPending}
                         className={cn(
                           "w-full pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground",
@@ -197,7 +258,7 @@ export function CreateProjectModal() {
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
-                        disabled={createMutation.isPending}
+                        disabled={isPending}
                         className={cn(
                           "w-full pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground",
@@ -232,17 +293,21 @@ export function CreateProjectModal() {
             <Button
               type="button"
               variant="outline"
-              disabled={createMutation.isPending}
+              disabled={isPending}
               onClick={() => setIsOpen(false)}
             >
               {t("common.cancel", "Cancel")}
             </Button>
-            <Button type="submit" disabled={createMutation.isPending}>
-              {createMutation.isPending ? (
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("common.creating", "Creating...")}
+                  {isEditing
+                    ? t("common.saving", "Saving...")
+                    : t("common.creating", "Creating...")}
                 </>
+              ) : isEditing ? (
+                t("common.save", "Save")
               ) : (
                 t("common.create", "Create")
               )}

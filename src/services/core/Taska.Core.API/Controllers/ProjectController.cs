@@ -49,6 +49,13 @@ public class ProjectController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await mediator.Send(new DeleteProjectCommand(id));
+        return NoContent();
+    }
+
     [HttpPost("{id}/members")]
     public async Task<IActionResult> AddMember(Guid id, [FromBody] AddProjectMemberCommand command)
     {

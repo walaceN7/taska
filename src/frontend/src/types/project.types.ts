@@ -1,6 +1,7 @@
 export interface ProjectDto {
   id: string;
   name: string;
+  description?: string;
   startDate?: string;
   endDate?: string;
   status: ProjectStatus;
@@ -14,6 +15,15 @@ export interface CreateProjectRequest {
   description?: string;
   startDate?: string;
   endDate?: string;
+}
+
+export interface UpdateProjectRequest {
+  projectId: string;
+  name?: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: ProjectStatus;
 }
 
 export interface AddProjectMemberRequest {

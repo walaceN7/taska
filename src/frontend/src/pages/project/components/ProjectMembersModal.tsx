@@ -232,16 +232,17 @@ export function ProjectMembersModal({
                 <div className="flex justify-center p-4">
                   <Loader2 className="animate-spin text-muted-foreground" />
                 </div>
-              ) : activeMembersDetails?.length === 0 ? (
+              ) : actualMembers.length === 0 ? (
                 <p className="text-xs text-center text-muted-foreground mt-4 py-4">
                   {t("team.noMembers", "No members in this project.")}
                 </p>
               ) : (
                 <div className="space-y-1">
-                  {activeMembersDetails?.map((user) => {
-                    const projectInfo = actualMembers.find(
-                      (m) => m.userId === user.id,
+                  {actualMembers.map((projectInfo) => {
+                    const user = activeMembersDetails?.find(
+                      (u) => u.id === projectInfo.userId,
                     );
+                    if (!user) return null;
                     return (
                       <div
                         key={user.id}

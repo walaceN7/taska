@@ -36,6 +36,58 @@ export function useCreateProjectMutation() {
   });
 }
 
+export function useUpdateProjectMutation() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: projectService.updateProject,
+    onSuccess: async (_, variables) => {
+      toast.success(
+        t("projects.updateSuccess", "Project updated successfully!"),
+      );
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["projects"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["project", variables.projectId],
+        }),
+      ]);
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const message =
+        error.response?.data?.error ||
+        t("projects.updateError", "Failed to update project");
+      toast.error(message);
+    },
+  });
+}
+
+export function useDeleteProjectMutation() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: projectService.deleteProject,
+    onSuccess: async () => {
+      toast.success(
+        t("projects.deleteSuccess", "Project deleted successfully!"),
+      );
+
+      await queryClient.invalidateQueries({
+        queryKey: ["projects"],
+      });
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const message =
+        error.response?.data?.error ||
+        t("projects.deleteError", "Failed to delete project");
+      toast.error(message);
+    },
+  });
+}
+
 export function usePagedProjects(pageIndex: number, pageSize: number) {
   return useQuery({
     queryKey: ["projects", "paged", pageIndex, pageSize],

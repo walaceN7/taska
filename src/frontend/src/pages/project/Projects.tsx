@@ -6,7 +6,7 @@ import { LayoutGrid, List, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useProjectColumns } from "./columns/project-columns";
-import { CreateProjectModal } from "./components/CreateProjectModal";
+import { ProjectModal } from "./components/ProjectModal";
 import { ProjectCard } from "./components/ProjectCard";
 
 export function Projects() {
@@ -57,7 +57,7 @@ export function Projects() {
             </Button>
           </div>
 
-          <CreateProjectModal />
+          <ProjectModal />
         </div>
       </header>
 
