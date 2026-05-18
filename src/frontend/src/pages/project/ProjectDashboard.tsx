@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { BoardCard } from "./components/BoardCard";
 import { BoardModal } from "./components/BoardModal";
+import { ProjectMembersTab } from "./components/ProjectMembersTab";
 
 export function ProjectDashboard() {
   const { t } = useTranslation();
@@ -119,10 +120,10 @@ export function ProjectDashboard() {
           value="members"
           className="outline-none border rounded-md p-6 bg-card text-center text-muted-foreground"
         >
-          {t(
-            "project.membersPlaceholder",
-            "Project members management will be implemented here.",
-          )}
+          <ProjectMembersTab
+            projectId={project.id}
+            members={project.members || []}
+          />
         </TabsContent>
         <TabsContent
           value="settings"
