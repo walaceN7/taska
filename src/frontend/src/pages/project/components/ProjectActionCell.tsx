@@ -69,7 +69,7 @@ export const ProjectActionCell = ({ project }: { project: ProjectDto }) => {
                 onSelect={(e) => e.preventDefault()}
               >
                 <Users className="mr-2 h-4 w-4" />
-                {t("common.members", "Members")}
+                {t("project.tabs.members", "Members")}
               </DropdownMenuItem>
             }
           />

@@ -43,7 +43,8 @@
     "status": "Status",
     "type": "Type",
     "name": "Name",
-    "add": "Add"
+    "add": "Add",
+    "dangerZone": "Danger Zone"
   },
   "notifications": {
     "title": "Notifications",
@@ -248,7 +249,12 @@
       "manager": "Manager",
       "developer": "Developer",
       "viewer": "Viewer"
-    }
+    },
+    "editProjectDescription": "Update project details",
+    "confirmDeleteDescription": "Are you sure you want to delete this project? This action cannot be undone.",
+    "deleteWarning": "Once deleted, all boards, columns, and tasks related to this project will be permanently gone.",
+    "confirmDeleteTitle": "Delete project {{name}}?",
+    "viewBoard": "View Board"
   },
   "boards": {
     "title": "Boards",

@@ -47,7 +47,8 @@
     "status": "Status",
     "type": "Tipo",
     "name": "Nome",
-    "add": "Adicionar"
+    "add": "Adicionar",
+    "dangerZone": "Zona de Perigo"
   },
   "notifications": {
     "title": "Notificações",
@@ -252,7 +253,12 @@
       "manager": "Gerente",
       "developer": "Desenvolvedor",
       "viewer": "Visualizador"
-    }
+    },
+    "editProjectDescription": "Atualize os detalhes do projeto",
+    "confirmDeleteDescription": "Tem certeza de que deseja excluir este projeto? Esta ação não pode ser desfeita.",
+    "deleteWarning": "Após a exclusão, todos os quadros, colunas e tarefas relacionados a este projeto serão permanentemente removidos.",
+    "confirmDeleteTitle": "Excluir o projeto {{name}}?",
+    "viewBoard": "Ver Quadro"
   },
   "boards": {
     "title": "Quadros",

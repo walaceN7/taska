@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BoardCard } from "./components/BoardCard";
 import { BoardModal } from "./components/BoardModal";
 import { ProjectMembersTab } from "./components/ProjectMembersTab";
+import { ProjectSettingsTab } from "./components/ProjectSettingsTab";
 
 export function ProjectDashboard() {
   const { t } = useTranslation();
@@ -129,10 +130,7 @@ export function ProjectDashboard() {
           value="settings"
           className="outline-none border rounded-md p-6 bg-card text-center text-muted-foreground"
         >
-          {t(
-            "project.settingsPlaceholder",
-            "Project settings will be implemented here.",
-          )}
+          <ProjectSettingsTab project={project} />
         </TabsContent>
       </Tabs>
     </div>
