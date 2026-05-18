@@ -1,6 +1,7 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Taska.Identity.Application.Features.Users.Commands;
 using Taska.Identity.Application.Features.Users.Queries;
 using Taska.Shared.Pagination;
 
@@ -37,5 +38,21 @@ public class UserController(IMediator mediator) : ControllerBase
     {
         var result = await mediator.Send(new SearchCompanyMembersQuery(searchTerm, paginationParams));
         return Ok(result);
+    }
+
+    [HttpPut("members/{userId}/role")]
+    public async Task<IActionResult> UpdateMemberRole(Guid userId, [FromBody] UpdateMemberRoleCommand command)
+    {        
+        if (userId != command.UserId) return BadRequest();
+
+        await mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpDelete("members/{userId}")]
+    public async Task<IActionResult> RemoveMember(Guid userId)
+    {
+        await mediator.Send(new RemoveCompanyMemberCommand(userId));
+        return NoContent();
     }
 }

@@ -193,7 +193,9 @@
     "memberCount": "Member Count",
     "membersCount": "members",
     "members": "Members",
-    "noMembers": "No members"
+    "noMembers": "No members",
+    "confirmRemoveTitle": "Remove {{name}}?",
+    "confirmRemoveDescription": "Are you sure you want to remove this member from the workspace? They will lose access immediately."
   },
   "projects": {
     "title": "Projects",

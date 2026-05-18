@@ -1,7 +1,12 @@
 import { api } from "@/lib/api";
 import type { PagedResult } from "@/types/api.types";
 import type { PendingInviteDto } from "@/types/team.types";
-import type { MemberDto } from "@/types/user.types";
+import {
+  UserRoleMap,
+  type MemberDto,
+  type UpdateMemberRoleDto,
+  type UserRole,
+} from "@/types/user.types";
 
 const urlBase = "identity/api/user";
 
@@ -61,5 +66,20 @@ export const userService = {
       },
     );
     return response.data;
+  },
+
+  updateCompanyMemberRole: async (
+    userId: string,
+    role: UserRole,
+  ): Promise<void> => {
+    const roleNumber = UserRoleMap[role];
+
+    await api.put<UpdateMemberRoleDto>(`${urlBase}/members/${userId}/role`, {
+      userId,
+      role: roleNumber,
+    });
+  },
+  removeCompanyMember: async (userId: string): Promise<void> => {
+    await api.delete(`${urlBase}/members/${userId}`);
   },
 };

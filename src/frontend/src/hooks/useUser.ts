@@ -1,5 +1,13 @@
 import { userService } from "@/services/userService";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import type { UserRole } from "@/types/user.types";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 export function usePagedCompanyMembers(pageNumber: number, pageSize: number) {
   return useQuery({
@@ -41,6 +49,39 @@ export function useSearchCompanyMembers(searchTerm: string) {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       return lastPage.hasNextPage ? lastPage.pageNumber + 1 : undefined;
+    },
+  });
+}
+
+export function useUpdateCompanyMemberRole() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: ({ userId, role }: { userId: string; role: UserRole }) =>
+      userService.updateCompanyMemberRole(userId, role),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["companyMembers"] });
+      toast.success(t("team.roleUpdated", "Role updated successfully!"));
+    },
+    onError: () => {
+      toast.error(t("common.error", "An error occurred."));
+    },
+  });
+}
+
+export function useRemoveCompanyMember() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: (userId: string) => userService.removeCompanyMember(userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["companyMembers"] });
+      toast.success(t("team.memberRemoved", "Member removed from company."));
+    },
+    onError: () => {
+      toast.error(t("common.error", "An error occurred."));
     },
   });
 }

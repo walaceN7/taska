@@ -9,7 +9,7 @@ import {
 } from "@/hooks/useUser";
 import { formatDate } from "@/lib/utils";
 import { useAuthStore } from "@/stores/authStore";
-import { Mail, Plus, RefreshCw, UserCog, Users } from "lucide-react";
+import { Mail, Plus, RefreshCw, UserCheck, UserCog, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getActiveMembersColumns } from "./columns/active-members-columns";
@@ -132,8 +132,12 @@ export function TeamMembers() {
       </header>
 
       <Tabs defaultValue="active" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 max-w-[500px]">
-          <TabsTrigger value="active">
+        <TabsList className="grid w-full grid-cols-3 max-w-[600px] bg-background border">
+          <TabsTrigger
+            value="active"
+            className="data-[state=active]:bg-primary/10"
+          >
+            <UserCheck className="mr-2 h-4 w-4" />
             {t("team.tabs.active", "Active Members")}
             <Badge
               variant="secondary"
@@ -142,8 +146,11 @@ export function TeamMembers() {
               {pagedActiveMembers?.totalCount || 0}
             </Badge>
           </TabsTrigger>
-
-          <TabsTrigger value="pending">
+          <TabsTrigger
+            value="pending"
+            className="data-[state=active]:bg-primary/10"
+          >
+            <Mail className="mr-2 h-4 w-4" />
             {t("team.tabs.pending", "Pending Invites")}
             {(pagedPendingInvites?.totalCount ?? 0) > 0 && (
               <Badge
@@ -154,8 +161,11 @@ export function TeamMembers() {
               </Badge>
             )}
           </TabsTrigger>
-
-          <TabsTrigger value="teams">
+          <TabsTrigger
+            value="teams"
+            className="data-[state=active]:bg-primary/10"
+          >
+            <Users className="mr-2 h-4 w-4" />
             {t("team.tabs.teams", "Teams")}
             {(pagedTeams?.totalCount ?? 0) > 0 && (
               <Badge
