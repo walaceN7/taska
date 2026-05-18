@@ -11,29 +11,44 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useCreateBoardMutation } from "@/hooks/useBoard";
-import { BoardType, type CreateBoardRequest } from "@/types/board.types";
+import {
+  useCreateBoardMutation,
+  useUpdateBoardMutation,
+} from "@/hooks/useBoard";
+import {
+  BoardType,
+  type BoardDto,
+  type CreateBoardRequest,
+  type UpdateBoardRequest,
+} from "@/types/board.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KanbanSquare, LayoutDashboard, Loader2, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import z from "zod";
 
-export function CreateBoardModal() {
+interface BoardModalProps {
+  board?: BoardDto;
+  customTrigger?: React.ReactNode;
+}
+
+export function BoardModal({ board, customTrigger }: BoardModalProps) {
   const { t } = useTranslation();
   const { projectId } = useParams<{ projectId: string }>();
   const [isOpen, setIsOpen] = useState(false);
 
-  const createSchema = z.object({
+  const isEditing = !!board;
+
+  const schema = z.object({
     name: z
       .string()
       .min(3, t("boards.nameMin", "Board name must be at least 3 characters")),
     type: z.number().int(),
   });
 
-  type CreateBoardFormValues = z.infer<typeof createSchema>;
+  type BoardFormValues = z.infer<typeof schema>;
 
   const {
     register,
@@ -42,13 +57,22 @@ export function CreateBoardModal() {
     control,
     setValue,
     formState: { errors },
-  } = useForm<CreateBoardFormValues>({
-    resolver: zodResolver(createSchema),
+  } = useForm<BoardFormValues>({
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       type: BoardType.Kanban,
     },
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        name: board?.name || "",
+        type: board?.type ?? BoardType.Kanban,
+      });
+    }
+  }, [isOpen, board, reset]);
 
   const selectedType = useWatch({
     control,
@@ -56,38 +80,65 @@ export function CreateBoardModal() {
   });
 
   const createMutation = useCreateBoardMutation();
+  const updateMutation = useUpdateBoardMutation();
+  const isPending = createMutation.isPending || updateMutation.isPending;
 
-  const onSubmit = (values: CreateBoardFormValues) => {
+  const onSubmit = (values: BoardFormValues) => {
     if (!projectId) return;
 
-    const payload: CreateBoardRequest = {
-      projectId: projectId,
-      name: values.name,
-      type: values.type,
-    };
-
-    createMutation.mutate(payload, {
-      onSuccess: () => {
-        setIsOpen(false);
-        reset();
-      },
-    });
+    if (isEditing) {
+      const payload: UpdateBoardRequest = { name: values.name };
+      updateMutation.mutate(
+        { id: board.id, request: payload },
+        {
+          onSuccess: () => {
+            setIsOpen(false);
+            reset();
+          },
+        },
+      );
+    } else {
+      const payload: CreateBoardRequest = {
+        projectId: projectId,
+        name: values.name,
+        type: values.type,
+      };
+      createMutation.mutate(payload, {
+        onSuccess: () => {
+          setIsOpen(false);
+          reset();
+        },
+      });
+    }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          {t("boards.create", "Create Board")}
-        </Button>
+        {customTrigger ? (
+          customTrigger
+        ) : (
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            {t("boards.create", "Create Board")}
+          </Button>
+        )}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.5">
         <DialogHeader>
-          <DialogTitle>{t("boards.create", "Create Board")}</DialogTitle>
+          <DialogTitle>
+            {isEditing
+              ? t("common.edit", "Edit") + " " + t("boards.name", "Board")
+              : t("boards.create", "Create Board")}
+          </DialogTitle>
           <DialogDescription>
-            {t("boards.createDescription", "Add a new board to this project.")}
+            {isEditing
+              ? t("boards.editDescription", "Update your board details.")
+              : t(
+                  "boards.createDescription",
+                  "Add a new board to this project.",
+                )}
           </DialogDescription>
         </DialogHeader>
 
@@ -101,7 +152,7 @@ export function CreateBoardModal() {
                 "boards.namePlaceholder",
                 "Ex: Sprint 1, Backlog, Development",
               )}
-              disabled={createMutation.isPending}
+              disabled={isPending}
             />
             {errors.name && (
               <p className="text-destructive text-sm font-medium">
@@ -116,7 +167,7 @@ export function CreateBoardModal() {
               value={String(selectedType)}
               onValueChange={(val) => setValue("type", Number(val))}
               className="grid grid-cols-2 gap-4"
-              disabled={createMutation.isPending}
+              disabled={isPending || isEditing}
             >
               <Label
                 htmlFor="type-kanban"
@@ -124,7 +175,7 @@ export function CreateBoardModal() {
                   selectedType === BoardType.Kanban
                     ? "border-primary bg-primary/5 ring-1 ring-primary"
                     : "border-input"
-                }`}
+                } ${(isPending || isEditing) && "opacity-50 cursor-not-allowed"}`}
               >
                 <RadioGroupItem
                   value={String(BoardType.Kanban)}
@@ -143,7 +194,7 @@ export function CreateBoardModal() {
                   selectedType === BoardType.Scrum
                     ? "border-primary bg-primary/5 ring-1 ring-primary"
                     : "border-input"
-                }`}
+                } ${(isPending || isEditing) && "opacity-50 cursor-not-allowed"}`}
               >
                 <RadioGroupItem
                   value={String(BoardType.Scrum)}
@@ -162,17 +213,21 @@ export function CreateBoardModal() {
             <Button
               type="button"
               variant="outline"
-              disabled={createMutation.isPending}
+              disabled={isPending}
               onClick={() => setIsOpen(false)}
             >
               {t("common.cancel", "Cancel")}
             </Button>
-            <Button type="submit" disabled={createMutation.isPending}>
-              {createMutation.isPending ? (
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("common.creating", "Creating...")}
+                  {isEditing
+                    ? t("common.saving", "Saving...")
+                    : t("common.creating", "Creating...")}
                 </>
+              ) : isEditing ? (
+                t("common.save", "Save")
               ) : (
                 t("common.create", "Create")
               )}

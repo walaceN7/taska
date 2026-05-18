@@ -8,7 +8,7 @@ import { ArrowLeft, LayoutTemplate, Settings, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { BoardCard } from "./components/BoardCard";
-import { CreateBoardModal } from "./components/CreateBoardModal";
+import { BoardModal } from "./components/BoardModal";
 
 export function ProjectDashboard() {
   const { t } = useTranslation();
@@ -94,13 +94,13 @@ export function ProjectDashboard() {
             <h2 className="text-xl font-semibold tracking-tight">
               {t("boards.title", "Project Boards")}
             </h2>
-            <CreateBoardModal />
+            <BoardModal />
           </div>
 
           {isBoardsLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Skeleton className="h-[120px] w-full rounded-xl" />
-              <Skeleton className="h-[120px] w-full rounded-xl" />
+              <Skeleton className="h-30 w-full rounded-xl" />
+              <Skeleton className="h-30 w-full rounded-xl" />
             </div>
           ) : boardsData?.items.length === 0 ? (
             <div className="text-center py-10 border rounded-md border-dashed text-muted-foreground">
